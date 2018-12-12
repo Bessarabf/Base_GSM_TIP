@@ -660,22 +660,27 @@ c    в yзлax на высотах rads в точке fig,dolg в момент td,uttau
       dimension rads(nh),cn1(nh),cn2(nh),cn4(nh),tn(nh)
       dimension d(8),t(2),apm(7)
       
-c     do 3 i=1,7
-c       apm(i)=ap
-c 3   continue
-      apm(1)=11.
-      apm(2)=2.
-      apm(3)=4.
-      apm(4)=6.
-      apm(5)=12.
-      apm(6)=13.
-      apm(7)=44.
+     do 3 i=1,7
+       apm(i)=ap
+ 3   continue
+!      apm(1)=11.
+!      apm(2)=2.
+!      apm(3)=4.
+!      apm(4)=6.
+!      apm(5)=12.
+!      apm(6)=13.
+!      apm(7)=44.
       alat=fig*1.7453292e-2
       alon=dolg*1.7453292e-2
       iyd=80*1000+td
       do 2 ih=1,nh
-        call gtd6(iyd,utsec,rads(ih)/1.e5,fig,dolg,tlttau,fs,fa,apm
+!       MSIS-86
+!        call gtd6(iyd,utsec,rads(ih)/1.e5,fig,dolg,tlttau,fs,fa,apm
+!     *      ,48,d,t)
+!       MSIS 2000
+        call gtd7(iyd,utsec,rads(ih)/1.e5,fig,dolg,tlttau,fs,fa,apm
      *      ,48,d,t)
+     
          tn(ih)=t(2)
          cn1(ih)=d(3)
          cn2(ih)=d(4)

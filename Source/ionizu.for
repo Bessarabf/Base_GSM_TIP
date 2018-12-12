@@ -6,7 +6,7 @@
 c     double precision tau0,xp,xxp,sx,reh,chep,derf,hsm,
 c    *       re,pi,xlg,cr,xig,xi,cx,chab,ab,ex1,ex2
       data am/32.,28.,16.,30.,4.,1./,bk/1.38e-16/,
-     *       ae/1.66e-24/,g/980.665/,pi/3.1415926d0/,
+     *       ae/1.66e-24/,g0/980.665/,pi/3.1415926d0/,
      *       re/6371.02d5/,om/7.2722e-5/
       data si/4.63, 4.98, 2.49, 0.0,  7.0, 4.23, 6.0, 0.0 ,12.68, 9.4,
      *        7.20, 0.0 ,13.0 , 9.0,  7.5, 0.0 ,12.5, 9.36, 7.58, 0.0,
@@ -22,7 +22,7 @@ c    *       re,pi,xlg,cr,xig,xi,cx,chab,ab,ex1,ex2
      *         0. , 0.  ,  1.6, 0.0, 0.0 , 0.0 , 0.01,0.0, 0.0 , 2.42/
 
       cr=180./pi
-      bkg=bk/g/ae
+      bkg=bk/g0/ae
       k=4
       kl=nse
       nd=dolm/ddolgs+1

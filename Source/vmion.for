@@ -104,23 +104,7 @@ c     print 678
     1 continue
    11 continue
    12 continue
-	! Увеличение мол. скорости в точках:
-!	do kk=1,nh
-! 	      vir(kk,8,2)=10*vir(kk,8,2)
-!		  vir(kk,9,2)=10*vir(kk,9,2)
-!	      vir(kk,8,3)=10*vir(kk,8,3)!
-!	      vir(kk,9,3)=10*vir(kk,9,3)
-!	
-!         	vim(kk,8,2)=10*vim(kk,8,2)
-!		vim(kk,9,2)=10*vim(kk,9,2)
-!	    vim(kk,8,3)=10*vim(kk,8,3)
-!	    vim(kk,9,3)=10*vim(kk,9,3)
-!
-!         	vid(kk,8,2)=10*vid(kk,8,2)
-!		vid(kk,9,2)=10*vid(kk,9,2)
-!	    vid(kk,8,3)=10*vid(kk,8,3)
-!	    vid(kk,9,3)=10*vid(kk,9,3)
-!	end do
+
 c 900 format(' ',10g12.3)
 c 901   format(' vir ')
 c 902   format(' vim ')

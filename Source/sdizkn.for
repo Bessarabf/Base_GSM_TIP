@@ -8,7 +8,7 @@
      *         ,ro(n1,n2,n),ro1(n1,n2,n)
      *         ,an6(n1,n2,n),vi(n1,n2,n),vj(n1,n2,n)
      *         ,solu(nsu),gkoor(2,n1,n2)
-      data am1,am2,am3/53.12e-24,46.51e-24,26.56e-24/
+      data amo2,amn2,amo/53.12e-24,46.51e-24,26.56e-24/
 c
 	allocatable q(:,:,:) ! dissosiation sourse
 	allocate (q(n1,n2,n))
@@ -40,7 +40,7 @@ c         O    con,
      *            ctd,ro1,n1,n2,n ,vi,vj)
 c . . . Циклическая прогонка
       call boskli(an31,n,n1,n2)
-      call barsos(an31,an6,rp,g,am3,n,n1,n2,lov)
+      call barsos(an31,an6,rp,g,amo,n,n1,n2,lov)
 !!      call ficon(an31,r,n,n1,n2,dt,ddolg,vj,dtet,vi)
 !!      call boskli(an31,n,n1,n2)
 !! comment 30.07.18
@@ -52,7 +52,7 @@ c . . . Циклическая прогонка
       call bongl(an31,n,n1,n2)
 c . . . Старый вариант
 c      call boskli(an31,n,n1,n2)
-c      call barsos(an31,an6,rp,g,am1,n,n1,n2,lov)
+c      call barsos(an31,an6,rp,g,amo2,n,n1,n2,lov)
 c . . . явная схема переноса через полюс
 c       call tetcon(an31,r,n,n1,n2,dt,dtet,vi,vj,n4)
 c      call tetcon_a(an31,vi,r,n,n1,n2,dt,n4)
@@ -67,14 +67,14 @@ c     . . . прогонка
      *               q,ctd,r,rp,g,n1,n2,n,dt)
        call boskli(an11,n,n1,n2)
 c  . . .   Корректировка О2 с ',loov,' точки'
-       call barsos(an11,an6,rp,g,am1,n,n1,n2,loov)! loov)
+       call barsos(an11,an6,rp,g,amo2,n,n1,n2,loov)! loov)
 
 !       call ficon(an11,r,n,n1,n2,dt,ddolg,vj,dtet,vi)
 !       call boskli(an11,n,n1,n2)
 c       call tetcon(an11,r,n,n1,n2,dt,dtet,vi,vj,n4)
 c      call tetcon_a(an11,vi,r,n,n1,n2,dt,n4)
 c      call boskli(an11,n,n1,n2)
-c      call barsos(an11,an6,rp,g,am1,n,n1,n2,loov)
+c      call barsos(an11,an6,rp,g,amo2,n,n1,n2,loov)
 c      call bongl(an11,n,n1,n2)
 
 c . . . Циклическая прогонка
@@ -89,12 +89,12 @@ c          N2 con.
        key=0
 c      lkk=lk
        lkk=n-1
-       ot=am1/am2
-       ot1=am3/am2
+       ot=amo2/amn2
+       ot1=amo/amn2
        do 1 i=2,n11
         do 2 j=1,n2
          do 3 k=2,n-1
-          tot=(ro1(i,j,k))/am2
+          tot=(ro1(i,j,k))/amn2
           sum=ot*an11(i,j,k)+ot1*an31(i,j,k)
           an21(i,j,k)=tot-sum
 c         . . . Автоматическая проверка
@@ -115,7 +115,7 @@ c          prov=0.3*an31(i,j,k)
        if (key.eq.1)
      *     print *,' N2 subtract until',lkk, ' point',ii,jj
 c    *     print 100,an21(ii,jj,lkk),ii,jj,lkk
-      call barsos   (an21,an6,rp,g,am2,n,n1,n2,lkk)
+      call barsos   (an21,an6,rp,g,amn2,n,n1,n2,lkk)
 c     call nts(an21,n,n1,n2,n4)
       call boskli(an21,n,n1,n2)
   100 format(' ОТРИЦАТЕЛЬНАЯ [N2]=',e10.2,3i4)
