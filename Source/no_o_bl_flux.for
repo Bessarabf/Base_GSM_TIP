@@ -10,13 +10,13 @@ c - chep     8
 c - potno    9
 c - hori    10
 c - horj    11
-c - hotoprof
-c - hotoptof_c photoChem 
+ 
 c
       subroutine nonew(pgl,pgi,cHot,tHot,gkoor,ctd,rads,rp,g,
      *                 kpars,ins,nh,its,ids,del,uts,dt,mass)
-     
-        logical file_exist
+!!!!     
+        USE mo_bas_gsm
+!!!!
 	dimension pgl(kpars,nh,its,ids),pgi(ins,nh,its,ids),
      *          cHot(its,ids,nh),tHot(its,ids,nh),mass(*),
 
@@ -24,36 +24,20 @@ c
      
      	
 	allocatable qHot(:,:,:),cNd(:,:,:),cO2i(:),cNoi(:)
-     *          ,cN2i(:),cNe(:),cNo(:),cO2plus(:,:,:),cNOplus(:,:,:)
-        allocate (cO2plus(nh,its,ids),cNOplus(nh,its,ids))
-	
+     *           ,cN2i(:),cNe(:),cNo(:)
 	allocate (qHot(its,ids,nh),cNd(its,ids,nh),cO2i(nh),cNoi(nh)
      *           ,cN2i(nh),cNe(nh),cNo(nh))
 	           
       INCLUDE 'alpha.inc'
-      data amo2/ 53.12e-24/ 
-     *    ,bk/1.38e-16/
-      data pi, om /3.1415926, 7.2722e-5/
-      
-      file_exist=.false.
-      
+
       data key/0/
       cr=180.d0/pi
       bkg=bk/amo2/g(1)
-      if (mass(20).eq.2) INQUIRE(FILE="molion.dat", EXIST=file_exist)
-      if(file_exist) then
-         open(77,file='molion.dat',form='unformatted')
-         rewind(77)
-         read(77)cO2plus
-         read(77)cNOplus
-         close(77)
-      end if
       do i=1,its
        do j=1,ids 
  	   do k=1,nh
-            tHot(i,j,k)=pgl(19,k,i,j)
-           ! tHot(i,j,k)=pgl(7,k,i,j) !thot=tn
-		  cHot(i,j,k)=pgl(18,k,i,j)
+            cO2i(i,j,k)=pgl(18,k,i,j)
+            cNOi(i,j,k)=pgl(19,k,i,j)
             cNd(i,j,k)=pgl(17,k,i,j)
 
 	   end do
@@ -76,14 +60,11 @@ c      . . . calculation of cos(hi)
 	  cNe(16)=0.5*(cNe(15)+cNe(17))
 !!!!!!!!!!! photochem approx
 	  call conn2i (cN2i,cNe,pgl,kpars,nh,its,ids,i,j)
-        if ((mass(20).eq.2).and.(file_exist)) then
-           cO2i(1:nh)=cO2plus(1:nh,i,j) 
-           cNoi(1:nh)=cNOplus(1:nh,i,j)
-        else !!! photochem approx
+        if ((mass(20).ne.2)) then
+           !!! photochem approx
            call cono2i (cO2i,cNo,cNe,pgl,kpars,nh,its,ids,i,j)
-    !    call connoi (cNoi,cO2i,cN2i,pgl,kpars,nh,its,ids,i,j)
-	  call connoi (cNoi,cO2i,cN2i,cNe,pgl,rp,g,
-     *              kpars,nh,its,ids,i,j)
+           call connoi (cNoi,cO2i,cN2i,cNe,pgl,rp,g,
+     *                  kpars,nh,its,ids,i,j)
         end if
 
 46      format(1p4e8.1)
@@ -97,42 +78,10 @@ c      . . . calculation of cos(hi)
     	  call nprog(cNd,cNoi,cO2i,cNe
      *            ,pgl,ctd,rads,rp,g,kpars,nh,its,ids,i,j,hi,dt)
 	  	 	  
-!! potokovaya progonka 
-!!        call nnewp (cNd,cNo,cNoi,cO2i,cNe
-!     *             ,pgl,ctd,rads,rp,g,kpars,nh,its,ids,i,j,hi,dt)
-c       call nnew (cNd,cNo,cNoi,cO2i,cNe
-c    *             ,pgl,rads,g,kpars,nh,its,ids,i,j,hi,dt)
-cc
-c . . . NO profile - calculation	   0
-!        call noprof(cNd,cNo,cO2i
-!     *             ,pgl,ctd,rads,rp,g,kpars,nh,its,ids,i,j,hi,dt)
       ! progonka NO. Altitude part
 	   call noprog(cNd,cNo,cO2i
      *             ,pgl,ctd,rads,rp,g,kpars,nh,its,ids,i,j,hi,dt)
 	  
-      ! . . . HOT O profile
-      ! progonka
-	  
-	  call hotprog(cHot,tHot,cNd,qHot,cNOi,cNe,pgl,pgi
-     *              ,ctd,rads,rp,g,ins,kpars,nh,its,ids,i,j,dt)
-   !!          
-! potokovaya progonka
-! 	  call hotprof(cHot,tHot,cNd,cNo,qHot,cNOi,cNe,pgl,pgi
-!     *             ,ctd,rads,rp,g,ins,kpars,nh,its,ids,i,j,hi,key,dt)
-!	  call hotprof_c(cHot,cNd,cNo,qHot,cNOi,cNe,pgl,pgi
-!     *             ,ctd,rads,rp,g,ins,kpars,nh,its,ids,i,j,hi,key,dt)
-c . . .  рабочая запись
- !        if(i.eq. 10.and.j.eq.3) then
- !         write(44,*) 'h   N2i  O2i  NOi  M+  Nd   cNe   cHot   Th   Qh'
- !         do k=1,nh
- !           write(44,'(f10.2,9(1pE10.2))')rads(k)*1.e-5,cN2i(k),co2i(k),
- !    *	            cNOi(k),pgl(6,k,i,j),cnd(i,j,k),cNe(k),cHot(i,j,k)
- !    *                ,tHot(i,j,k)!,cO1d(i,j,k)
- !    
- !         end do
- !        end if
-       end do
-	end do
       !  S-N poles smoothing for N2D
 	  call bongl(cNd,nh,its,ids)
 	  !  horisontal part for NO
@@ -140,57 +89,29 @@ c . . .  рабочая запись
 	  
         call pgl_ic(pgl,rads,kpars,nh,its,ids,dt,nh,4)
         call pgl_jc(pgl,rads,kpars,nh,its,ids,dt,nh,4) 
-	  call bospgl(pgl,kpars,nh,its,ids,4)
+	call bospgl(pgl,kpars,nh,its,ids,4)
       !  horisontal part for N(4s)
-	  call bospgl(pgl,kpars,nh,its,ids,5)
-	  call pgl_ic(pgl,rads,kpars,nh,its,ids,dt,nh,5)
+	call bospgl(pgl,kpars,nh,its,ids,5)
+	call pgl_ic(pgl,rads,kpars,nh,its,ids,dt,nh,5)
         call pgl_jc(pgl,rads,kpars,nh,its,ids,dt,nh,5)
-	  call bospgl(pgl,kpars,nh,its,ids,5)
+	call bospgl(pgl,kpars,nh,its,ids,5)
 c     . . .  horisontal circulation NO,N
 !      call hori(pgl,rads,kpars,nh,its,ids,4,dt)
 !      call horj(pgl,rads,kpars,nh,its,ids,4,dt)
 !      call hori(pgl,rads,kpars,nh,its,ids,5,dt)
 !      call horj(pgl,rads,kpars,nh,its,ids,5,dt)
-
-	!!!
-   
-      ! smoothing cHot on S-N pole
-	  call bongl(cHot,nh,its,ids)
-      ! horizontal part cHot 
-	
-	call thot_ic(cHot,pgl,rads,kpars,nh,its,ids,dt,nh)
-      call thot_jc(cHot,pgl,rads,kpars,nh,its,ids,dt,nh)
-	call bongl(cHot,nh,its,ids)
-
-	! THot calculation
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-      
-     	call thotO(pgl,pgi,cHot,tHot,
-     *           qHot,rads,kpars,ins,nh,its,ids,dt,mass)
-      ! polar point
- 	call bongl(tHot,nh,its,ids)        
-      call thot_ic(tHot,pgl,rads,kpars,nh,its,ids,dt,nh)
-      call thot_jc(tHot,pgl,rads,kpars,nh,its,ids,dt,nh)
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-! approximation thot=4000
-!      call thot4000(thot,nh,its,ids)
-! with conductivity
-      !    call thot_icl(tHot,cHot,pgl,rads,kpars,nh,its,ids,dt,nh)
-      !   call thot_jcl(tHot,cHot,pgl,rads,kpars,nh,its,ids,dt,nh)
-	call bongl(tHot,nh,its,ids)
  
 	DO K=1,NH
 	   DO I=1,ITS
 	    DO J=1,IDS
 	       PGL(17,K,I,J)=CND(I,J,K)
-             PGL(18,K,I,J)=cHot(I,J,K)
-             PGL(19,K,I,J)=tHot(I,J,K)
+               PGL(18,K,I,J)=cO2i(I,J,K)
+               PGL(19,K,I,J)=cNOi(I,J,K)
           END DO
 	   END DO
 	END DO
 	
-	deallocate (qHot,cNd,cO2i,cNoi,cN2i,cNe,cNo,cO2plus,cNOplus)
+	deallocate (qHot,cNd,cO2i,cNoi,cN2i,cNe,cNo)
 	return
       end
 
@@ -723,95 +644,7 @@ c          end if
 
 	return
 	end
-   !!!!!
-   !!!!!!!
-  !!!    hot O concentration photochemistry     
-                          
-	subroutine hotprof_c(cHot,cNd,cNo,qHot,cNOi,cNe,pgl,pgi
-     *               ,ctd,rads,rp,g,ins,kpars,nh,its,ids,i,j,hi,key,dt)
-     
-      dimension pgl(kpars,nh,its,ids),pgi(ins,nh,its,ids),
-     *          cHot(its,ids,nh),qHot(its,ids,nh),cNd(its,ids,nh)
-     *         ,cNOi(nh),cNe(nh),rads(nh),rp(nh),g(nh),ctd(nh),cNo(nh)
-      allocatable r(:),cmd(:),
-     *          cNv(:) ! N2v
-      INCLUDE 'alpha.inc'	 
-      data amo2,amn2,amo,amno/ 53.12e-24,46.51e-24,26.56e-24,49.82e-24/
-     *    ,bk/1.38e-16/
-	data ea1,      ea2,     eNv
-     *   /0.18,     1.28,    0.19/,
-     *     e7,       e9 ,     e12
-     *   /2.45,     1.11,    3.58/ ,
-     *     e17,       e19
-     *   /0.68,      1.03/
-
-      data re/6.371e+8/,erg/1.6e-12/
-      
-	allocate (r(nh),cmd(nh),
-     *          cNv(nh)) ! N2v
-
-    	do  k=1,nh
-! p - lost and...
-         u=2.6e-09*pgl(3,k,i,j)*sqrt(0.79/8.) ! for Oh - O
-!       	   
-!     for Oh - O+  Namgaladze 
-  	 Gam=pgi(6,k,i,j)+pgl(7,k,i,j)
-!!	 p=u+4.8e-13*sqrt(Gam)*pgi(1,k,i,j)*(10.6-0.67*alog10(Gam))**2
-!                  Stubbe
-         p=u+1.86e-9*pgi(1,k,i,j)*(Gam/2000.)**0.37
-! . . . q - sourse O2 - Nd
-         w=alyam7*pgl(1,k,i,j)
-	   qHot(i,j,k)=w*e7 !heat energy in ev
-! . . .  NO - Nd
-	   tmp=alyam12*cNo(k)
-         w=w+tmp
-         qHot(i,j,k)=qHot(i,j,k)+tmp*e12 !heat energy in eV
-! . . .  O - Nd
-         tmp=alyam9*pgl(3,k,i,j)
-         w=w+tmp
-         qHot(i,j,k)=qHot(i,j,k)+tmp*e9
-! . . . 
-         tmp=alyam17*pgi(1,k,i,j)
-         w=w+tmp
-         qHot(i,j,k)=qHot(i,j,k)+tmp*e17
-! . . . 
-	   w=w*cNd(i,j,k)
-         qHot(i,j,k)=qHot(i,j,k)*cNd(i,j,k)
-	!!! O2 - O+
-         tmp=2.1e-11*pgl(1,k,i,j)*pgi(1,k,i,j)
-	   w=w+tmp
-         qHot(i,j,k)=qHot(i,j,k)+tmp*e19
-        !!! NO+ - e
-         otn=exp(300/pgl(9,k,i,j))
-	   tmp=alfa1*otn*cNOi(k)*cNe(k)
-         w=w+tmp 
-         qHot(i,j,k)=qHot(i,j,k)+tmp*(r1*ea1+(1-r1)*ea2)
-      !!! N2v
-	    !!! N2v
-	    Tv=pgl(9,k,i,j)*1.1	  !tv=1.2*te
-	    pok=3353.0/Tv
-	   ! if (pok.gt.60.) pok=60.  
-	    est=exp(-pok)
-          cNv(k)= pgl(2,k,i,j)*(1.0-est)*est
-	    pok1=69.9/pgl(7,k,i,j)**0.333
-	    tmp=cNv(k)*pgl(3,k,i,j)*1.07e-10*exp(-pok1)
-          q=w+tmp
-          qHot(i,j,k)=(qHot(i,j,k)+tmp*eNv)*erg ! energi in erg
-
-! . . .        
-! . . . photochem
-	   if(key.eq.0) then
-           cHot(i,j,k)=q/p
-         else
-          cHot(i,j,k)=(cHot(i,j,k)+q*dt)/(1.+p*dt)
-         end if
- !	equation
- 	end do
-
-      deallocate (r,cmd,cNv) ! N2v
-
-      return
-	end
+ 
 !!
 
       subroutine baromi(an,pgl,rp,g,am,kpars,nh,its,ids,i,j,l)

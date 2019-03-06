@@ -1,16 +1,16 @@
 !  ver 18.04.14 - add nv to interface
-!  Hot O influence
-      subroutine tube_OH(ne,nx,dt,ht,tt,co2,cn2,co,ch,che,tn,
+
+      subroutine tube(ne,nx,dt,ht,tt,co2,cn2,co,ch,che,tn,
      *                vnq,vnu,vnv,cim,cio,cih,cihe,vio,vih,vihe,ti,te,
      *                vdu,vdv,cio1,cih1,cihe1,ti1,te1,qo,qsm,vio1,vih1,
-     *                vihe1,dolm,qomt,qmax,iqo,mast,mass,cOhot,tOhot,nv)
+     *                vihe1,dolm,qomt,qmax,iqo,mast,mass,nv)
       
       dimension ht(nv),tt(nv),co2(nv),cn2(nv),co(nv),ch(nv),
      *          che(nv),tn(nv),vnq(nv),vnu(nv),vnv(nv),cim(nv),
      *          cio(nv),cih(nv),cihe(nv),vio(nv),vih(nv),
      *          vihe(nv),ti(nv),te(nv),vdu(nv),vdv(nv),cio1(nv),
      *          cih1(nv),cihe1(nv),ti1(nv),te1(nv),qo(nv),qsm(nv),
-     *          vio1(nv),vih1(nv),vihe1(nv),cOhot(nv),tOhot(nv),
+     *          vio1(nv),vih1(nv),vihe1(nv),
      *          mast(40),mass(30)
 
     
@@ -65,10 +65,10 @@ c     goto 25
 c
       if(ne.le.3)then
 	
-         call alga_OH(ne,nx,i1,i2,dt,ht,tt,co2,cn2,co,ch,che,tn,
+         call alga(ne,nx,i1,i2,dt,ht,tt,co2,cn2,co,ch,che,tn,
      *                vnq,vnu,vnv,cim,cio,cih,cihe,vio,vih,vihe,
      *                ti,te,vdu,vdv,cio1,cih1,cihe1,ti1,te1,qo,
-     *                qsm,al,ga,qomt,qmax,iqo,cOhot,tOhot,mass,nv)
+     *                qsm,al,ga,qomt,qmax,iqo,mass,nv)
 
      	   call lambet(ne,i1,i2,dt,ht,tt,co2,cn2,co,ch,che,tn,vnq,cim,
      *               cio,cih,cihe,vio,vih,vihe,ti,te,col,vdu,vdv,beta,
@@ -86,11 +86,11 @@ c
           tiit=ti(i1)
           teit=te(i1)
           do 32 i=1,itr
-            call algat_OH(ne,nx,i1,i1,i2,dt,ht,tt,co2,cn2,co,ch,
-     *                    che,tn,vnq,vnu,vnv,cim,cio,cih,cihe,
-     *                    vio,vih,vihe,tiit,teit,vdu,vdv,cio1,cih1,
-     *                    cihe1,ti1,te1,qo,qsm,alte,gate,qomt,qmax,
-     *                    iqo,cOhot,tOhot,mass,nv)
+            call algat(ne,nx,i1,i1,i2,dt,ht,tt,co2,cn2,co,ch,
+     *                 che,tn,vnq,vnu,vnv,cim,cio,cih,cihe,
+     *                 vio,vih,vihe,tiit,teit,vdu,vdv,cio1,cih1,
+     *                 cihe1,ti1,te1,qo,qsm,alte,gate,qomt,qmax,
+     *                 iqo,mass,nv)
             if(ne.eq.4)then
               teit1=teit
               tiit1=tiit*(1.+dte)
@@ -99,11 +99,11 @@ c
               teit1=teit*(1.+dte)
             end if
 		   
-            call algat_OH(ne,nx,i1,i1,i2,dt,ht,tt,co2,cn2,co,ch,
-     *                    che,tn,vnq,vnu,vnv,cim,cio,cih,cihe,
-     *                    vio,vih,vihe,tiit1,teit1,vdu,vdv,cio1,cih1,
-     *                    cihe1,ti1,te1,qo,qsm,altep,gatep,qomt,qmax,
-     *                    iqo,cOhot,tOhot,mass,nv)
+            call algat(ne,nx,i1,i1,i2,dt,ht,tt,co2,cn2,co,ch,
+     *                 che,tn,vnq,vnu,vnv,cim,cio,cih,cihe,
+     *                 vio,vih,vihe,tiit1,teit1,vdu,vdv,cio1,cih1,
+     *                 cihe1,ti1,te1,qo,qsm,altep,gatep,qomt,qmax,
+     *                 iqo,mass,nv)
             if(ne.eq.4)then
               teit2=teit
               tiit2=tiit*(1.-dte)
@@ -112,12 +112,12 @@ c
               teit2=teit*(1.-dte)
             end if
 		 
-            call algat_OH(ne,nx,i1,i1,i2,dt,ht,tt,co2,cn2,co,ch,
+            call algat(ne,nx,i1,i1,i2,dt,ht,tt,co2,cn2,co,ch,
      *                    che,tn,vnq,vnu,vnv,
      *                    cim,cio,cih,cihe,vio,vih,vihe,tiit2,
      *                    teit2,vdu,vdv,cio1,cih1,
      *                    cihe1,ti1,te1,qo,qsm,altem,gatem,qomt,qmax,
-     *                    iqo,cOhot,tOhot,mass,nv)
+     *                    iqo,mass,nv)
             if(ne.eq.4)then
               dfte=(gatep/altep-gatem/altem)/(tiit*2.*dte)
               tiit=(gate/alte-tiit*dfte)/(1.-dfte)
@@ -129,11 +129,11 @@ c
             end if
    32     continue
          	
-          call algat_OH(ne,nx,i1,i1,i2,dt,ht,tt,co2,cn2,co,ch,
-     *                  che,tn,vnq,vnu,vnv,cim,cio,cih,cihe,
-     *                  vio,vih,vihe,tiit,teit,vdu,vdv,cio1,cih1,
-     *                  cihe1,ti1,te1,qo,qsm,alte,gate,qomt,qmax,
-     *                  iqo,cOhot,tOhot,mass,nv)
+          call algat(ne,nx,i1,i1,i2,dt,ht,tt,co2,cn2,co,ch,
+     *               che,tn,vnq,vnu,vnv,cim,cio,cih,cihe,
+     *               vio,vih,vihe,tiit,teit,vdu,vdv,cio1,cih1,
+     *               cihe1,ti1,te1,qo,qsm,alte,gate,qomt,qmax,
+     *               iqo,mass,nv)
           al(i1)=alte
           ga(i1)=gate
           if(ne.eq.4)then
@@ -186,12 +186,12 @@ c       if(ne.eq.5)te(i1)=tn(i1)*5.
           teit=te(i2)
           do 34 i=1,itr
 	     
-            call algat_OH(ne,nx,i2,i1,i2,dt,ht,tt,co2,cn2,co,ch,
-     *                    che,tn,vnq,vnu,vnv,
-     *                    cim,cio,cih,cihe,vio,vih,vihe,
-     *                    tiit,teit,vdu,vdv,cio1,cih1,
-     *                    cihe1,ti1,te1,qo,qsm,alte,gate,qomt,qmax,
-     *                    iqo,cOhot,tOhot,mass,nv)
+            call algat(ne,nx,i2,i1,i2,dt,ht,tt,co2,cn2,co,ch,
+     *                 che,tn,vnq,vnu,vnv,
+     *                 cim,cio,cih,cihe,vio,vih,vihe,
+     *                 tiit,teit,vdu,vdv,cio1,cih1,
+     *                 cihe1,ti1,te1,qo,qsm,alte,gate,qomt,qmax,
+     *                 iqo,mass,nv)
             if(ne.eq.4)then
               teit1=teit
               tiit1=tiit*(1.+dte)
@@ -200,12 +200,12 @@ c       if(ne.eq.5)te(i1)=tn(i1)*5.
               teit1=teit*(1.+dte)
             end if
              
-		  call algat_OH(ne,nx,i2,i1,i2,dt,ht,tt,co2,cn2,co,ch,
+		  call algat(ne,nx,i2,i1,i2,dt,ht,tt,co2,cn2,co,ch,
      *                    che,tn,vnq,vnu,vnv,
      *                    cim,cio,cih,cihe,vio,vih,vihe,tiit1,
      *                    teit1,vdu,vdv,cio1,cih1,
      *                    cihe1,ti1,te1,qo,qsm,altep,gatep,
-     *                    qomt,qmax,iqo,cOhot,tOhot,mass,nv)
+     *                    qomt,qmax,iqo,mass,nv)
             if(ne.eq.4)then
               teit2=teit
               tiit2=tiit*(1.-dte)
@@ -213,12 +213,12 @@ c       if(ne.eq.5)te(i1)=tn(i1)*5.
               tiit2=tiit
               teit2=teit*(1.-dte)
             end if
-	      call algat_OH(ne,nx,i2,i1,i2,dt,ht,tt,co2,cn2,co,ch,
+	      call algat(ne,nx,i2,i1,i2,dt,ht,tt,co2,cn2,co,ch,
      *                    che,tn,vnq,vnu,vnv,
      *                    cim,cio,cih,cihe,vio,vih,vihe,tiit2,
      *                    teit2,vdu,vdv,cio1,cih1,
      *                    cihe1,ti1,te1,qo,qsm,altem,gatem,
-     *                    qomt,qmax,iqo,cOhot,tOhot,mass,nv)
+     *                    qomt,qmax,iqo,mass,nv)
             if(ne.eq.4)then
               dfte=(gatep/altep-gatem/altem)/(tiit*2.*dte)
               tiit=(gate/alte-tiit*dfte)/(1.-dfte)
@@ -229,12 +229,12 @@ c       if(ne.eq.5)te(i1)=tn(i1)*5.
               if(teit.lt.tn(i2))teit=tn(i2)
             end if
    34     continue
-          call algat_OH(ne,nx,i2,i1,i2,dt,ht,tt,co2,cn2,co,ch,
+          call algat(ne,nx,i2,i1,i2,dt,ht,tt,co2,cn2,co,ch,
      *                  che,tn,vnq,vnu,vnv,
      *                  cim,cio,cih,cihe,vio,vih,vihe,tiit,teit,
      *                  vdu,vdv,cio1,cih1,
      *                  cihe1,ti1,te1,qo,qsm,alte,gate,
-     *                  qomt,qmax,iqo,cOhot,tOhot,mass,nv)
+     *                  qomt,qmax,iqo,mass,nv)
           
 		al(i2)=alte
           ga(i2)=gate
@@ -310,15 +310,15 @@ c         te(i2)=tn(i2)*5.
         else
           itr=mast(12)
         end if
-        do40i=1,itr
+        do 40 i=1,itr
           bet(i1)=0.
           gamm(i1)=delu(i1)
 	
-          call alga_OH(ne,nx,i1,i2,dt,ht,tt,co2,cn2,co,ch,che,tn,
+          call alga(ne,nx,i1,i2,dt,ht,tt,co2,cn2,co,ch,che,tn,
      *             vnq,vnu,vnv,cim,cio,cih,cihe,vio,vih,vihe,
      *             ti,te,vdu,vdv,cio1,cih1,
      *             cihe1,ti1,te1,qo,qsm,al,ga,qomt,qmax,
-     *             iqo,cOhot,tOhot,mass,nv)
+     *             iqo,mass,nv)
 	  
           call lambet(ne,i1,i2,dt,ht,tt,co2,cn2,co,ch,che,tn,vnq,cim,
      *            cio,cih,cihe,vio,vih,vihe,ti,te,col,vdu,vdv,beta,lam,
@@ -334,11 +334,11 @@ c         te(i2)=tn(i2)*5.
               tempe(j)=te(j)*(1.+dte)
             end if
           end do
-      call alga_OH(ne,nx,i1,i2,dt,ht,tt,co2,cn2,co,ch,che,tn,
+      call alga(ne,nx,i1,i2,dt,ht,tt,co2,cn2,co,ch,che,tn,
      *             vnq,vnu,vnv,cim,cio,cih,cihe,vio,vih,vihe,
      *             tempi,tempe,vdu,vdv,cio1,cih1,
      *             cihe1,ti1,te1,qo,qsm,alp,gap,qomt,qmax,iqo,
-     *             cOhot,tOhot,mass,nv)
+     *             mass,nv)
 
 	     
 
@@ -356,11 +356,11 @@ c         te(i2)=tn(i2)*5.
               tempe(j)=te(j)*(1.-dte)
             end if
    43     continue
-      call alga_OH(ne,nx,i1,i2,dt,ht,tt,co2,cn2,co,ch,che,tn,
+      call alga(ne,nx,i1,i2,dt,ht,tt,co2,cn2,co,ch,che,tn,
      *             vnq,vnu,vnv,cim,cio,cih,cihe,vio,vih,vihe,
      *             tempi,tempe,vdu,vdv,cio1,cih1,cihe1,
      *             ti1,te1,qo,qsm,alm,gam,qomt,qmax,iqo,
-     *             cOhot,tOhot,mass,nv)
+     *             mass,nv)
 
 	call lambet(ne,i1,i2,dt,ht,tt,co2,cn2,co,ch,che,tn,vnq,cim,
      *     cio,cih,cihe,vio,vih,vihe,tempi,tempe,col,vdu,vdv,betam,

@@ -1,9 +1,10 @@
-c   terpot_HAM - integrate with HAMMONIA 
-c   ver.    18.05.18 Ion Drag sent to HAMMONIA 
-c   ver.    10.05.18 Joul heating sent to HAMMONIA
-c   ver.    08.04.14 allocatable massives
+c   terpot_bas - bas variant GSM TIP 2018-2019
+
+c   ver.    
+c   ver.    
+c   ver.    
 c   version 25.05.12 add to intrface KPA & NT for massive pril
-c           20.11.17 integate with HAMMONIA
+
 c - terpot
 c - lowgln
 c - gstrf0
@@ -28,11 +29,6 @@ c - sumro
      *       ap,pkp,dst,ae,al,au,bmpz,bmpy,mass,delta,pgl,pgi,ids,ins
      *      ,isp,vir,vid,vim,verno,parj,potef,ntr,nl2,pril,KPA,NT)
 !    
-!     module with mass GSM to HAM & HAM to GSM 
-
-
-!	  use ieee_arithmetic
-!	  Parameter(nh0=30,its0=37,ids0=72) !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       integer day,god,dayt,godt,verno
       dimension
      *   sole(nse),solu(nsu),solet(nse),parj(nh,its,ids)
@@ -96,11 +92,7 @@ ccc     *           gkoor,rads,delta,kpars,nh,its,ids,nsu,uts)
          print*, 'GSMTIP: termos-recommended Stau=',Stau,Vmax,dLong
       end if
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-      if(mass(21).le.1) then
          call timol(pgl,kpars,nh,its,ids,dts,vim,vir,vid)
-      else ! HOT O
-         call timol_OH(pgl,pgi,kpars,ins,nh,its,ids,dts,vim,vir,vid)
-      end if
 c
       call nachc(an1,an2,an3,an6,vi,vj,an11,an21,an31,an61
      *          ,vi1,vj1,nh,its,ids)

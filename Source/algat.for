@@ -1,20 +1,17 @@
-      subroutine algat_OH(ne,nx,m,i1,i2,dt,ht,tt,co2,cn2,co,ch,che,tn,
+      subroutine algat(ne,nx,m,i1,i2,dt,ht,tt,co2,cn2,co,ch,che,tn,
      *                    vnq,vnu,vnv,cim,cio,cih,cihe,vio,vih,vihe,
      *                    ti,te,vdu,vdv,cio1,cih1,cihe1,ti1,te1,qo,qsm,
-     *                    al,ga,qomt,qmax,iqo,cOhot,tOhot,mass,NV)
+     *                    al,ga,qomt,qmax,iqo,mass,NV)
 
       dimension ht(NV),tt(NV),co2(NV),cn2(NV),co(NV),ch(NV),
      *          che(NV),tn(NV),vnq(NV),vnu(NV),vnv(NV),cim(NV),
      *          cio(NV),cih(NV),cihe(NV),vio(NV),vih(NV),vihe(NV),
      *          vdu(NV),vdv(NV),cio1(NV),cih1(NV),cihe1(NV),
      *          ti1(NV),te1(NV),qo(NV),qsm(NV),
-     *          cOhot(NV),tOhot(NV),mass(30)
+     *          mass(30)
 !	* ,al(NV),ga(NV)
       real la1,la2,la3,la4,n2,lamh,lamo,mi,la5,la6
       data la5/1.e-9/,la6/1.4e-9/,e0/10./
-	!
-	ptOhot=0. ! Ohot heating
-	!
 
       eht=1./dt
       alt=ht(m)
@@ -74,9 +71,6 @@
       vihem=vihe(mm)
       if(ne.eq.5)goto15
         ptn=pitn(alt,o2,n2,o,h,he,ten,oi,hi,hei,tei)
-	  if(mass(21).eq.2)
-     *     ptOhot=pitOhot(alt,o2,n2,cOhot(m),h,he,tOhot(m),
-     *            oi,hi,hei,tei)
         pqj=piqj(alt,o2,n2,o,h,he,ten,vqn,vun,vvn,
      *  oi,hi,hei,voi,vhi,vhei,tei,vud,vvd)
         ces=1./ces
@@ -85,10 +79,10 @@
         rah=hi*(vihp*bmp-vihm*bmm)*dst
         rahe=hei*(vihep*bmp-vihem*bmm)*dst
         ra=6.67e-1*bm*(rao+rah+rahe)
-        g=(ptn*ten+ptOhot*tOhot(m)+pqj+b*tee)*ces+ti1(m)*eht
+        g=(ptn*ten+pqj+b*tee)*ces+ti1(m)*eht
         if(ra.lt.0.)g=g-ti1(m)*ra*ces
         if(dvt.lt.0.)g=g-ti1(m)*dvt
-        a=(ptn+ptOhot+b)*ces+eht
+        a=(ptn+b)*ces+eht
         if(ra.ge.0.)a=a+ra*ces
         if(dvt.ge.0.)a=a+dvt
         ga=g

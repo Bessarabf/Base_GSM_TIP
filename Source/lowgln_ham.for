@@ -89,8 +89,13 @@ c  12       alt=rads(1)/1.e5
             do i =  1,its
               do  j = 1,ids 
                 pgl(7,1,i,j)=gsmHAM(1,i,j)
-                pgl(1,1,i,j)=0.2*dgsmHAM(1,i,j)/am1
-                pgl(2,1,i,j)=0.8*dgsmHAM(1,i,j)/am2
+
+! sum concentration
+                aNall=dgsmHAM(1,i,j)/(0.21*am1+0.79*am2)
+!
+                pgl(1,1,i,j)=0.21*aNall   !!! 05.03.19
+                pgl(2,1,i,j)=0.79*aNall
+
 !!!!!!!!!!!!!!!!!!!!!! !!!!!!!!!!!!!!!!!!
                 pgl(3,1,i,j)=dOgsm(1,i,j)
                 

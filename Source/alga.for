@@ -1,23 +1,22 @@
 c     ver 18.04.14 add nv to interface
-      subroutine alga_OH(ne,nx,i1,i2,dt,ht,tt,co2,cn2,co,ch,che,tn,
-     *                   vnq,vnu,vnv,cim,cio,cih,cihe,vio,vih,vihe,
-     *                   ti,te,vdu,vdv,cio1,cih1,cihe1,ti1,te1,qo,qsm,
-     *				   al,ga,qomt,qmax,iqo,cOhot,tOhot,mass,NV)
+      subroutine alga(ne,nx,i1,i2,dt,ht,tt,co2,cn2,co,ch,che,tn,
+     *                vnq,vnu,vnv,cim,cio,cih,cihe,vio,vih,vihe,
+     *                ti,te,vdu,vdv,cio1,cih1,cihe1,ti1,te1,qo,qsm,
+     *		      al,ga,qomt,qmax,iqo,mass,NV)
 
       dimension ht(NV),tt(NV),co2(NV),cn2(NV),co(NV),ch(NV),
      *          che(NV),tn(NV),vnq(NV),vnu(NV),vnv(NV),cim(NV),
      *          cio(NV),cih(NV),cihe(NV),vio(NV),vih(NV),vihe(NV),
      *          ti(NV),te(NV),vdu(NV),vdv(NV),
      *          cio1(NV),cih1(NV),cihe1(NV),ti1(NV),te1(NV),
-     *          qo(NV),al(NV),ga(NV),qsm(NV),cOhot(NV),tOhot(NV)
+     *          qo(NV),al(NV),ga(NV),qsm(NV),
      *          ,mass(30)
       dimension hs(23),hn(23),yos(23),yon(23),tns(23),tnn(23),tes(23),
      *          tenor(23),cnes(23),cnen(23),alfa(23),tvn(23),tvs(23)
       real la1,la2,la3,la4,n2,lamh,lamo,mi,la5,la6
       data la5/1.e-9/,la6/1.4e-9/,e0/10./,qt0/2.0e14/
 	!
-	ptOhot=0. ! Ohot Heating
-	!
+
 
       if(nx.ge.45) then
         do m=1,23        !!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -82,8 +81,8 @@ c           end if
 c
 c поток фотоэлектронов на 70 град широты увеличен в 6 раз
 c           if(nx.eq.127)qt=qt*4.
-ccc         if(nx.eq.127)qt=qt*6.
-ccc         if(nx.eq.127)qt=qt*8.
+c!!         if(nx.eq.127)qt=qt*6.
+c!!         if(nx.eq.127)qt=qt*8.
 c
 c
 c поток фотоэлектронов с 65 град широты увеличен в 4 раза
@@ -258,9 +257,7 @@ c     dvt=2/3*dv,
 c     ces=n(o+)+n(h+)+n(he+),
 c     ce=ces+n(m+)
             ptn=pitn(alt,o2,n2,o,h,he,ten,oi,hi,hei,tei)
-		  if(mass(21).eq.2)
-     *		 ptOhot=pitOhot(alt,o2,n2,cOhot(m),h,he,tOhot(m),
-     *         oi,hi,hei,tei)
+
             pqj=piqj(alt,o2,n2,o,h,he,ten,vqn,vun,vvn,
      *      oi,hi,hei,voi,vhi,vhei,tei,vud,vvd)
 c           pqj=0.
@@ -271,11 +268,11 @@ c           pqj=0.
             rahe=hei*(vihep*bmp-vihem*bmm)*dst
             ra=6.67e-1*bm*(rao+rah+rahe)
 c           ra=0.
-            g=(ptn*ten+ptOhot*tOhot(m)+pqj+b*tee)*ces+ti1(m)*eht
+            g=(ptn*ten+pqj+b*tee)*ces+ti1(m)*eht
             if(ra.lt.0.)g=g-ti1(m)*ra*ces
             if(dvt.lt.0.)g=g-ti1(m)*dvt
 c           a=(ptn+ra+b)*ces+eht
-            a=(ptn+ptOhot+b)*ces+eht
+            a=(ptn+b)*ces+eht
             if(ra.ge.0.)a=a+ra*ces
             if(dvt.ge.0.)a=a+dvt
             ga(m)=g
