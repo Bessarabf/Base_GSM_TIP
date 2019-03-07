@@ -28,7 +28,9 @@ c - sumro
      *       solu,nsu,nse,kpars,rads,nh,gkoor,its,ddolgs,dtets,fa,fs,
      *       ap,pkp,dst,ae,al,au,bmpz,bmpy,mass,delta,pgl,pgi,ids,ins
      *      ,isp,vir,vid,vim,verno,parj,potef,ntr,nl2,pril,KPA,NT)
-!    
+!   constants of GSM TIP   
+      USE mo_bas_gsm
+!   !!!!!!!!!!!!!!!!!!!!
       integer day,god,dayt,godt,verno
       dimension
      *   sole(nse),solu(nsu),solet(nse),parj(nh,its,ids)
@@ -54,9 +56,7 @@ c - sumro
      *   ,cHot(its,ids,nh),tHot(its,ids,nh)
      *   ,ros0(ITS,IDS,NH),ros(ITS,IDS,NH),ron(ITS,IDS,NH))
 
-      data pi,om/3.1415926,7.27e-5/,! bk/1.38e-16/,
-     *     g0,re/981.,6.371e8/
-     *    ,key/1/
+      data key/1/
 
       n4=nh
 
@@ -73,7 +73,7 @@ c
 ccc   	call r_dis(qdis,pgl,solu,
 ccc     *           gkoor,rads,delta,kpars,nh,its,ids,nsu,uts)
        
-       call lowgln_ham(pgl,rads,kpars,nh,its,ids,day
+       call lowgln_bas(pgl,rads,kpars,nh,its,ids,day
      *         ,ap,fa,fs,gkoor,dtets,ddolgs,uts,mass(18),pril,KPA,NT)
 
        call pgl3d(pgl,kpars,nh,its,ids,an1,an2,an3,an6,vr,vi,vj)
@@ -138,7 +138,7 @@ c     . . . Температура рассчитывается
       if(mass(4).ne.0) then
          call co2con(anco2,an1,an2,an3,an6,ctd,
      *               rads,rp,g,nh,its,ids)
-         call heatpo_ham(pgl,pgi,parj,solet,solu,nsu,nse,
+         call heatpo_bas(pgl,pgi,parj,solet,solu,nsu,nse,
      *               kpars,rads,g,nh,gkoor,its,ddolgs,dtets,
      *               mass,delta,day,uts,tau,dts,ctd,vim,vid,
      *               vir,ids,ins,an1,an2,an3,anco2,an6,an61,ros,
@@ -650,34 +650,30 @@ c
 c   cn4,cn2,cn1,dh,tn - мaccивы концентраций O,O2,N2,H и тeмпepaтyp
 c    в yзлax на высотах rads в точке fig,dolg в момент td,uttau
       dimension rads(nh),cn1(nh),cn2(nh),cn4(nh),tn(nh)
-      dimension d(8),t(2),apm(7)
-      
-     do 3 i=1,7
-       apm(i)=ap
- 3   continue
-!      apm(1)=11.
-!      apm(2)=2.
-!      apm(3)=4.
-!      apm(4)=6.
-!      apm(5)=12.
-!      apm(6)=13.
-!      apm(7)=44.
+      dimension t(2),apm(7),d(9) ! MSIS2000
+!     dimension d(8)             ! MSIS86
+      do 3 i=1,7
+       apm(i)=ap   ! ap-index
+ 3    continue
+
       alat=fig*1.7453292e-2
       alon=dolg*1.7453292e-2
       iyd=80*1000+td
-      do 2 ih=1,nh
-!       MSIS-86
-!        call gtd6(iyd,utsec,rads(ih)/1.e5,fig,dolg,tlttau,fs,fa,apm
-!     *      ,48,d,t)
-!       MSIS 2000
-        call gtd7(iyd,utsec,rads(ih)/1.e5,fig,dolg,tlttau,fs,fa,apm
-     *      ,48,d,t)
      
+      do 2 ih=1,nh
+!           MSIS-86
+!            call gtd6(iyd,utsec,rads(ih)/1.e5,fig,dolg,tlttau,fs,fa,apm
+!     *      ,48,d,t)
+!           MSIS 2000
+            call gtd7(iyd,utsec,rads(ih)/1.e5,fig,dolg,tlttau,fs,fa,apm
+     *      ,48,d,t)
+         
          tn(ih)=t(2)
          cn1(ih)=d(3)
          cn2(ih)=d(4)
          cn4(ih)=d(2)
  2    continue
+
       return
       end
 

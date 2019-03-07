@@ -9,7 +9,7 @@ c     ver 18.04.14 add nv to interface
      *          cio(NV),cih(NV),cihe(NV),vio(NV),vih(NV),vihe(NV),
      *          ti(NV),te(NV),vdu(NV),vdv(NV),
      *          cio1(NV),cih1(NV),cihe1(NV),ti1(NV),te1(NV),
-     *          qo(NV),al(NV),ga(NV),qsm(NV),
+     *          qo(NV),al(NV),ga(NV),qsm(NV)
      *          ,mass(30)
       dimension hs(23),hn(23),yos(23),yon(23),tns(23),tnn(23),tes(23),
      *          tenor(23),cnes(23),cnen(23),alfa(23),tvn(23),tvs(23)

@@ -1,7 +1,7 @@
 C
 c    12.12.18 Base vaiant GSM TIP based on EAGLE 
 C
-      USE mo_ham_gsm
+!      USE mo_ham_gsm
 
 ! объ€вление статических массивов
 ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -142,7 +142,7 @@ c     . . . Creating global initial distribution of the parameters:
 
 !     . . .  Calculation cycle
       
-      call cyclt_ham(god,day,ut0,utk,dtt,dts,tau,b,c,sole,solu,
+      call cyclt_bas(god,day,ut0,utk,dtt,dts,tau,b,c,sole,solu,
      *        bmpz,bmpy,bmod,vsol,csol,solen,solet,fa0,fs,ap0,pkp0,
      *        dst0,ae0,al0,au0,nh,ddolgs,dtets,ddolgt,ntsl,nl,nl2,q,u,
      *        dtett,int,ins,rads,ntr,gkoor,kpart,kpars,nadrt,

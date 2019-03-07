@@ -120,7 +120,7 @@ c . . .
      *               csol,vsol,fa0,pkp0,ap0,ae0,dst0,al0,au0,
      *               fa,pkp,ap,ae,dst,al,au,solen,nsu,nse,ps,
      *               AEj2)
-          call cyclt1_HAM(god,day,ut0,ut1,dtt,dts,tau,solen,sole,solu,
+          call cyclt1_bas(god,day,ut0,ut1,dtt,dts,tau,solen,sole,solu,
      *              solet,bmpz,bmpy,bmod,vsol,csol,ntr,gkoor,ps,gins,
      *              fa,fs,ap,pkp,dst,ae,al,au,rads,ni,nv,vdr,nh,
      *              ddolgs,dtets,ddolgt,ntsl,nl,idt,ids,its,q,u,
@@ -157,7 +157,7 @@ c . . .
      *             csol,vsol,fa0,pkp0,ap0,ae0,dst0,al0,au0,
      *               fa,pkp,ap,ae,dst,al,au,solen,nsu,nse,ps,
      *               AEj2)
-        call cyclt1_HAM(god,day,ut0,ut1,dtt,dts,tau,solen,sole,solu,
+        call cyclt1_bas(god,day,ut0,ut1,dtt,dts,tau,solen,sole,solu,
      *              solet,bmpz,bmpy,bmod,vsol,csol,ntr,gkoor,ps,gins,
      *              fa,fs,ap,pkp,dst,ae,al,au,rads,ni,nv,vdr,nh,
      *              ddolgs,dtets,ddolgt,ntsl,nl,idt,ids,its,q,u,

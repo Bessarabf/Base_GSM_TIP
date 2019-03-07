@@ -2,8 +2,10 @@
      *                 fs,fa,ap,uts,day)
 c     . . . расчет атомарного водорода по MSIS до 520 км
       integer day
-      dimension pgl(kpars,nh,its,ids),dm(8),tm(2),gkoor(2,its,ids)
+      dimension pgl(kpars,nh,its,ids),tm(2),gkoor(2,its,ids)
      *         ,apm(7),rads(nh)
+!      dimension dm(8) ! MSIS 90
+      dimension dm(9)  ! MSIS 2000
       data om/7.27e-5/,pi/3.14159/
       iyd=80*1000+day
 c     vys=rads(nh)/1.e5
@@ -27,7 +29,8 @@ c     write(*,*) fs,fa,ap
            if(tau2.gt.86400.) tau2=tau2-86400.
            do k=15,nh
              vys=rads(k)*1.e-5
-             call gtd6(iyd,tau2,vys,fig,dol,tault,fs,fa,apm,
+             ! MSIS2000
+             call gtd7(iyd,tau2,vys,fig,dol,tault,fs,fa,apm,
      *                  1,dm,tm)
              pgl(5,k,i,j)=dm(7)
            end do

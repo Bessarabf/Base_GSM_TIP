@@ -9,7 +9,7 @@ C - COLD
 C - DJOULP
 C - FREAC
 C - E
-C - TNPOT_h - нагрев горячим кислородом
+
 c    . . . cicle_prog alog i и j
       subroutine heatpo_bas(pgl,pgi,parj,solet,solu,nsu,nse,
      *           kpars,rads,g,nh,gkoor,its,ddolg,dtet,
@@ -58,17 +58,11 @@ c         print*,' Значения Tn на в.границе только при mass(10)=30'
 c         stop
 cc    end if
 !
-!    вариант с горяим кислородом и нагрев
-      if (mass(21).eq.2) then
-          call tnpot_h_ham(pgl,pgi,an1,an2,an3,an6,an61,vi,vj,vr,
-     *  	     anco2,ro,vim,vid,vir,rads,g,gkoor,ctd,solu,nsu,
-     *               kpars,ins,nh,its,ids,delta,uts,dts,mass)
-		print*,'hot O heating'
-      else
-          call tnpot_ham(pgl,pgi,an1,an2,an3,an6,an61,vi,vj,vr,
+!    
+      call tnpot_bas(pgl,pgi,an1,an2,an3,an6,an61,vi,vj,vr,
      *              anco2,ro,vim,vid,vir,rads,g,gkoor,ctd,solu,nsu,
      *              kpars,ins,nh,its,ids,delta,uts,dts,mass)
-      end if 
+      
 c  . . . циклическая прогонка вдоль  fi & tet
 C     call tn_jc(an61,vj,
 C    *     rads,nh,its,ids,dts,mass(10))
@@ -100,10 +94,10 @@ c     call tnalt(an61,nh,its,ids,mass(10))
       return
       end
 c
-      subroutine tnpot_ham(pgl,pgi,an1,an2,an3,an6,an61,vi,vj,vr,
+      subroutine tnpot_bas(pgl,pgi,an1,an2,an3,an6,an61,vi,vj,vr,
      *                 anco2,ro,vim,vid,vir,rads,g,gkoor,ctd,solu,nsu,
      *                 kpars,ins,nh,its,ids,dl,uts,dts,mass)
-      USE mo_ham_gsm, ONLY:qJGSM
+!      USE mo_ham_gsm, ONLY:qJGSM
       dimension pgl(kpars,nh,its,ids),an1(its,ids,nh),
      *          an2(its,ids,nh),an3(its,ids,nh),anco2(its,ids,nh),
      *          an6(its,ids,nh),an61(its,ids,nh),
@@ -141,7 +135,7 @@ c
      *            an1,an2,an3,an6,anco2,vr,vi,vj,vim,vid,vir)
         do 29 k=1,n0m
          rc=(2.5*(an1(i,j,k)+an2(i,j,k))+1.5*an3(i,j,k))*bk
-         qJGSM(i,j,k)=qdj(k)/rc
+ !        qJGSM(i,j,k)=qdj(k)/rc
          q(k)=q(k)+qdj(k)
    29   continue
 c
@@ -520,166 +514,3 @@ c
       return
       end
 c
-!     hot O heating. Only for Pgl(19... !!!
-      subroutine tnpot_h_ham(pgl,pgi,an1,an2,an3,an6,an61,vi,vj,vr,
-     *                 anco2,ro,vim,vid,vir,rads,g,gkoor,ctd,solu,nsu,
-     *                 kpars,ins,nh,its,ids,dl,uts,dts,mass)
-      USE mo_ham_gsm, ONLY: qjGSM
-      dimension pgl(kpars,nh,its,ids),an1(its,ids,nh),
-     *          an2(its,ids,nh),an3(its,ids,nh),anco2(its,ids,nh),
-     *          an6(its,ids,nh),an61(its,ids,nh),
-     *          vj(its,ids,nh),vi(its,ids,nh),
-     *          vr(its,ids,nh),rads(nh),mass(30)
-     *,         pgi(ins,nh,its,ids)
-     *,         solu(nsu),ctd(nh),g(nh)
-     *,         vim(nh,its,ids),vid(nh,its,ids),gkoor(2,its,ids)
-     *,         vir(nh,its,ids),alyam(3),ro(its,ids,nh)
-
-      allocatable pa(:),pb(:),q(:),qdj(:)
-      allocate (pa(NH+5),pb(NH+5),q(NH),qdj(NH))
-      data re/6.371e8/,pi/3.1415926/,bk/1.38e-16/,
-     *    am1,am2,am3/53.12e-24,46.51e-24,26.56e-24/
-     *,   om/7.272205e-5/
-      cr=pi/180.
-      klik=0
-      n0=mass(10)
-      n0m=n0-1
-      itsm1=its-1
-      itsm2=its-2
-      dteta=pi/itsm1
-      ddol=2.*pi/ids
-c
-c
-      do 1 i=2,itsm1
-       teta=dteta*(i-1)
-       sin t=sin(teta)
-       sin p=sin(teta+dteta)
-       sin m=sin(teta-dteta)
-       do 2 j=1,ids
-        an60=pgl(7,1,i,j)
-        call ijoulp(q,qdj,pgl,pgi,ctd,rads,g,an60,solu,
-     *            gkoor,kpars,ins,nh,its,ids,nsu,i,j,uts,dl,
-     *            an1,an2,an3,an6,anco2,vr,vi,vj,vim,vid,vir)
-        do 29 k=1,n0m
-         rc=(2.5*(an1(i,j,k)+an2(i,j,k))+1.5*an3(i,j,k))*bk
-         qJGSM(i,j,k)=qdj(k)/rc
-         q(k)=q(k)+qdj(k)
-   29   continue
-c
-      pa(2)=0.
-      pb(2)=an60
-      jm=j-1
-      jp=j+1
-      if(j.eq.1) jm=ids
-      if(j.eq.ids) jp=1
-      do 3 k=2,n0m
-c
-        do 20 k1=1,3
-         kv=k-2+k1
-          al=18.6*an6(i,j,kv)**0.84*an1(i,j,kv)
-          al=al+27.2*an6(i,j,kv)**0.8*an2(i,j,kv)
-          al=al+67.1*an6(i,j,kv)**0.71*an3(i,j,kv)
-          alyam(k1)=al/(an1(i,j,kv)+an2(i,j,kv)+
-     *              an3(i,j,kv))
-c         . . . eddy conductivity
-          rocp=(3.5*(an1(i,j,kv)+an2(i,j,kv))+2.5*
-     *               an3(i,j,kv))*bk
-          alyam(k1)=alyam(k1)+rocp*ctd(kv)
-c
-   20   continue
-c
-        anu=3.34e-6*an6(i,j,k)**0.71
-c        sum=(an1(i,j,k)+an2(i,j,k)+an3(i,j,k))*bk
-        sum1=(an1(i,j,k)+an2(i,j,k)+an3(i,j,k))
-        ams=(an1(i,j,k)*am1+an2(i,j,k)*am2 +
-     *       an3(i,j,k)*am3)/sum1
-        rc=(2.5*(an1(i,j,k)+an2(i,j,k))+1.5*an3(i,j,k))*bk
-        abs vr= abs(vr(i,j,k))
-        con1=vr(i,j,k)-abs vr
-        con2=vr(i,j,k)+abs vr
-c
-        drad=rads(k+1)-rads(k)
-        drad1=rads(k)-rads(k-1)
-c
-        rk=rads(k)+re
-c
-        a=((alyam(3)+alyam(2))/drad-rc*con1)/(rads(k+1)-
-     *     rads(k-1))
-        c=((alyam(2)+alyam(1))/drad1+rc*con2)/(rads(k+1)-
-     *     rads(k-1))
-        b=a+c+rc/dts
-c
-        davl0=(vr(i,j,k+1)-vr(i,j,k-1))/(drad+drad1)
-c        davl1=(vi(i+1,j,k)*sin p-
-c     *         vi(i-1,j,k)*sin m)/dteta*.5
-        davl1=(vi(i+1,j,k)-
-     *         vi(i-1,j,k))/dteta*.5+vi(i,j,k)*cos(teta)/sin t
-        davl2=(vj(i,jp,k)-vj(i,jm,k))/ddol*.5
-c        davl=davl0+(davl1+davl2)/(rk*sin t)
-        davl=davl0+davl1/rk+davl2/(rk*sin t)
-        ha=rc*pgl(7,k,i,j)/dts
-c . . .  Вязкий нагрев  
-        vqi=(vi(i,j,k+1)-vi(i,j,k))/drad
-        vqj=(vj(i,j,k+1)-vj(i,j,k))/drad
-        vq=(vqi*vqi+vqj*vqj)*anu
-c       fk=q(k)+  ha -davl*sum*an6(i,j,k)+vq
-         fk=q(k) + ha+vq
-c . . .  signum of pressure
-        if(davl.lt.0.) then
-          fk=fk-davl*ro(i,j,k)*bk/ams*an6(i,j,k)
-        else
-          b=b+davl*ro(i,j,k)*bk/ams
-        end if
-!!      hot O heating
-          !razn=-pgl(19,k,i,j) ! Ёрчэюёшь яю Ёрчэ√ь ъю¤ЇЇшЎшхэЄрь
-	     razn=(pgl(7,k,i,j)-pgl(19,k,i,j)) ! Єюы№ъю т шёЄюўэшъ
-! approx:Brunelly, Namgaladze  
-          proizv=1.143e-12*bk*pgl(18,k,i,j)*
-     *    (pgl(3,k,i,j)*sqrt(pgl(19,k,i,j)+pgl(7,k,i,j))+!hard sphere 
-     *    pgl(2,k,i,j)*2.031*sqrt(pgl(19,k,i,j)+pgl(7,k,i,j)*0.571))
-          qh=proizv*razn
-          fk=fk-qh 
-
-        ! b=b+proizv  ! dependence of signum !!
-c . . .  direct progon
-        pa(k+1)=a/(b-pa(k)*c)
-        pb(k+1)=(c*pb(k)+fk)/(b-pa(k)*c)
-    3  continue
-c*
-       if(mass(22).ne.0) then
-c    . . . non local heating
-         q_ot=pgl(16,n0,i,j)+pgl(16,n0,its-i+1,j)
-         if(pgl(16,n0,i,j).ge.pgl(16,n0,its-i+1,j)) then
-            q_max=pgl(16,n0,i,j)
-         else
-            q_max=pgl(16,n0,its-i+1,j)
-         end if
-         q_ot=q_ot/q_max
-         pot_m=0.05                    !   Flux erg/cm2*c-1
-c  
-         if (klik.eq.0) then
-           print*,' non local heating! Flux =',pot_m,' erg/cm2*c-1'
-           klik=1
-         end if
-         pot=pot_m*.5*q_ot
-         pot=pot/alyam(3)
-         rp=rads(n0)-rads(n0-1)
-         an61(i,j,n0)=(pb(n0)+pot*rp)/(1.-pa(n0))
-       else
-         an61(i,j,n0)=pb(n0)/(1.-pa(n0))
-       end if
-       do 4 l=2,n0m
-        k=n0-l+1
-        an61(i,j,k)=pa(k+1)*an61(i,j,k+1)+pb(k+1)
-        if(an61(i,j,k).lt.100.or.an61(i,j,k).gt.1600.) then
-            print 100,an61(i,j,k),k,i,j
-        end if
-    4  continue
-    2 continue
-    1 continue
-  100 format('  Tn=',f6.0,' k=',i3,' i=',i2,' j=',i2)
-      deallocate (pa,pb,q,qdj)
-      return
-      end
-
-

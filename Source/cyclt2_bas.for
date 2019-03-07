@@ -1,7 +1,7 @@
 c    VER _04_2014 DINAMIC MASSIVES
 
-      subroutine cyclt2_bas(mast,ntsl,nl,par,nr,pari,ni,par1,PAR2,b,c,its,
-     *                  park,ks,gins,rads,nh,ddolgt,dtett,ddolgs,
+      subroutine cyclt2_bas(mast,ntsl,nl,par,nr,pari,ni,par1,PAR2,b,c,
+     *                  its,park,ks,gins,rads,nh,ddolgt,dtett,ddolgs,
      *                  dtets,kpart,int,ins,rmaxt,ntr,nv,idt,ids,
      *                  dtt0,dtt,potef,q,u,nl2,vert,utt,kdu,kdf,
      *                  ldor,isp,pole,nin,verno,vdr,sole,solen,nse,

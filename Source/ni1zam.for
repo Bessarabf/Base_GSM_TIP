@@ -130,7 +130,7 @@ c****
 c     if(naa.eq.9.and.nomsl.eq.6.and.m.eq.1)
 c    * write(3,1000)l,(qi(iii),iii=1,l),(y(jjj),jjj=1,l)
 c***
-        call spline(l,qi,y,b,c,d)
+        call spline_bas(l,qi,y,b,c,d)
 c****
 c     if(naa.eq.9.and.nomsl.eq.6.and.m.eq.1)
 c    * write(3,1000)l,n1,n2,(q1(iii),iii=n1,n2),(ht1(jjj),jjj=n1,n2),

@@ -102,7 +102,7 @@ c  91      continue
           y(i)=p1(m,in)
           i=i+1
    13   continue
-        call spline(nto,x,y,b,c,d)
+        call spline_bas(nto,x,y,b,c,d)
         do 14 n=n1,n2
           nn=nob1+(n-1)*kpart+m
           if(ht1(n).le.rads(ntr)) go to 15

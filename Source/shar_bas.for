@@ -1,7 +1,7 @@
 c   shar_HAM - integrate with HAMMONIA 
 c   ver.    18.05.18 Ion Drag sent to HAMMONIA 
 c   ver.    10.05.18 Joul heating sent to HAMMONIA
-      subroutine shar_HAM(day,god,dayt,godt,uts,tau,dts,sole,solu,
+      subroutine shar_bas(day,god,dayt,godt,uts,tau,dts,sole,solu,
      *           solen,nsu,nse,kpars,ins,int,rads,nh,gkoor,
      *           its,ids,ddolgs,dtets,dtett,fa,fs,ap,pkp,dst,
      *           ae,al,au,bmpz,bmpy,vsol,ps,csol,mass,delta,
@@ -10,7 +10,7 @@ c   ver.    10.05.18 Joul heating sent to HAMMONIA
      *           gins,solet,ut0,qom,qmax,iqo,mast,pgl,pril,
      *           kpa,nt,E0,FAE)
 !
-      USE mo_ham_gsm
+!      USE mo_ham_gsm
       logical readfl
       integer god,day,godt,dayt,verno
     
@@ -59,7 +59,7 @@ c        else
 c        end if
   11  continue
       
-      call terpot_HAM(day,god,dayt,godt,uts,tau,dts,solet,sole,solu
+      call terpot_bas(day,god,dayt,godt,uts,tau,dts,solet,sole,solu
      *           ,nsu,nse,kpars,rads,nh,gkoor,its,ddolgs
      *           ,dtets,fa,fs,ap,pkp,dst,ae,al,au,bmpz,bmpy,
      *            mass,delta,pgl,gins,ids,ins,isp,

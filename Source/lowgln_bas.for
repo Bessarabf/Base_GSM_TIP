@@ -1,14 +1,16 @@
 c . . . ver. 2012 - P_riliv 
-      subroutine lowgln_ham(pgl,rads,kpars,nh,its,ids,day
+      subroutine lowgln_bas(pgl,rads,kpars,nh,its,ids,day
      *           ,ap,fa,fs,gkoor,dtets,ddolgs,uts,musl,pril,KPA,NT)
 c
 c     . . . параметры на 80 км
 c
-      USE mo_ham_gsm
+!      USE mo_ham_gsm 
       
       dimension pgl(kpars,nh,its,ids),rads(nh)
      *         ,gkoor(2,its,ids)
-     *         ,apm(7),dm(8),tm(2)
+     *         ,apm(7),tm(2)
+!      dimension dm(8) ! MSIS 90
+      dimension dm(9) ! MSIS2000
 
 
       dimension pril(*)
@@ -72,7 +74,9 @@ c . . . Сдвиг фазы на 2 часа
 c  12       alt=rads(1)/1.e5
             iyd=80*1000+td
             vis=rads(1)/1.e5
-            call gtd6(iyd,tau2,80.,fig,dol,tau3,fa,fs,
+!            call gtd6(iyd,tau2,80.,fig,dol,tau3,fa,fs,
+!     *                 apm,48,dm,tm)
+            call gtd7(iyd,tau2,80.,fig,dol,tau3,fa,fs,
      *                 apm,48,dm,tm)
             pgl(7,1,i,j)=tm(2)
             pgl(1,1,i,j)=dm(4)
@@ -85,28 +89,28 @@ c  12       alt=rads(1)/1.e5
                call botcalc_L(pgl,nh,its,ids,kpars,uts,dtets,ddolgs,
      *                      rads,gkoor,pril,KPA,NT)
 !         HAMMONIA!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!	         
-          ELSE IF(m usl.eq.3) THEN
-            do i =  1,its
-              do  j = 1,ids 
-                pgl(7,1,i,j)=gsmHAM(1,i,j)
-
-! sum concentration
-                aNall=dgsmHAM(1,i,j)/(0.21*am1+0.79*am2)
+!          ELSE IF(m usl.eq.3) THEN
+!            do i =  1,its
+!              do  j = 1,ids 
+!                pgl(7,1,i,j)=gsmHAM(1,i,j)
 !
-                pgl(1,1,i,j)=0.21*aNall   !!! 05.03.19
-                pgl(2,1,i,j)=0.79*aNall
-
+! sum concentration
+!                aNall=dgsmHAM(1,i,j)/(0.21*am1+0.79*am2)
+!
+!                pgl(1,1,i,j)=0.21*aNall   !!! 05.03.19
+!                pgl(2,1,i,j)=0.79*aNall
+!
 !!!!!!!!!!!!!!!!!!!!!! !!!!!!!!!!!!!!!!!!
-                pgl(3,1,i,j)=dOgsm(1,i,j)
-                
-                pgl(4,1,i,j)=dNOgsm(1,i,j)
-                pgl(5,1,i,j)=dNgsm(1,i,j)
+!                pgl(3,1,i,j)=dOgsm(1,i,j)
+!                
+!                pgl(4,1,i,j)=dNOgsm(1,i,j)
+!                pgl(5,1,i,j)=dNgsm(1,i,j)
 !!!!!!!!!!!!!!!!!!!!!! 
-               pgl(11,1,i,j)=UgsmHAM(1,i,j)
-                pgl(12,1,i,j)=VgsmHAM(1,i,j)
-
-              end do
-            end do
+!               pgl(11,1,i,j)=UgsmHAM(1,i,j)
+!                pgl(12,1,i,j)=VgsmHAM(1,i,j)
+!
+!              end do
+!            end do
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!            
           ELSE
                 print *,'GSMTIP: lowgln incorrect МАSS(18) in lowgln'

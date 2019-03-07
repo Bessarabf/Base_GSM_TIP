@@ -36,9 +36,7 @@ c
       do i=1,its
        do j=1,ids 
  	   do k=1,nh
-            cO2i(i,j,k)=pgl(18,k,i,j)
-            cNOi(i,j,k)=pgl(19,k,i,j)
-            cNd(i,j,k)=pgl(17,k,i,j)
+         cNd(i,j,k)=pgl(17,k,i,j)   
 
 	   end do
 	 end do
@@ -55,16 +53,20 @@ c      . . . calculation of cos(hi)
         do k=1,nh
          cNe(k)=pgl(6,k,i,j)+pgi(1,k,i,j)
          cNo(k)=pgl(4,k,i,j)
+         cO2i(k)=pgl(18,k,i,j)
+         cNOi(k)=pgl(19,k,i,j)
+         cN2i(k)=pgl(6,k,i,j)-cNOi(k)-cO2i(k)
         end do
         !!! smoothing sudden change Ne
 	  cNe(16)=0.5*(cNe(15)+cNe(17))
 !!!!!!!!!!! photochem approx
-	  call conn2i (cN2i,cNe,pgl,kpars,nh,its,ids,i,j)
+	  
         if ((mass(20).ne.2)) then
            !!! photochem approx
            call cono2i (cO2i,cNo,cNe,pgl,kpars,nh,its,ids,i,j)
            call connoi (cNoi,cO2i,cN2i,cNe,pgl,rp,g,
      *                  kpars,nh,its,ids,i,j)
+           call conn2i (cN2i,cNe,pgl,kpars,nh,its,ids,i,j)
         end if
 
 46      format(1p4e8.1)
@@ -78,10 +80,11 @@ c      . . . calculation of cos(hi)
     	  call nprog(cNd,cNoi,cO2i,cNe
      *            ,pgl,ctd,rads,rp,g,kpars,nh,its,ids,i,j,hi,dt)
 	  	 	  
-      ! progonka NO. Altitude part
+  ! progonka NO. Altitude part
 	   call noprog(cNd,cNo,cO2i
      *             ,pgl,ctd,rads,rp,g,kpars,nh,its,ids,i,j,hi,dt)
-	  
+          end do
+	end do	  
       !  S-N poles smoothing for N2D
 	  call bongl(cNd,nh,its,ids)
 	  !  horisontal part for NO
@@ -105,8 +108,7 @@ c     . . .  horisontal circulation NO,N
 	   DO I=1,ITS
 	    DO J=1,IDS
 	       PGL(17,K,I,J)=CND(I,J,K)
-               PGL(18,K,I,J)=cO2i(I,J,K)
-               PGL(19,K,I,J)=cNOi(I,J,K)
+            
           END DO
 	   END DO
 	END DO

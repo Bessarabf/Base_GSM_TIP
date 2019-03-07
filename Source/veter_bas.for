@@ -4,7 +4,7 @@ c vj_r
 c vn_t
 c vn_fi
 c vrprim_s
-      subroutine veter_bas(vi1,vj1,vi,vj,vr,vim,vjm,an1,an2,an3,an6,ro,
+      subroutine veter_ham(vi1,vj1,vi,vj,vr,vim,vjm,an1,an2,an3,an6,ro,
      *                 pgl,pgi,rp,r,ctd,n,n1,n2,kpars,ins,dt)
 !
 

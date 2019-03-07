@@ -4,7 +4,7 @@ c   _bas - base variant based on EAGLE
 C            22/05/2014 - ADD PAR2 TO INTERFACE
 c            25/05/2012 - kpa & nt to priL
 c    version 25.03.2012 - bmod and isat
-c            20.11.2017 - integrate with HAMMONIA
+c    
       subroutine cyclt1_bas(god,day,ut0,ut1,dtt,dts,tau,solen,sole,solu,
      *                 solet,bmpz,bmpy,bmod,vsol,csol,ntr,gkoor,ps,
      *                 gins,fa,fs,ap,pkp0,dst,ae,al,au,rads,ni,nv,vdr,
@@ -84,7 +84,7 @@ cc      fac2=(3.e-14+0.006*1.e-14*ae)*1.28
         call aeppVY(mass,nl2,idt,ddolgs,dtets,al,dst,uts,delta,E0,FAE)
       end if
       
-      call shar_HAM(day,god,dayt,godt,uts,tau,dts,sole,solu,solen,nsu,
+      call shar_bas(day,god,dayt,godt,uts,tau,dts,sole,solu,solen,nsu,
      *           nse,kpars,ins,int,rads,nh,gkoor,its,ids,ddolgs,
      *           dtets,dtett,fa,fs,ap,pkp,dst,ae,al,au,bmpz,bmpy,
      *           vsol,ps,csol,mass,delta,kdu,kdf,ldor,isp,pole,par,
@@ -147,8 +147,8 @@ cc
             if(mass(13).ne.0) then
               call rvert(nf,kpart,ddolgt,ntsl,nl,kdf,ldor,isp,
      *                   pole,nv,idt,vert,mast)
-              call cyclt2(mast,ntsl,nl,par,nr,pari,ni,par1,PAR2,b,c,its,
-     *                    park,ks,gins,rads,nh,ddolgt,dtett,ddolgs,
+              call cyclt2_bas(mast,ntsl,nl,par,nr,pari,ni,par1,PAR2,b,c,
+     *                    its,park,ks,gins,rads,nh,ddolgt,dtett,ddolgs,
      *                    dtets,kpart,int,ins,rmaxt,ntr,nv,idt,ids,
      *                    dtt0,dtt,potef,q,u,nl2,vert,utt,kdu,kdf,
      *                    ldor,isp,pole,nin,verno,vdr,sole,solen,nse,
@@ -166,8 +166,8 @@ cc
         if(mass(13).ne.0) then
          call rvert(nf,kpart,ddolgt,ntsl,nl,kdf,ldor,isp,
      *               pole,nv,idt,vert,mast)
-         call cyclt2(mast,ntsl,nl,par,nr,pari,ni,par1,PAR2,b,c,its,park,
-     *                ks,gins,rads,nh,ddolgt,dtett,ddolgs,dtets,
+         call cyclt2_bas(mast,ntsl,nl,par,nr,pari,ni,par1,PAR2,b,c,its,
+     *                park,ks,gins,rads,nh,ddolgt,dtett,ddolgs,dtets,
      *                kpart,int,ins,rmaxt,ntr,nv,idt,ids,dtt0,dtt,
      *                potef,q,u,nl2,vert,utt,kdu,kdf,ldor,isp,pole,
      *                nin,verno,vdr,sole,solen,nse,qom,qmax,iqo,mass)
