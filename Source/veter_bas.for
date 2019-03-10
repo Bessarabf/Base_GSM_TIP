@@ -492,11 +492,13 @@ c
       imin=1
       imax=1
       do i=2,3
-       if(a(i).lt.amin) then
+       if(a(i).le.amin) then
           amin=a(i)
           imin=i
        end if
-       if(a(i).ge.amax) then
+
+       if(a(i).gt.amax) then
+
           amax=a(i)
           imax=i
         end if
