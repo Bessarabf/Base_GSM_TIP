@@ -78,7 +78,7 @@ c     . . . atomic H calculated
      *              fs,fa,ap,uts,day)
       end if
       PRINT*, 'GSMTIP: glqint start'
-      call glqint(pgl,par,pari,kpars,nh,its,ids,kdf,ldor,pole,
+      call glqint_bas(pgl,par,pari,kpars,nh,its,ids,kdf,ldor,pole,
      *            isp,ddolgs,dtets,sole,solen,rads,gkoor,
      *            uts,delta,nse,gins,ins,mass,dts,ps,park,
      *            nr,ni,kpart,ks,ddolgt,int,ntsl,nl,parj,parj1,

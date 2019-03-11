@@ -551,6 +551,8 @@ C   . . . ids - четное
       dimension pgl(kpars,nh,its,ids)
       i2=its-1
       do 1 k=1,nh
+c     ssp - sum s.pole
+c     snp - sum n.pole
        s sp=0.
        s np=0.
        do 2 j=1,ids

@@ -1,5 +1,7 @@
-      subroutine glqint(pgl1,par,pari,kpars,nh,its,ids,kdf,ldor,pole,
-     *                  isp,ddolgs,dtets,sole,solen,rads,gkoor,
+! Base version glqint 11/03-2019
+!
+      subroutine glqint_bas(pgl1,par,pari,kpars,nh,its,ids,kdf,ldor,
+     *                  pole,isp,ddolgs,dtets,sole,solen,rads,gkoor,
      *                  uts,delta,nse,gins,ins,mass,dts,ps,park,
      *                  nr,ni,kpart,ks,ddolgt,int,ntsl,nl,parj,parj1,
      *                  ntr,qom,qmax,iqo,mast,vir,E0,FAE)
@@ -12,9 +14,6 @@
       dimension E0(its,ids),FAE(its,ids)
       dimension vir(nh,its,ids)
       logical readfl
-
-      allocatable cO2plus(:,:,:),cNOplus(:,:,:)
-      allocate (cO2plus(nh,its,ids),cNOplus(nh,its,ids))
       
       data key/0/
 
@@ -24,15 +23,6 @@
      *                ddolgs,ins,dtets,ntr)
       end if
   	print *,' glqint '
-      if(mass(20).eq.2) then
-      !
-         open(77,file='molion.dat',form='unformatted')
-         if(key.ne.0) then
-           rewind(77)
-	   read(77)cO2plus
-           read(77)cNOplus  
-	 end if
-      end if    
       do 1 j = 1 , ids
        dolg=ddolgs*(j-1)
        
@@ -53,7 +43,7 @@
        else if(mass(20).eq.2) then
 !	   call molio3S(cO2plus,cNOplus,par,ids,its,nh,kpars,pari,ins,
 !     *                mass,dts,j,ntr,key)  
-         call molio3nIT(cO2plus,cNOplus,par,ids,its,nh,kpars,pari,ins,
+         call molio3nIT(par,ids,its,nh,kpars,pari,ins,
      *                  mass,dts,j,ntr,key)  
        end if
        call temol (par,pari,rads,mass,kpars,nh,its,dts,ntr,ins)
@@ -64,44 +54,30 @@ c . . . обход интерполяции шар-трубка при фиксировании ионосферы
      *              nh,its,dtets,kpars,qom,qmax,iqo,mast)
       end if
       nfile=9
-      do  np = 1 , kpars
-       do  k = 1 , nh
-        do  i = 1 , its
+       
+      do  k = 1 , nh
+       do  i = 1 , its
+        do  np = 6 , kpars
          pgl1(np,k,i,j)=par(np,k,i)
         end do
-       end do 
+        parj(k,i,j)=parj1(k,i)
+        end do 
        end do
-
-      do k = 1,nh
-         do i = 1,its
-           parj(k,i,j)=parj1(k,i)
-         end do
-	  end do
     1 continue
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! end of longitude 
-
-	
       key=1
       ! pole smoothing
+      call bonPGL_np(pgl1,kpars,nh,its,ids,18)
+      call bonPGL_np(pgl1,kpars,nh,its,ids,19)
       call botite(pgl1,kpars,nh,its,ids)
-      if(mass(20).eq.2) then
-!       call bonPGL_np(pgl1,kpars,nh,its,ids,6)
-!		call bonPGL_np(pgl1,kpars,nh,its,ids,8)
-                rewind(77)
-		write(77) cO2plus
-	        write(77) cNOplus
-	        close(77)
-        end if
-      deallocate (cO2plus,cNOplus)
       return
       end
 
-	subroutine bonPGL_np(pgl,kpars,nh,its,ids,np)
+      subroutine bonPGL_np(pgl,kpars,nh,its,ids,np)
 	! smoothing in polar for np- number parametr
       dimension pgl(kpars,nh,its,ids)
       i2=its-1
       do k=1,nh
-         
 c      ssp - sum s.pole
 c      snp - sum n.pole
         s np=0.

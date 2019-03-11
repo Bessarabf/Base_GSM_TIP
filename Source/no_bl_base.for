@@ -23,9 +23,9 @@ c
      *          rads(nh),rp(nh),g(nh),ctd(nh),gkoor(2,its,ids)
      
      	
-	allocatable qHot(:,:,:),cNd(:,:,:),cO2i(:),cNoi(:)
+	allocatable cNd(:,:,:),cO2i(:),cNoi(:)
      *           ,cN2i(:),cNe(:),cNo(:)
-	allocate (qHot(its,ids,nh),cNd(its,ids,nh),cO2i(nh),cNoi(nh)
+	allocate (cNd(its,ids,nh),cO2i(nh),cNoi(nh)
      *           ,cN2i(nh),cNe(nh),cNo(nh))
 	           
       INCLUDE 'alpha.inc'
@@ -53,9 +53,6 @@ c      . . . calculation of cos(hi)
         do k=1,nh
          cNe(k)=pgl(6,k,i,j)+pgi(1,k,i,j)
          cNo(k)=pgl(4,k,i,j)
-         cO2i(k)=pgl(18,k,i,j)
-         cNOi(k)=pgl(19,k,i,j)
-         cN2i(k)=pgl(6,k,i,j)-cNOi(k)-cO2i(k)
         end do
         !!! smoothing sudden change Ne
 	  cNe(16)=0.5*(cNe(15)+cNe(17))
@@ -67,6 +64,17 @@ c      . . . calculation of cos(hi)
            call connoi (cNoi,cO2i,cN2i,cNe,pgl,rp,g,
      *                  kpars,nh,its,ids,i,j)
            call conn2i (cN2i,cNe,pgl,kpars,nh,its,ids,i,j)
+           do k=1,nh    
+            pgl(18,k,i,j)=cO2i(k)
+            pgl(19,k,i,j)=cNOi(k)
+           
+           end do   
+        else
+           do k=1,nh    
+            cO2i(k)=pgl(18,k,i,j)
+            cNOi(k)=pgl(19,k,i,j)
+            cN2i(k)=pgl(6,k,i,j)-cNOi(k)-cO2i(k)
+           end do     
         end if
 
 46      format(1p4e8.1)
@@ -103,7 +111,12 @@ c     . . .  horisontal circulation NO,N
 !      call horj(pgl,rads,kpars,nh,its,ids,4,dt)
 !      call hori(pgl,rads,kpars,nh,its,ids,5,dt)
 !      call horj(pgl,rads,kpars,nh,its,ids,5,dt)
- 
+!
+! if photochem approx 
+      if ((mass(20).ne.2)) then
+          call bospgl(pgl,kpars,nh,its,ids,18)
+          call bospgl(pgl,kpars,nh,its,ids,19)
+      end if
 	DO K=1,NH
 	   DO I=1,ITS
 	    DO J=1,IDS
@@ -113,7 +126,7 @@ c     . . .  horisontal circulation NO,N
 	   END DO
 	END DO
 	
-	deallocate (qHot,cNd,cO2i,cNoi,cN2i,cNe,cNo)
+	deallocate (cNd,cO2i,cNoi,cN2i,cNe,cNo)
 	return
       end
 
