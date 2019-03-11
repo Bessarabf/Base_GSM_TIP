@@ -347,11 +347,11 @@ c    . . . производная по времени на 3-х временных слоях
       subroutine vrprim_s(vr,vi,vj,vi1,vj1,ro0,ro,ro1,
      *                   rp,rads,n,n1,n2,dt,nn)
  
-       dimension ro1(n1,n2,n),ro(n1,n2,n),ro0(n1,n2,n)
+      dimension ro1(n1,n2,n),ro(n1,n2,n),ro0(n1,n2,n)
      *          ,rp(n),rads(n),vi1(n1,n2,n),vj1(n1,n2,n)
      *          ,vi(n1,n2,n),vj(n1,n2,n),vr(n1,n2,n)
-      allocatable f(:),s(:,:,:),s1(:,:,:),s0(:,:,:)
-      allocate (f(n),s(n1,n2,N),s1(n1,n2,N),s0(n1,n2,N))
+      allocatable f(:),s(:,:,:),s1(:,:,:),s0(:,:,:),a(:)
+      allocate (f(n),s(n1,n2,N),s1(n1,n2,N),s0(n1,n2,N),a(3))
       data pi,re/3.1415926,6.371e 8/,key/1/
       ns=n1-1
       ili=0
@@ -473,7 +473,8 @@ c    . . . временная производная по s
 
 !!!!!!!!!!!!!!!!!!!!! median smoothing !!!!!!!!!!!!!!!!!!!!!!!!!!
          do k=2,nm1
-	     vr(i,j,k)=amed3(vr(i,j,k-1:k+1))
+             a(1:3)=vr(i,j,k-1:k+1)
+	     vr(i,j,k)=amed3(a)
 	   end do
        
     2  continue
@@ -481,7 +482,7 @@ c    . . . временная производная по s
       
   100 format(' VR на данной высоте слишком велико!   vr=',
      *        1pe10.2,' ',3e10.3,3i4)
-      deallocate( f,s,s1,s0)
+      deallocate( f,s,s1,s0,a)
        return
        end
 c
@@ -492,18 +493,19 @@ c
       imin=1
       imax=1
       do i=2,3
-       if(a(i).lt.amin) then
+       if(a(i).le.amin) then
           amin=a(i)
           imin=i
        end if
 
-       if(a(i).ge.amax) then
+       if(a(i).gt.amax) then
 
           amax=a(i)
           imax=i
         end if
       end do
       imed=6-(imax+imin)
+      
       amed3=a(imed)
       return
       end
