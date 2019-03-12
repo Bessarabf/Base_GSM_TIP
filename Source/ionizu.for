@@ -68,6 +68,7 @@ c ********* Chepmen function**********
             do 8 m=1,k
               ai(m)=ai(m)+(par(m,i,ig)+par(m,i+1,ig))*
      *        (rads(i+1)-rads(i))/2.
+!	      if(ai(m).lt.0) print*, ai(m),m,par(m,i,ig),i,ig
     8       continue
     7     continue
           do 4 j=1,k
@@ -76,6 +77,7 @@ c ********* Chepmen function**********
               ab=0.
               do 6 m=1,k
                 ab=ab+sa(m,l)*ai(m)
+	
     6         continue
               ab=ab*1.e-18
               chab=chep*ab

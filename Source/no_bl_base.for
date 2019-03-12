@@ -73,7 +73,8 @@ c      . . . calculation of cos(hi)
            do k=1,nh    
             cO2i(k)=pgl(18,k,i,j)
             cNOi(k)=pgl(19,k,i,j)
-            cN2i(k)=pgl(6,k,i,j)-cNOi(k)-cO2i(k)
+            !cN2i(k)=pgl(6,k,i,j)-cNOi(k)-cO2i(k)
+	      call conn2i (cN2i,cNe,pgl,kpars,nh,its,ids,i,j)
            end do     
         end if
 
@@ -94,17 +95,16 @@ c      . . . calculation of cos(hi)
           end do
 	end do	  
       !  S-N poles smoothing for N2D
-	  call bongl(cNd,nh,its,ids)
-	  !  horisontal part for NO
-        call bospgl(pgl,kpars,nh,its,ids,4)
-	  
-        call pgl_ic(pgl,rads,kpars,nh,its,ids,dt,nh,4)
-        call pgl_jc(pgl,rads,kpars,nh,its,ids,dt,nh,4) 
+	call bongl(cNd,nh,its,ids)
+	!  horisontal part for NO
+      call bospgl(pgl,kpars,nh,its,ids,4)
+	call pgl_ic(pgl,rads,kpars,nh,its,ids,dt,nh,4)
+      call pgl_jc(pgl,rads,kpars,nh,its,ids,dt,nh,4) 
 	call bospgl(pgl,kpars,nh,its,ids,4)
       !  horisontal part for N(4s)
 	call bospgl(pgl,kpars,nh,its,ids,5)
 	call pgl_ic(pgl,rads,kpars,nh,its,ids,dt,nh,5)
-        call pgl_jc(pgl,rads,kpars,nh,its,ids,dt,nh,5)
+      call pgl_jc(pgl,rads,kpars,nh,its,ids,dt,nh,5)
 	call bospgl(pgl,kpars,nh,its,ids,5)
 c     . . .  horisontal circulation NO,N
 !      call hori(pgl,rads,kpars,nh,its,ids,4,dt)
