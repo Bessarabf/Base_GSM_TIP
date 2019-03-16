@@ -20,14 +20,12 @@ c . . . Сечения
      *         0.,0.,0.,0.,0./,
      *    sihe/0.,0.,0.,0.,3.e-9,3.4e-9,1.6e-9,3.e-9,5.e-9,5.e-9,1.7e-9,
      *        .5e-9,0.,0.,0./
-      q0h=0.
-      q0he=0.
-c      print 900,dolm
-  900 format('+trubka  dolm=',f4.0)
-      do i=1,nse
-        q0h=q0h+sih(i)*sole(i)
-        q0he=q0he+sihe(i)*sole(i)
-      end do
+!      q0h=0.
+!      q0he=0.
+!      do i=1,nse
+!        q0h=q0h+sih(i)*sole(i)
+!        q0he=q0he+sihe(i)*sole(i)
+!      end do
       do 15 j=1,nl
         nx=ntsl(j)
         call select(1,j,kpart,ntsl,nl,cio1,cih1,cihe1,vio1,vih1,vihe1
@@ -123,6 +121,9 @@ c    *           cn2,co,ch,che,qo,vnq,vnu,vnv,vdu,vdv,tn)
       md=1
       call wwt(readfl,nfile,kpar,dolm,ddolgt,nomsl,ntsl,nl,
      *         kdf,ldor,isp,md,par1,pole,nr,mast)
+c      print 900,dolm
+  900 format('+trubka  dolm=',f4.0)
+
       return
       end
 !
