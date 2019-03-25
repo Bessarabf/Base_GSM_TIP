@@ -23,12 +23,14 @@
      *                ddolgs,ins,dtets,ntr)
       end if
   	print *,' glqint '
+!!! longitude cycle
       do 1 j = 1 , ids
        dolg=ddolgs*(j-1)
        
        DO i = 1 , its
         do k = 1 , nh
          do np = 1 , kpars
+           !!!form 2d massiv (for compatibility with old version GSM TIP)
            par(np,k,i)=pgl1(np,k,i,j)
          end do
          do nin = 1 ,ins

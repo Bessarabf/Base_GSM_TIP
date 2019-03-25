@@ -1,9 +1,10 @@
+c     . . . energy and flux of electron precipitations
       subroutine iacflo_AE(utn,sole,solu,bmpz,bmpy,mas,
      *                  csol,vsol,fa0,pkp0,ap0,ae0,dst0,al0,au0,
      *                  fa,pkp,ap,ae,dst,al,au,solen,nsu,nse,ps,
      *                  AEj2)
       dimension sole(nse),solu(nsu),mas(10),solen(nse),ps(10)
-! . . . soft electron 70 deg
+! . . . soft electron (cusp) 70 deg
 !     ps(1 )=1.e8
       ps(1 )=5.e8
 !     ps(1 )=5.e9
@@ -11,7 +12,7 @@
 !     ps(1 )=1.5e9
       ps(2 )=1.
       ps(3 )=0.20e3
-! . . . hard electron 70 deg
+! . . . hard electron (auroral) 70 deg
 !     ps(4 )=5.e8
       ps(4 )=1.e7  ! flux
       ps(5 )=1.0   ! param gamma
