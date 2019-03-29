@@ -45,7 +45,7 @@
        else if(mass(20).eq.2) then
 !	   call molio3S(cO2plus,cNOplus,par,ids,its,nh,kpars,pari,ins,
 !     *                mass,dts,j,ntr,key)  
-         call molio3nIT(par,ids,its,nh,kpars,pari,ins,
+         call molio3nIT_bas(par,ids,its,nh,kpars,pari,ins,
      *                  mass,dts,j,ntr,key)  
        end if
        call temol (par,pari,rads,mass,kpars,nh,its,dts,ntr,ins)

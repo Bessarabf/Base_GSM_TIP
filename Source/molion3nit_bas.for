@@ -1,5 +1,6 @@
+!!!!  ver 11.03.2019 - O2+ and NO+ write in file4
 !!!!  NEWTON ITERATION
-      subroutine molio3Nit(par,ids,its,nh,kpars,pari,ins,
+      subroutine molio3Nit_bas(par,ids,its,nh,kpars,pari,ins,
      *                  mass,dts,j,ntr,key) 
 	                 
       dimension par(kpars,nh,its),

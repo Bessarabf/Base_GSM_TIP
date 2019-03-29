@@ -92,7 +92,7 @@ ccc     *           gkoor,rads,delta,kpars,nh,its,ids,nsu,uts)
          print*, 'GSMTIP: termos-recommended Stau=',Stau,Vmax,dLong
       end if
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-         call timol(pgl,kpars,nh,its,ids,dts,vim,vir,vid)
+      call timol(pgl,kpars,nh,its,ids,dts,vim,vir,vid)
 c
       call nachc(an1,an2,an3,an6,vi,vj,an11,an21,an31,an61
      *          ,vi1,vj1,nh,its,ids)
