@@ -44,16 +44,15 @@ c - sumro
      *   ,an11(:,:,:),an21(:,:,:),an31(:,:,:)
      *   ,an61(:,:,:),vr(:,:,:),vi(:,:,:)
      *   ,vj(:,:,:),vi1(:,:,:),vj1(:,:,:)
-     *   ,q(:,:,:),g(:),rp(:),ctd(:),anco2(:,:,:)
-     *   ,cHot(:,:,:),tHot(:,:,:),ron(:,:,:),ros(:,:,:),ros0(:,:,:)
+     *   ,qdis(:,:,:,:),g(:),rp(:),ctd(:),anco2(:,:,:)
+     *   ,ron(:,:,:),ros(:,:,:),ros0(:,:,:)
     
        allocate (an1(its,ids,nh),an2(its,ids,nh),an3(its,ids,nh) 
      *   ,an6(its,ids,nh)
      *   ,an11(its,ids,nh),an21(its,ids,nh),an31(its,ids,nh)
      *   ,an61(its,ids,nh),vr(its,ids,nh),vi(its,ids,nh)
      *   ,vj(its,ids,nh),vi1(its,ids,nh),vj1(its,ids,nh)
-     *   ,q(its,ids,nh),g(NH),rp(NH),ctd(NH),anco2(its,ids,nh)
-     *   ,cHot(its,ids,nh),tHot(its,ids,nh)
+     *   ,qdis(2,its,ids,nh),g(NH),rp(NH),ctd(NH),anco2(its,ids,nh)
      *   ,ros0(ITS,IDS,NH),ros(ITS,IDS,NH),ron(ITS,IDS,NH))
 
       data key/1/
@@ -72,7 +71,8 @@ c
 !      rate dissociation massiv
 ccc   	call r_dis(qdis,pgl,solu,
 ccc     *           gkoor,rads,delta,kpars,nh,its,ids,nsu,uts)
-       
+       call r_dis(qdis,an1,an6,gkoor,g,rads,solu,nsu,delta,
+     *            nh,its,ids,uts)
        call lowgln_bas(pgl,rads,kpars,nh,its,ids,day
      *         ,ap,fa,fs,gkoor,dtets,ddolgs,uts,mass(18),pril,KPA,NT)
 
@@ -125,7 +125,7 @@ c     . . . NO-block
       if(mass(21).eq.0) then  ! apprpoximation
         call connot(pgl,rads,kpars,nh,its,ids)
       else
-        call nonew(pgl,pgi,cHot,tHot,gkoor,ctd,rads,rp,g,
+        call nonew(pgl,pgi,gkoor,ctd,rads,rp,g,
      *              kpars,ins,nh,its,ids,delta,uts,dts,mass)
       end if
 c     . . . Расчет термосферы по MSIS
@@ -215,8 +215,8 @@ c          File: labt.dan writing heat sourse
      *   ,an6,an11,an21,an31
      *   ,an61,vr,vi
      *   ,vj,vi1,vj1
-     *   ,q,g,rp,ctd,anco2
-     *   ,cHot,tHot,ron,ros,ros0)
+     *   ,qdis,g,rp,ctd,anco2
+     *   ,ron,ros,ros0)
 
       return
       end

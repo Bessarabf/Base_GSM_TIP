@@ -97,6 +97,7 @@ c
       subroutine tnpot_bas(pgl,pgi,an1,an2,an3,an6,an61,vi,vj,vr,
      *                 anco2,ro,vim,vid,vir,rads,g,gkoor,ctd,solu,nsu,
      *                 kpars,ins,nh,its,ids,dl,uts,dts,mass)
+! for EAGLE part
 !      USE mo_ham_gsm, ONLY:qJGSM
       dimension pgl(kpars,nh,its,ids),an1(its,ids,nh),
      *          an2(its,ids,nh),an3(its,ids,nh),anco2(its,ids,nh),
@@ -135,7 +136,8 @@ c
      *            an1,an2,an3,an6,anco2,vr,vi,vj,vim,vid,vir)
         do 29 k=1,n0m
          rc=(2.5*(an1(i,j,k)+an2(i,j,k))+1.5*an3(i,j,k))*bk
- !        qJGSM(i,j,k)=qdj(k)/rc
+! for EAGLE part
+!        qJGSM(i,j,k)=qdj(k)/rc
          q(k)=q(k)+qdj(k)
    29   continue
 c

@@ -12,13 +12,13 @@ c - hori    10
 c - horj    11
  
 c
-      subroutine nonew(pgl,pgi,cHot,tHot,gkoor,ctd,rads,rp,g,
+      subroutine nonew(pgl,pgi,gkoor,ctd,rads,rp,g,
      *                 kpars,ins,nh,its,ids,del,uts,dt,mass)
 !!!!     
         USE mo_bas_gsm
 !!!!
 	dimension pgl(kpars,nh,its,ids),pgi(ins,nh,its,ids),
-     *          cHot(its,ids,nh),tHot(its,ids,nh),mass(*),
+     *          mass(*),
 
      *          rads(nh),rp(nh),g(nh),ctd(nh),gkoor(2,its,ids)
      
@@ -677,10 +677,4 @@ c          end if
           an(k)=exp(ss)
     3 continue
       return
-	end
-
-	subroutine thot4000(thot,nh,its,ids)
-	dimension thot(its,ids,nh)
-	thot=4000.
-	return
 	end

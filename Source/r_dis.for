@@ -27,7 +27,7 @@ cc   *        1.37e-17,1.01e-17,6.01e-18,2.58e-18,1.09e-18,3.92e-19/
            gshir=gkoor(1,i,j)*cr
            gdol=gkoor(2,i,j)*cr
            gshir=0.5*pi-gshir
-c*
+c     !!!!!!!  zenith angle   !!!!!
            coshi=sin(gshir)*sin(del)+cos(gshir)*cos(del)*
      *           cos(om*(uts-43200.)+gdol)
            hi=acos(coshi)
@@ -56,7 +56,7 @@ c*
                     expTAU=exp(-tau)                                  
                     sumL=sumL+sp(l)*solu(l)*expTAU 
                     sumErg=sumErg+sp(l)*solu(l+nsu05)*expTAU                
-                    ! print tau,k,l  
+                    ! print*,tau,k,l  
                 end do                                  
                 qdis(1,i,j,k)=sumL *anO2(i,j,k)*1.e9  
                 qdis(2,i,j,k)=sumErg *anO2(i,j,k) 
@@ -64,7 +64,8 @@ c*
             end do                           
             a1=(qdis(1,nh-1,i,j))                                          
             a2=(qdis(1,nh-2,i,j))                                          
-            a3=(qdis(1,nh-3,i,j))                                          
+            a3=(qdis(1,nh-3,i,j))   
+!     !!!!!  qdis(nh) extrapolation !!!!
             qdis(1,nh,i,j)=a3*a1**3/(a2**3)
             a1=(qdis(2,nh-1,i,j))                                          
             a2=(qdis(2,nh-2,i,j))                                          
