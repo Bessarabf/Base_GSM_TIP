@@ -9,7 +9,7 @@ c    NO в приближении малой компоненты  (прогонка)
 	allocate (a(nh),b(nh),c(nh),f(nh),cmd(nh)
      *          ,h(nh),hsr(nh),alf(nh),bet(nh))
 
-       INCLUDE 'alpha.inc'	 
+      INCLUDE 'alpha.inc'	 
       data amo2,amn2,amo,amno/ 53.12e-24,46.51e-24,26.56e-24,49.82e-24/
      *    ,bk/1.38e-16/,re/6.371e8/,pi/3.14159/
       const=bk/amno
@@ -59,7 +59,8 @@ c         epok=1
          w=w+alyam15*pgl(3,k,i,j)*pgl(2,k,i,j)*exp(940./pgl(7,k,i,j))
  !       p=w+alyam1*cO2i(k)
          p=w+alyam1*cO2i(k)+pgl(15,k,i,j)/pgl(4,k,i,j)
-         h o2=const1*pgl(7,k,i,j)/g(k)
+ 	 
+         ho2=const1*pgl(7,k,i,j)/g(k)
          x=(rads(k)+re)/h o2
          ch=chept(x,hi)
          pok=1.e-8*(pgl(1,k,i,j)*h o2*ch*1.e-4)**0.38

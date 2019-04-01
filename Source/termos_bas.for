@@ -74,8 +74,11 @@ c
        call pgl3d(pgl,kpars,nh,its,ids,an1,an2,an3,an6,vr,vi,vj)
    
 !      rate dissociation massiv
-       call r_dis(qdis,an1,an6,gkoor,g,rads,solu,nsu,delta,
+!       call r_dis(qdis,an1,an6,gkoor,g,rads,solu,nsu,delta,
+!     *            nh,its,ids,uts)
+        call qdismod(qdis,an1,an6,gkoor,g,rads,solu,nsu,delta,
      *            nh,its,ids,uts)
+ 
         
 !      recommend time step
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -95,7 +98,7 @@ c
 c
       call nachc(an1,an2,an3,an6,vi,vj,an11,an21,an31,an61
      *          ,vi1,vj1,nh,its,ids)
-!!!      Fist step on time
+!!!      First step on time
       if(key.eq.1) then
         if((mass(5).eq.0).or.(mass(5).eq.2)) then
           call sumro(an1,an2,an3,ros,nh,its,ids)

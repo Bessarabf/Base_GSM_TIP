@@ -4,7 +4,7 @@ c 4d massive dissociation rates (1 - 1/cm3/s; 2 - erg/cm3/s )
      *           nh,its,ids,uts)
 
       USE mo_bas_gsm, ONLY: pi,om,bk,re,amO2
-      dimension qdis(2,its,ids,nh),ano2(its,ids,nh),tem(its,ids,nh),
+      dimension ano2(its,ids,nh),tem(its,ids,nh),qdis(2,its,ids,nh),
      *          g(nh),rads(nh),gkoor(2,its,ids)
       dimension solu(nsu),sp(12)
       data 
@@ -20,11 +20,12 @@ cc   *        1.37e-17,1.01e-17,6.01e-18,2.58e-18,1.09e-18,3.92e-19/
 
       cr=pi/180.
       nsu05=nsu/2
-	qdis=1.e-20 !!!!!!!!!!!!!!!!
+	qdis=1.e-10 !!!!!!!!!!!!!!!!
       sum=0.
+	
       do i=2,its-1
          do j=1,ids
-           gshir=gkoor(1,i,j)*cr
+	       gshir=gkoor(1,i,j)*cr
            gdol=gkoor(2,i,j)*cr
            gshir=0.5*pi-gshir
 c     !!!!!!!  zenith angle   !!!!!
@@ -63,19 +64,16 @@ c     !!!!!!!  zenith angle   !!!!!
             a2=(qdis(1,i,j,nh-2))                                          
             a3=(qdis(1,i,j,nh-3))   
 !     !!!!!  qdis(nh) extrapolation !!!!
-!            print *,a1,a2,a3,i,j
             qdis(1,i,j,nh)=a3*(a1**3/(a2**3))
             a1=(qdis(2,i,j,nh-1))                                          
             a2=(qdis(2,i,j,nh-2))                                          
             a3=(qdis(2,i,j,nh-3))
-	print *,i,j, qdis(1,i,j,nh-1),'!!!!!!!!'
-            print *,a1
-		  print *,a2
-		  print*,a3,i,j
-            qdis(2,i,j,nh)=a3*(a1**3/(a2**3))
+
+      !      qdis(2,i,j,nh)=a3*(a1**3/(a2**3))
+	!      qdis(2,i,j,nh)=a3*(a1/(a2))
           end do
       end do
-      qdis(1,:,:,:)=qdis(1,:,:,:)*1.e9
+      
       return 
       end
 

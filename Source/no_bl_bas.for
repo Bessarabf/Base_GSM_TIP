@@ -18,7 +18,7 @@ c
         USE mo_bas_gsm
 !!!!
 	dimension pgl(kpars,nh,its,ids),pgi(ins,nh,its,ids),
-     *          mass(*),
+     *          mass(30),
 
      *          rads(nh),rp(nh),g(nh),ctd(nh),gkoor(2,its,ids)
      

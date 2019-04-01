@@ -39,7 +39,7 @@
         if(sum.lt.1.e-30)sum=0.
     3   as=a*sum
 c
-        parj(i,ig)=0.
+!       parj(i,ig)=0.
         do 4 j=1,4
           jj=j
           if(j.eq.3) jj=4
