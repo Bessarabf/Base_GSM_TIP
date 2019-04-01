@@ -505,7 +505,7 @@ c
         end if
       end do
       imed=6-(imax+imin)
-      
+      if (imed.gt.3) imed=3
       amed3=a(imed)
       return
       end

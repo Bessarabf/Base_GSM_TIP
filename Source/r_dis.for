@@ -20,7 +20,7 @@ cc   *        1.37e-17,1.01e-17,6.01e-18,2.58e-18,1.09e-18,3.92e-19/
 
       cr=pi/180.
       nsu05=nsu/2
-
+	qdis=1.e-20 !!!!!!!!!!!!!!!!
       sum=0.
       do i=2,its-1
          do j=1,ids
@@ -36,13 +36,10 @@ c     !!!!!!!  zenith angle   !!!!!
               ra=sqrt(rads(k)*(rads(k)+2.*re))
               alfa=atan(re/ra)
               him=pi-alfa
-              if(hi.gt.him) then
-                qdis(1,i,j,k)=0.
-                qdis(2,i,j,k)=0.
-              else 
-              !!!!!!!!!!!!!!!!!!!!!! 
+              if(hi.le.him) then
+      
                 hO2=(bk*tem(i,j,k))/(amO2*g(k))
-                reh=(rads(i)+re)/hO2
+                reh=(rads(k)+re)/hO2
               !  Chepmen function
                 chep=chept(reh,hi)
               !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -58,7 +55,7 @@ c     !!!!!!!  zenith angle   !!!!!
                     sumErg=sumErg+sp(l)*solu(l+nsu05)*expTAU                
                     ! print*,tau,k,l  
                 end do                                  
-                qdis(1,i,j,k)=sumL *anO2(i,j,k)*1.e9  
+                qdis(1,i,j,k)=sumL *anO2(i,j,k)!*1.e9  
                 qdis(2,i,j,k)=sumErg *anO2(i,j,k) 
               end if
             end do                           
@@ -66,13 +63,19 @@ c     !!!!!!!  zenith angle   !!!!!
             a2=(qdis(1,i,j,nh-2))                                          
             a3=(qdis(1,i,j,nh-3))   
 !     !!!!!  qdis(nh) extrapolation !!!!
-            qdis(1,i,j,nh)=a3*a1**3/(a2**3)
+!            print *,a1,a2,a3,i,j
+            qdis(1,i,j,nh)=a3*(a1**3/(a2**3))
             a1=(qdis(2,i,j,nh-1))                                          
             a2=(qdis(2,i,j,nh-2))                                          
-            a3=(qdis(2,i,j,nh-3))                                          
-            qdis(2,i,j,nh)=a3*a1**3/(a2**3)
+            a3=(qdis(2,i,j,nh-3))
+	print *,i,j, qdis(1,i,j,nh-1),'!!!!!!!!'
+            print *,a1
+		  print *,a2
+		  print*,a3,i,j
+            qdis(2,i,j,nh)=a3*(a1**3/(a2**3))
           end do
-      end do                              
+      end do
+      qdis(1,:,:,:)=qdis(1,:,:,:)*1.e9
       return 
       end
 

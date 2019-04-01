@@ -68,16 +68,15 @@ c - sumro
        end if
  21   continue
 c
-!      rate dissociation massiv
-ccc   	call r_dis(qdis,pgl,solu,
-ccc     *           gkoor,rads,delta,kpars,nh,its,ids,nsu,uts)
-       call r_dis(qdis,an1,an6,gkoor,g,rads,solu,nsu,delta,
-     *            nh,its,ids,uts)
-       call lowgln_bas(pgl,rads,kpars,nh,its,ids,day
+      call lowgln_bas(pgl,rads,kpars,nh,its,ids,day
      *         ,ap,fa,fs,gkoor,dtets,ddolgs,uts,mass(18),pril,KPA,NT)
 
        call pgl3d(pgl,kpars,nh,its,ids,an1,an2,an3,an6,vr,vi,vj)
    
+!      rate dissociation massiv
+       call r_dis(qdis,an1,an6,gkoor,g,rads,solu,nsu,delta,
+     *            nh,its,ids,uts)
+        
 !      recommend time step
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       dLong=(re+rads(nh-1))*sin(pi*dtets/180.)
