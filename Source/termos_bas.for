@@ -44,7 +44,7 @@ c - sumro
      *   ,an11(:,:,:),an21(:,:,:),an31(:,:,:)
      *   ,an61(:,:,:),vr(:,:,:),vi(:,:,:)
      *   ,vj(:,:,:),vi1(:,:,:),vj1(:,:,:)
-     *   ,qdis(:,:,:,:),g(:),rp(:),ctd(:),anco2(:,:,:)
+     *   ,g(:),rp(:),ctd(:),anco2(:,:,:)
      *   ,ron(:,:,:),ros(:,:,:),ros0(:,:,:)
     
        allocate (an1(its,ids,nh),an2(its,ids,nh),an3(its,ids,nh) 
@@ -52,7 +52,7 @@ c - sumro
      *   ,an11(its,ids,nh),an21(its,ids,nh),an31(its,ids,nh)
      *   ,an61(its,ids,nh),vr(its,ids,nh),vi(its,ids,nh)
      *   ,vj(its,ids,nh),vi1(its,ids,nh),vj1(its,ids,nh)
-     *   ,qdis(2,its,ids,nh),g(NH),rp(NH),ctd(NH),anco2(its,ids,nh)
+     *   ,g(NH),rp(NH),ctd(NH),anco2(its,ids,nh)
      *   ,ros0(ITS,IDS,NH),ros(ITS,IDS,NH),ron(ITS,IDS,NH))
 
       data key/1/
@@ -150,9 +150,10 @@ c     . . . Температура рассчитывается
       end if
 
       if(mass(5).ne.0) then
-         call sdizkn(an1,an2,an3,an11,an21,an31,
+         call sdizkn_bas(an1,an2,an3,an11,an21,an31,
      *               an61,vr,vi,vj,ros,rp,rads,g,nh,its,ids,
-     *               dts,ctd,roS,solu,gkoor,delta,nsu,dtets,uts,ddolgs)
+     *               dts,ctd,roS,solu,qdis,gkoor,delta,nsu,
+     *               dtets,uts,ddolgs)
          call nts (An11,nh,its,ids,nh,its-3) ! ,1
          call nts (An31,nh,its,ids,nh,its-3) ! ,1)  
       end if
@@ -215,7 +216,7 @@ c          File: labt.dan writing heat sourse
      *   ,an6,an11,an21,an31
      *   ,an61,vr,vi
      *   ,vj,vi1,vj1
-     *   ,qdis,g,rp,ctd,anco2
+     *   ,g,rp,ctd,anco2
      *   ,ron,ros,ros0)
 
       return

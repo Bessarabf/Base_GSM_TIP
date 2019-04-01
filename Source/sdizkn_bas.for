@@ -1,10 +1,10 @@
-      subroutine sdizkn(an1,an2,an3,an11,an21,an31,an6,vr,
+      subroutine sdizkn_bas(an1,an2,an3,an11,an21,an31,an6,vr,
      *                  vi,vj,ro,rp,r,g,n,n1,n2,dt,ctd,ro1,
-     *                  solu,gkoor,delta,nsu,dtet,uts,ddolg)
+     *                  solu,qdis,gkoor,delta,nsu,dtet,uts,ddolg)
       dimension an1(n1,n2,n),an2(n1,n2,n),an3(n1,n2,n)
      *         ,ctd(n),an11(n1,n2,n),an21(n1,n2,n),an31(n1,n2,n)
      *         ,vr(n1,n2,n),r(n),rp(n),g(n)
-              
+     *         ,qdis(2,n1,n2,n)         
      *         ,ro(n1,n2,n),ro1(n1,n2,n)
      *         ,an6(n1,n2,n),vi(n1,n2,n),vj(n1,n2,n)
      *         ,solu(nsu),gkoor(2,n1,n2)
@@ -29,8 +29,9 @@ c    . . .  источник фотодиссоциации (q)
       
       do i=1,n1
         do j=1,n2
-          call fqsmen(an1,an2,an3,an6,n,n1,i,j,solu,q,
-     *                gkoor,r,delta,n2,nsu,uts)
+!          call fqsmen(an1,an2,an3,an6,n,n1,i,j,solu,q,
+!     *                gkoor,r,delta,n2,nsu,uts)
+            q(i,j,:)=qdis(1,i,j,:)
         end do
       end do
 

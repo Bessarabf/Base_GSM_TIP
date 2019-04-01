@@ -4,6 +4,8 @@ MODULE mo_bas_gsm
   INTEGER, PARAMETER :: its0 = 37    ! number of latitudes
   INTEGER, PARAMETER :: nh0 = 30     ! number of GSMTIP levels
   INTEGER, PARAMETER :: mlev =10     ! number of hamtoGSMTIP levels
+! massives
+  DIMENSION qdis(2,its0,ids0,nh0)
 ! constant section !!!!!!!!!!!!!!!!!!!
   real,parameter :: pi=3.1415926 
   real,parameter :: om=7.2722e-5

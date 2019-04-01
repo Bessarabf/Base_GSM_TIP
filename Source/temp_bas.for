@@ -16,6 +16,7 @@ c    . . . cicle_prog alog i и j
      *           mass,delta,day,uts,
      *           tau,dts,ctd,vim,vid,vir,ids,ins,
      *           an1,an2,an3,anco2,an6,an61,ro,vi,vj,vr)
+      USE mo_bas_gsm
       dimension pgl(kpars,nh,its,ids)
      *,         pgi(ins,nh,its,ids),parj(nh,its,ids)
      *,         solet(nse),solu(nsu),rads(nh),mass(30),ctd(nh)
@@ -27,8 +28,8 @@ c    . . . cicle_prog alog i и j
      *,         vr(its,ids,nh),g(nh),anco2(its,ids,nh)
      *,         apm(7)
       integer day
-      data apm/7*11./,fa,fs/130.,130./
-      data pi,om/3.14159,7.27e-5/
+!      data apm/7*11./,fa,fs/130.,130./ ! for MSIS section 
+!      data pi,om/3.14159,7.27e-5/
 !      if(ids.gt.24) then
 !       print *,'HEATPO: ids is too small '
 !       stop
@@ -99,6 +100,9 @@ c
      *                 kpars,ins,nh,its,ids,dl,uts,dts,mass)
 ! for EAGLE part
 !      USE mo_ham_gsm, ONLY:qJGSM
+
+      USE mo_bas_gsm
+
       dimension pgl(kpars,nh,its,ids),an1(its,ids,nh),
      *          an2(its,ids,nh),an3(its,ids,nh),anco2(its,ids,nh),
      *          an6(its,ids,nh),an61(its,ids,nh),
@@ -111,9 +115,9 @@ c
      
       allocatable pa(:),pb(:),q(:),qdj(:)
       allocate (pa(NH+5),pb(NH+5),q(NH),qdj(NH))
-      data re/6.371e8/,pi/3.1415926/,bk/1.38e-16/,
-     *    am1,am2,am3/53.12e-24,46.51e-24,26.56e-24/
-     *,   om/7.272205e-5/
+!      data re/6.371e8/,pi/3.1415926/,bk/1.38e-16/,
+!     *    amO2,amN2,amO/53.12e-24,46.51e-24,26.56e-24/
+!     *,   om/7.272205e-5/
       cr=pi/180.
       klik=0
       n0=mass(10)
@@ -131,7 +135,7 @@ c
        sin m=sin(teta-dteta)
        do 2 j=1,ids
         an60=pgl(7,1,i,j)
-        call ijoulp(q,qdj,pgl,pgi,ctd,rads,g,an60,solu,
+        call ijoulp_bas(q,qdj,qdis,pgl,pgi,ctd,rads,g,an60,solu,
      *            gkoor,kpars,ins,nh,its,ids,nsu,i,j,uts,dl,
      *            an1,an2,an3,an6,anco2,vr,vi,vj,vim,vid,vir)
         do 29 k=1,n0m
@@ -166,8 +170,8 @@ c
         anu=3.34e-6*an6(i,j,k)**0.71
 c        sum=(an1(i,j,k)+an2(i,j,k)+an3(i,j,k))*bk
         sum1=(an1(i,j,k)+an2(i,j,k)+an3(i,j,k))
-        ams=(an1(i,j,k)*am1+an2(i,j,k)*am2 +
-     *       an3(i,j,k)*am3)/sum1
+        ams=(an1(i,j,k)*amo2+an2(i,j,k)*amN2 +
+     *       an3(i,j,k)*amO)/sum1
         rc=(2.5*(an1(i,j,k)+an2(i,j,k))+1.5*an3(i,j,k))*bk
         abs vr= abs(vr(i,j,k))
         con1=vr(i,j,k)-abs vr
@@ -247,9 +251,11 @@ c  night flux on upper boundary erg/cm2*c-1
       return
       end
 !
-      subroutine ijoulp(q,qdj,pgl,pgi,ctd,rads,g,an60,solu,
+      subroutine ijoulp_bas(q,qdj,qdis,pgl,pgi,ctd,rads,g,an60,solu,
      *                  gkoor,kpars,ins,nh,its,ids,nsu,i,j,uts,
      *                  del,an1,an2,an3,an6,anco2,vr,vi,vj,vim,vid,vir)
+!      USE mo_bas_gsm
+
       dimension q(nh),g(nh),pgl(kpars,nh,its,ids),gkoor(2,its,ids),
      *          rads(nh),solu(nsu),ctd(nh),sni(6)
      *         ,an1(its,ids,nh),an2(its,ids,nh),an3(its,ids,nh)
@@ -257,7 +263,7 @@ c  night flux on upper boundary erg/cm2*c-1
      *         ,vi(its,ids,nh),vj(its,ids,nh)
      *         ,pgi(ins,nh,its,ids)
      *         ,vim(nh,its,ids),vid(nh,its,ids)
-     *         ,vir(nh,its,ids),qdj(nh)
+     *         ,vir(nh,its,ids),qdj(nh),qdis(2,its,ids,nh)
       data pi/3.14159265359d0/,om/7.272205e-5/,
 c   . . . эффективность для зимы
 c    *     r0,r00/3.48,2.94/
@@ -311,7 +317,8 @@ c*
         te=pgl(9,k,i,j)
         conco2=anco2(i,j,k)
         
-        di=dis mod(ano,tem,g(k),rads(k),solu,nsu,hi,key)*ano
+        !di=dis mod(ano,tem,g(k),rads(k),solu,nsu,hi,key)*ano
+         di=qdis(2,i,j,k)
 c
         e_dis=0.3          ! Равномерный 
         if(k.le.23) then   ! нагрев
@@ -383,7 +390,7 @@ c
 c
       function cold(ano,and,antr,tem,anco2,radsk,gk,ctdk)
       real ltau,ksy
-      data am1,am2,am3,amco2/53.12e-24,46.51e-24,26.56e-24,
+      data amo2,amN2,amO,amco2/53.12e-24,46.51e-24,26.56e-24,
      *     73.04e-24/,
      *     bk/1.38e-16/,re/6.371e8/
 c*

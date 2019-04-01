@@ -62,15 +62,15 @@ c     !!!!!!!  zenith angle   !!!!!
                 qdis(2,i,j,k)=sumErg *anO2(i,j,k) 
               end if
             end do                           
-            a1=(qdis(1,nh-1,i,j))                                          
-            a2=(qdis(1,nh-2,i,j))                                          
-            a3=(qdis(1,nh-3,i,j))   
+            a1=(qdis(1,i,j,nh-1))                                          
+            a2=(qdis(1,i,j,nh-2))                                          
+            a3=(qdis(1,i,j,nh-3))   
 !     !!!!!  qdis(nh) extrapolation !!!!
-            qdis(1,nh,i,j)=a3*a1**3/(a2**3)
-            a1=(qdis(2,nh-1,i,j))                                          
-            a2=(qdis(2,nh-2,i,j))                                          
-            a3=(qdis(2,nh-3,i,j))                                          
-            qdis(2,nh,i,j)=a3*a1**3/(a2**3)
+            qdis(1,i,j,nh)=a3*a1**3/(a2**3)
+            a1=(qdis(2,i,j,nh-1))                                          
+            a2=(qdis(2,i,j,nh-2))                                          
+            a3=(qdis(2,i,j,nh-3))                                          
+            qdis(2,i,j,nh)=a3*a1**3/(a2**3)
           end do
       end do                              
       return 
