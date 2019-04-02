@@ -16,7 +16,7 @@ c    . . . cicle_prog alog i и j
      *           mass,delta,day,uts,
      *           tau,dts,ctd,vim,vid,vir,ids,ins,
      *           an1,an2,an3,anco2,an6,an61,ro,vi,vj,vr)
-      USE mo_bas_gsm
+!      USE mo_bas_gsm, ONLY:
       dimension pgl(kpars,nh,its,ids)
      *,         pgi(ins,nh,its,ids),parj(nh,its,ids)
      *,         solet(nse),solu(nsu),rads(nh),mass(30),ctd(nh)
@@ -135,7 +135,7 @@ c
        sin m=sin(teta-dteta)
        do 2 j=1,ids
         an60=pgl(7,1,i,j)
-        call ijoulp_bas(q,qdj,qdis,pgl,pgi,ctd,rads,g,an60,solu,
+        call ijoulp_bas(q,qdj,pgl,pgi,ctd,rads,g,an60,solu,
      *            gkoor,kpars,ins,nh,its,ids,nsu,i,j,uts,dl,
      *            an1,an2,an3,an6,anco2,vr,vi,vj,vim,vid,vir)
         do 29 k=1,n0m
@@ -251,10 +251,10 @@ c  night flux on upper boundary erg/cm2*c-1
       return
       end
 !
-      subroutine ijoulp_bas(q,qdj,qdis,pgl,pgi,ctd,rads,g,an60,solu,
+      subroutine ijoulp_bas(q,qdj,pgl,pgi,ctd,rads,g,an60,solu,
      *                  gkoor,kpars,ins,nh,its,ids,nsu,i,j,uts,
      *                  del,an1,an2,an3,an6,anco2,vr,vi,vj,vim,vid,vir)
-!      USE mo_bas_gsm
+      USE mo_bas_gsm, ONLY: pi,om,qdis
 
       dimension q(nh),g(nh),pgl(kpars,nh,its,ids),gkoor(2,its,ids),
      *          rads(nh),solu(nsu),ctd(nh),sni(6)
@@ -263,8 +263,9 @@ c  night flux on upper boundary erg/cm2*c-1
      *         ,vi(its,ids,nh),vj(its,ids,nh)
      *         ,pgi(ins,nh,its,ids)
      *         ,vim(nh,its,ids),vid(nh,its,ids)
-     *         ,vir(nh,its,ids),qdj(nh),qdis(2,its,ids,nh)
-      data pi/3.14159265359d0/,om/7.272205e-5/,
+     *         ,vir(nh,its,ids),qdj(nh)
+!      data pi/3.14159265359d0/,om/7.272205e-5/,
+       data
 c   . . . эффективность для зимы
 c    *     r0,r00/3.48,2.94/
 c   . . . эффективность=0.6   равноденствие
@@ -317,8 +318,9 @@ c*
         te=pgl(9,k,i,j)
         conco2=anco2(i,j,k)
         
-        !di=dis mod(ano,tem,g(k),rads(k),solu,nsu,hi,key)*ano
+!         di=dis mod(ano,tem,g(k),rads(k),solu,nsu,hi,key)*ano
          di=qdis(2,i,j,k)
+	
 c
         e_dis=0.3          ! Равномерный 
         if(k.le.23) then   ! нагрев

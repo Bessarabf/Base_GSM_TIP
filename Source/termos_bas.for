@@ -39,6 +39,7 @@ c - sumro
      *   ,vir(nh,its,ids),vid(nh,its,ids),vim(nh,its,ids)
      *   ,potef(ntr,ids,nl2),pril(*)
      *   ,ros00(its0,ids0,nh0)   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
        allocatable an1(:,:,:),an2(:,:,:),an3(:,:,:) 
      *   ,an6(:,:,:)
      *   ,an11(:,:,:),an21(:,:,:),an31(:,:,:)
@@ -74,12 +75,11 @@ c
        call pgl3d(pgl,kpars,nh,its,ids,an1,an2,an3,an6,vr,vi,vj)
    
 !      rate dissociation massiv
-!       call r_dis(qdis,an1,an6,gkoor,g,rads,solu,nsu,delta,
-!     *            nh,its,ids,uts)
-        call qdismod(qdis,an1,an6,gkoor,g,rads,solu,nsu,delta,
+       call r_dis(qdis,an1,an6,gkoor,g,rads,solu,nsu,delta,
      *            nh,its,ids,uts)
- 
-        
+!        call qdismod(qdis,an1,an6,gkoor,g,rads,solu,nsu,delta,
+!     *            nh,its,ids,uts)
+	 
 !      recommend time step
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       dLong=(re+rads(nh-1))*sin(pi*dtets/180.)
@@ -154,7 +154,7 @@ c     . . . Температура рассчитывается
       if(mass(5).ne.0) then
          call sdizkn_bas(an1,an2,an3,an11,an21,an31,
      *               an61,vr,vi,vj,ros,rp,rads,g,nh,its,ids,
-     *               dts,ctd,roS,solu,qdis,gkoor,delta,nsu,
+     *               dts,ctd,roS,solu,gkoor,delta,nsu,
      *               dtets,uts,ddolgs)
          call nts (An11,nh,its,ids,nh,its-3) ! ,1
          call nts (An31,nh,its,ids,nh,its-3) ! ,1)  

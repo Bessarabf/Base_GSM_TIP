@@ -19,9 +19,10 @@
             temp=an6(i,j,k)
             anq=an1(i,j,k)
         
-            qdis(1,i,j,k)=1.e9*dismod(anq,temp,g(k),rads(k),
+          qdis(1,i,j,k)=1.e9*dismod(anq,temp,g(k),rads(k),
      *                    solu,nsu,hi,2)
-            qdis(2,i,j,k)=dismod(anq,temp,g(k),rads(k),solu,nsu,hi,1)
+          qdis(2,i,j,k)=dismod(anq,temp,g(k),rads(k),solu,nsu,hi,1)*anq
+	    
         
   1       continue
         end do

@@ -1,14 +1,14 @@
       subroutine sdizkn_bas(an1,an2,an3,an11,an21,an31,an6,vr,
      *                  vi,vj,ro,rp,r,g,n,n1,n2,dt,ctd,ro1,
-     *                  solu,qdis,gkoor,delta,nsu,dtet,uts,ddolg)
+     *                  solu,gkoor,delta,nsu,dtet,uts,ddolg)
+      USE mo_bas_gsm, ONLY:amo2,amn2,amo,qdis
       dimension an1(n1,n2,n),an2(n1,n2,n),an3(n1,n2,n)
      *         ,ctd(n),an11(n1,n2,n),an21(n1,n2,n),an31(n1,n2,n)
      *         ,vr(n1,n2,n),r(n),rp(n),g(n)
-     *         ,qdis(2,n1,n2,n)         
      *         ,ro(n1,n2,n),ro1(n1,n2,n)
      *         ,an6(n1,n2,n),vi(n1,n2,n),vj(n1,n2,n)
      *         ,solu(nsu),gkoor(2,n1,n2)
-      data amo2,amn2,amo/53.12e-24,46.51e-24,26.56e-24/
+!      data amo2,amn2,amo/53.12e-24,46.51e-24,26.56e-24/
 c
 	allocatable q(:,:,:) ! dissosiation sourse
 	allocate (q(n1,n2,n))
@@ -29,10 +29,11 @@ c    . . .  источник фотодиссоциации (q)
       
       do i=1,n1
         do j=1,n2
-	    do k=1,n
+	    
 !          call fqsmen(an1,an2,an3,an6,n,n1,i,j,solu,q,
 !     *                gkoor,r,delta,n2,nsu,uts)
-            q(i,j,k)=qdis(1,i,j,k)*1.e9
+          do k=1,n
+		  q(i,j,k)=qdis(1,i,j,k)
 	    end do
         end do
       end do

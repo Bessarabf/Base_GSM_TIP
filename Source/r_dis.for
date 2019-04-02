@@ -4,8 +4,10 @@ c 4d massive dissociation rates (1 - 1/cm3/s; 2 - erg/cm3/s )
      *           nh,its,ids,uts)
 
       USE mo_bas_gsm, ONLY: pi,om,bk,re,amO2
-      dimension ano2(its,ids,nh),tem(its,ids,nh),qdis(2,its,ids,nh),
-     *          g(nh),rads(nh),gkoor(2,its,ids)
+      dimension ano2(its,ids,nh),tem(its,ids,nh)
+     *         ,g(nh),rads(nh)
+     *         ,qdis(2,its,ids,nh),gkoor(2,its,ids)
+ 
       dimension solu(nsu),sp(12)
       data 
 cc      cross sections F10.7= 70
@@ -20,12 +22,12 @@ cc   *        1.37e-17,1.01e-17,6.01e-18,2.58e-18,1.09e-18,3.92e-19/
 
       cr=pi/180.
       nsu05=nsu/2
-	qdis=1.e-10 !!!!!!!!!!!!!!!!
+!!!	qdis=1.e-10 !!!!!!!!!!!!!!!!
       sum=0.
-	
       do i=2,its-1
          do j=1,ids
-	       gshir=gkoor(1,i,j)*cr
+
+	     gshir=gkoor(1,i,j)*cr
            gdol=gkoor(2,i,j)*cr
            gshir=0.5*pi-gshir
 c     !!!!!!!  zenith angle   !!!!!
@@ -33,7 +35,7 @@ c     !!!!!!!  zenith angle   !!!!!
      *           cos(om*(uts-43200.)+gdol)
            hi=acos(coshi)
            sumI=0.
-           do k=nh-1,1,-1
+           do k=nh,1,-1
               ra=sqrt(rads(k)*(rads(k)+2.*re))
               alfa=atan(re/ra)
               him=pi-alfa
@@ -44,33 +46,26 @@ c     !!!!!!!  zenith angle   !!!!!
               !  Chepmen function
                 chep=chept(reh,hi)
               !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                sumI=sumI+0.5*(anO2(i,j,k)+anO2(i,j,k+1))*
-     *               (rads(k+1)-rads(k))    
-                ! print sumI                                           
+                IF(K.EQ.NH) THEN 
+                  sumI=anO2(i,j,k)*hO2
+                else
+                  sumI=sumI+0.5*(anO2(i,j,k)+anO2(i,j,k+1))*
+     *                 (rads(k+1)-rads(k))    
+                ! print sumI 
+                end if
                 sumL=0. 
                 sumErg=0.                                               
                 do l=1,nsu05                                   
-                    tau=sp(l)*sumI*chep 
-                    expTAU=exp(-tau)                                  
-                    sumL=sumL+sp(l)*solu(l)*expTAU 
-                    sumErg=sumErg+sp(l)*solu(l+nsu05)*expTAU                
+                   tau=sp(l)*sumI*chep 
+                   expTAU=exp(-tau)                                  
+                   sumL=sumL+sp(l)*solu(l)*expTAU 
+                   sumErg=sumErg+sp(l)*solu(l+nsu05)*expTAU                
                     ! print*,tau,k,l  
                 end do                                  
-                qdis(1,i,j,k)=sumL *anO2(i,j,k)!*1.e9  
+                qdis(1,i,j,k)=sumL*1.e9 ! *anO2(i,j,k)!  
                 qdis(2,i,j,k)=sumErg *anO2(i,j,k) 
               end if
             end do                           
-            a1=(qdis(1,i,j,nh-1))                                          
-            a2=(qdis(1,i,j,nh-2))                                          
-            a3=(qdis(1,i,j,nh-3))   
-!     !!!!!  qdis(nh) extrapolation !!!!
-            qdis(1,i,j,nh)=a3*(a1**3/(a2**3))
-            a1=(qdis(2,i,j,nh-1))                                          
-            a2=(qdis(2,i,j,nh-2))                                          
-            a3=(qdis(2,i,j,nh-3))
-
-      !      qdis(2,i,j,nh)=a3*(a1**3/(a2**3))
-	!      qdis(2,i,j,nh)=a3*(a1/(a2))
           end do
       end do
       
