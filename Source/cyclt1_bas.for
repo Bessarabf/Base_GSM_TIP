@@ -47,16 +47,17 @@ c
         qom=0.
 !!!!  end do
       qmax=0.
-      !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-      if(mass(12).eq.2.or.mass(12).eq.3)then
-!        pdpc=38.0+0.089*ae
+!!!!  pdpc cross potential relations
+!!!!  pdpc(Kp) with Zhang&Pacston precipitations mass(6)=2 or 6
+!!!!  pdpc(Ae) with Vorobiev and Yagodkina 
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      if(mass(12).eq.2.or.mass(12).eq.6) then
+        pdpc=26.4+13.3*pkp0
+      else if(mass(12).eq.3) then
         pdpc=38.0+0.089*AEpdpc
       end if
-      if(mass(12).eq.4.or.mass(12).eq.5)then
-        pdpc=1.e-4*vsol*vsol+11.7*bmod*sin(.5*acos(bmpz/bmod))**3.
-      end if
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
+!!    shift tet2 on latitude with dependences with pdpc 
       if(pdpc.ge.0..and.pdpc.lt.40.)tet2=25.
       if(pdpc.ge.40..and.pdpc.lt.50.)tet2=30.
       if(pdpc.ge.50..and.pdpc.lt.88.5)tet2=35.
@@ -64,24 +65,28 @@ c
       if(pdpc.ge.127..and.pdpc.lt.165.4)tet2=45.
       if(pdpc.ge.165.4.and.pdpc.lt.200.)tet2=50.
       if(pdpc.ge.200.)tet2=55.
-
-cc      fac2=3.06e-13+2.14e-16*ae
-cc      fac2=(3.e-14+0.006*1.e-14*ae)*1.28
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!      fac2=3.06e-13+2.14e-16*ae
+!      fac2=(3.e-14+0.006*1.e-14*ae)*1.28
 !      fac2=(3.e-14+0.006*1.e-14*AEpdpc)*1.28
-       fac2=(3.e-13+0.006*1.e-13*AEpdpc)*1.28
+!      fac2=(3.e-13+0.006*1.e-13*AEpdpc)*1.28
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!       fac2 from danmodel only !!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     1 if(i.ge.ns) go to 2
         dtt=dtt0
         utt=uts+dtt-dts
         alt=rads(ntr)
 !!!   electron precipitation
       ! Zhang & Paxton
-      if(mass(12).eq.2.or.mass(12).eq.4)then
+      if(mass(12).eq.2.or.mass(12).eq.6)then
         call aepp(mass,pkp,nl2,idt,ddolgs,dtets,uts,delta,
      *            E0,FAE,its,ids)
-      end if
       ! Vorobiev & Yagodkina
-      if(mass(12).eq.3.or.mass(12).eq.5)then
+      else if(mass(12).eq.3) then
         call aeppVY(mass,nl2,idt,ddolgs,dtets,al,dst,uts,delta,E0,FAE)
+      else  
+        print*, 'incorrect mass(12) - var of precipitations'
       end if
       
       call shar_bas(day,god,dayt,godt,uts,tau,dts,sole,solu,solen,nsu,
@@ -214,7 +219,7 @@ cc
         call zait(readfl,6,nzapt,nzaps,nadrt,nadrs,isp,
      *           ldor,kdf,god,day,ut0,ut3,pole)
       end if
-c . . . Запись времени и даты в информационную запись
+c . . . writing date and time in inf-record
       read(4,rec=1) pole
       pole(2)=god
       pole(3)=day
