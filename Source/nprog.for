@@ -27,22 +27,14 @@ c*******
       if(j.eq.1)  jm=ids
       cN(1)=pgl(5,1,i,j)
       do k=1,nh     
-c     . . . scale height
+c     . . . scale heights
          h(k) =const*pgl(7,k,i,j)/g(k)
          sum=pgl(1,k,i,j)+pgl(2,k,i,j)+pgl(3,k,i,j)
          ams=(amo*pgl(3,k,i,j)+amo2*pgl(1,k,i,j)+
      *        amn2*pgl(2,k,i,j))/sum
          hsr(k)=bk*pgl(7,k,i,j)/(ams*g(k))
-c    . . . Coef. Mol. Dif.
-c         epok=1
-!          epok=exp(2.8/an6(i,j,k))
-!          sum1=an1(i,j,k)+an2(i,j,k)
-!          sum2=an1(i,j,k)+an3(i,j,k)
-!          d12=0.829e17/sum1*an6(i,j,k)**0.724*epok
-!          d13=0.969e17/sum2*an6(i,j,k)**0.774*epok
-!          obr=(an2(i,j,k)/d12+an3(i,j,k)/d13)/(an2(i,j,k)+an3(i,j,k))
-!          cmd(k)=1./obr
-          cmd(k)=4.55e17/sum*sqrt(pgl(7,k,i,j))  ! к-т м.диффузии N
+
+          cmd(k)=4.55e17/sum*sqrt(pgl(7,k,i,j))  ! mol dif N 
           alf(k)=cmd(k)/(cmd(k)+ctd(k))
           bet(k)=ctd(k)/(cmd(k)+ctd(k))
          end do
@@ -86,14 +78,25 @@ c      . . . к-т диффузии в дробной точке
           aprim=(cmd(k+1)+ctd(k+1))/pro*clp
           cprim=(cmd(k-1)+ctd(k-1))/pro*clm
           cl=0.5*(-dtnp/rp(k)+dtnm/rp(k-1))
-          a(k)=a(k)+aprim-pgl(10,k+1,i,j)/pro*.5
-          c(k)=c(k)+cprim+pgl(10,k-1,i,j)/pro*.5
+!          a(k)=a(k)+aprim-pgl(10,k+1,i,j)/pro*.5 ! var before 30.10.18
+!          c(k)=c(k)+cprim+pgl(10,k-1,i,j)/pro*.5 !
+!!! like O2pro 30/10/18 !!!!!!!!!!!!!!!!!!!!!!
+          a(k)=a(k)+aprim
+          c(k)=c(k)+cprim
+          if(pgl(10,k+1,i,j).le.0.) then
+           a(k)=a(k)-pgl(10,k+1,i,j)/rp(k)
+           b(k)=b(k)-pgl(10,k,i,j)/rp(k)
+          else  
+           b(k)=b(k)+pgl(10,k,i,j)/rp(k-1)
+           c(k)=c(k)+pgl(10,k-1,i,j)/rp(k-1)
+          end if 
+!!!!!!!!!!!!!!!!!!!!! end 30.10.18 !!!!!!!!!!!!!!!!!!!!!
           b(k)=b(k)+cl*(cmd(k)+ctd(k))/pro
           f(k)=q+cN(k)/dt
-c . . .  Дивергенция V:
+c . . .  div V:
           del=2.*dfi*rk*sin_t
           div=(pgl(12,k,i,jp)-pgl(12,k,i,jm))/del
-c . . .  учет котангенса:
+c . . .  non spheric:
           del=2.*dtet*rk
           div=div+pgl(11,k,i,j)/rk*cot_t+
      *         (pgl(11,k,i+1,j)-pgl(11,k,i-1,j))/del
@@ -102,18 +105,16 @@ c . . .  учет котангенса:
           else
              f(k)=f(k)-div*cN(k)
           end if
-        end do
+      end do
 c . . . элемент массива используется для удобства
 c       
-        f(nh)=exp(-rp(nh-1)/h(nh))
-        kiss=2
-        call progon (cN,a,b,c,f,nh,kiss)
+      f(nh)=exp(-rp(nh-1)/h(nh))
+      kiss=2
+      call progon (cN,a,b,c,f,nh,kiss)
 c     . . .
-        do k=1,nh
-         pgl(5,k,i,j)=cN(k)
-        end do
-      deallocate (a ,b ,c ,f ,cmd ,cN ,
-     *            h ,hsr ,alf ,bet )
-
+      do k=1,nh
+        pgl(5,k,i,j)=cN(k)
+      end do
+      deallocate (a,b,c,f,cmd,cN,h,hsr,alf,bet )
       return
       end

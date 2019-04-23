@@ -79,33 +79,48 @@ c      . . . calculation of cos(hi)
         end if
 
 46      format(1p4e8.1)
-  ! . . . cNd - calculation
-        
-        call ndnew (cNd,cNo,cNoi,cN2i,cNe
-     *             ,pgl,kpars,nh,its,ids,i,j,key,dt)
- 
-  !  progonka N(4S)
+! . . . cNd - calculation
+!  photochen N2d       
+!        call ndnew (cNd,cNo,cNoi,cN2i,cNe
+!     *             ,pgl,kpars,nh,its,ids,i,j,key,dt)
+! 
+!  progonka N(2D)
+          call ndprog(cNd,cNo,cNoi,cN2i,cNe
+     *            ,pgl,ctd,rads,rp,g,kpars,nh,its,ids,i,j,hi,dt)
+!  progonka N(4S)
        
     	  call nprog(cNd,cNoi,cO2i,cNe
      *            ,pgl,ctd,rads,rp,g,kpars,nh,its,ids,i,j,hi,dt)
-	  	 	  
-  ! progonka NO. Altitude part
+! progonka NO. Altitude part
 	   call noprog(cNd,cNo,cO2i
-     *             ,pgl,ctd,rads,rp,g,kpars,nh,its,ids,i,j,hi,dt)
+     *            ,pgl,ctd,rads,rp,g,kpars,nh,its,ids,i,j,hi,dt)
           end do
 	end do	  
       !  S-N poles smoothing for N2D
 	call bongl(cNd,nh,its,ids)
-	!  horisontal part for NO
-      call bospgl(pgl,kpars,nh,its,ids,4)
+      !  horisontal part for NO
+        call bospgl(pgl,kpars,nh,its,ids,4)
 	call pgl_ic(pgl,rads,kpars,nh,its,ids,dt,nh,4)
-      call pgl_jc(pgl,rads,kpars,nh,its,ids,dt,nh,4) 
-	call bospgl(pgl,kpars,nh,its,ids,4)
+        call pgl_jc(pgl,rads,kpars,nh,its,ids,dt,nh,4) 
+        call bospgl(pgl,kpars,nh,its,ids,4)
       !  horisontal part for N(4s)
 	call bospgl(pgl,kpars,nh,its,ids,5)
 	call pgl_ic(pgl,rads,kpars,nh,its,ids,dt,nh,5)
-      call pgl_jc(pgl,rads,kpars,nh,its,ids,dt,nh,5)
+        call pgl_jc(pgl,rads,kpars,nh,its,ids,dt,nh,5)
 	call bospgl(pgl,kpars,nh,its,ids,5)
+      !  horisontal part for N(2D)
+      	DO K=1,NH
+	   DO I=1,ITS
+	      DO J=1,IDS
+	       PGL(17,K,I,J)=CND(I,J,K)
+            
+              END DO
+	   END DO
+	END DO
+       	call pgl_ic(pgl,rads,kpars,nh,its,ids,dt,nh,17)
+        call pgl_jc(pgl,rads,kpars,nh,its,ids,dt,nh,17)
+	call bospgl(pgl,kpars,nh,its,ids,17)
+
 c     . . .  horisontal circulation NO,N
 !      call hori(pgl,rads,kpars,nh,its,ids,4,dt)
 !      call horj(pgl,rads,kpars,nh,its,ids,4,dt)
@@ -117,17 +132,8 @@ c     . . .  horisontal circulation NO,N
           call bospgl(pgl,kpars,nh,its,ids,18)
           call bospgl(pgl,kpars,nh,its,ids,19)
       end if
-	DO K=1,NH
-	   DO I=1,ITS
-	    DO J=1,IDS
-	       PGL(17,K,I,J)=CND(I,J,K)
-            
-          END DO
-	   END DO
-	END DO
-	
-	deallocate (cNd,cO2i,cNoi,cN2i,cNe,cNo)
-	return
+      deallocate (cNd,cO2i,cNoi,cN2i,cNe,cNo)
+      return
       end
 
 c

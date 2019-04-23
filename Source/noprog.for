@@ -120,7 +120,6 @@ c     . . .
         do k=1,nh
          pgl(4,k,i,j)=cNO(k)
         end do
-      deallocate (a,b,c,f,cmd
-     *          ,h,hsr,alf,bet)
+      deallocate (a,b,c,f,cmd,h,hsr,alf,bet)
       return
       end
