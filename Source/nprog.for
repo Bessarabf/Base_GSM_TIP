@@ -47,9 +47,9 @@ c     . . . scale heights
           ots=sqrt(ot)
 
 c p -lost, and q - source
-          u=alfa1*ot**0.85*(1.-r1)*cNoi(k)*cNe(k)
-          u=u+(alyam9*pgl(3,k,i,j)+alyam11/ots*cNe(k)+
-     *    alyam16*pgl(2,k,i,j)+alyam13)*cNd(i,j,k)
+          u=alfa1*ot**0.85*(1.-r1)*cNoi(k)*cNe(k)       ! NO+ + e 
+          u=u+(alyam9*pgl(3,k,i,j)+alyam11/ots*cNe(k)+  ! N(2D) + O ; N2D + e
+     *    alyam16*pgl(2,k,i,j)+alyam13)*cNd(i,j,k)      ! N2D + N2; N2D -> N
           q=u+r3*alyam6*pgl(14,k,i,j)
           ho2=const1*pgl(7,k,i,j)/g(k)
           x=(rads(k)+re)/h o2

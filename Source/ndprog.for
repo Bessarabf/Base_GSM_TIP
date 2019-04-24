@@ -58,9 +58,9 @@ c     . . .
          ot=300./pgl(9,k,i,j)
          ots=sqrt(ot)
 c . . . p -lost, and q- source
-         q=alfa1*ot**0.85*r1*cNoi(k)*cNe(k)
-         q=q+alyam4*(300./tr)**0.44*cN2i(k)*pgl(3,k,i,j)
-         q=q+r3*alyam6*pgl(14,k,i,j)
+         q=alfa1*ot**0.85*r1*cNoi(k)*cNe(k)               ! NO+ + e
+         q=q+alyam4*(300./tr)**0.44*cN2i(k)*pgl(3,k,i,j)  ! N2+ + O
+         q=q+r3*alyam6*pgl(14,k,i,j)                      ! q(N2+)
          p=alyam7*pgl(1,k,i,j)
          p=p+alyam9*pgl(3,k,i,j)
          p=p+alyam11/ots*cNe(k)

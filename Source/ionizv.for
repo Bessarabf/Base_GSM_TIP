@@ -3,7 +3,9 @@
       real i0,c(4)
       func1(e)=1.46e-15*(e**(-5.8)+5.e9*e**(-8.8))
 !!    ! func2(e,e0,r)=e**(gam-0.854)*exp(-func1(e)*r**3-e/e0)
-      data c/1.09,1.,0.61,1./
+! ionization branch: O2,N2,NO,O
+!      data c/1.09,1.,0.61,1./
+      data c/1.09,1.,0.,1./ ! NO is not ionization by e 
       a=1.277e-13*i0
       g=gam-0.854
       g1=1.+gam
