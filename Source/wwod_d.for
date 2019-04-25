@@ -90,6 +90,7 @@ c     write(10,944)ns,uprt,uprs
       if(mas(4).gt.100)go to 120
 
       utk=ut0+tk
+!  fa0 - background F10.7, fs - daily F10.7
       read(7,919)fa0,fs
 	   
       nn=mas(4)

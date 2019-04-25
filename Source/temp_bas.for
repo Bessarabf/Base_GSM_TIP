@@ -16,7 +16,6 @@ c    . . . cicle_prog alog i и j
      *           mass,delta,day,uts,
      *           tau,dts,ctd,vim,vid,vir,ids,ins,
      *           an1,an2,an3,anco2,an6,an61,ro,vi,vj,vr)
-!      USE mo_bas_gsm, ONLY:
       dimension pgl(kpars,nh,its,ids)
      *,         pgi(ins,nh,its,ids),parj(nh,its,ids)
      *,         solet(nse),solu(nsu),rads(nh),mass(30),ctd(nh)
@@ -59,7 +58,6 @@ c         print*,' Значения Tn на в.границе только при mass(10)=30'
 c         stop
 cc    end if
 !
-!    
       call tnpot_bas(pgl,pgi,an1,an2,an3,an6,an61,vi,vj,vr,
      *              anco2,ro,vim,vid,vir,rads,g,gkoor,ctd,solu,nsu,
      *              kpars,ins,nh,its,ids,delta,uts,dts,mass)
@@ -100,7 +98,6 @@ c
      *                 kpars,ins,nh,its,ids,dl,uts,dts,mass)
 ! for EAGLE part
 !      USE mo_ham_gsm, ONLY:qJGSM
-
       USE mo_bas_gsm
 
       dimension pgl(kpars,nh,its,ids),an1(its,ids,nh),
@@ -318,9 +315,8 @@ c*
         te=pgl(9,k,i,j)
         conco2=anco2(i,j,k)
         
-!         di=dis mod(ano,tem,g(k),rads(k),solu,nsu,hi,key)*ano
-         di=qdis(2,i,j,k)
-	
+!       di=dis mod(ano,tem,g(k),rads(k),solu,nsu,hi,key)*ano
+        di=qdis(2,i,j,k)
 c
         e_dis=0.3          ! Равномерный 
         if(k.le.23) then   ! нагрев

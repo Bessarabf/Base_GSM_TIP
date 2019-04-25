@@ -17,23 +17,20 @@
         em=0.373*em**0.1
         em=em*r**0.3
 	  em=em+g*e0
- !     PRINT*,I0,GAM,EM,E0,EMIN,EMAX,I,IG,R
 
-	  psi=g+(5.76e-14*r)*r*r*(em**(-5.8)+1.1e10*em**(-8.8))
+	psi=g+(5.76e-14*r)*r*r*(em**(-5.8)+1.1e10*em**(-8.8))
 	
         sq=1./sqrt(psi)
         r=sqrt(psi/2.)
         er=1.+erf(r)
         fi=1.253/fg*sq*er
-      !  fff=func1(em)*r*r*r
-	  fff=func1(em)
-	!  print*, fff,r,par(3,i,ig),i,ig
-	  fff=fff*r*r*r
-	  if(fff.gt.80.)fff=80.
+        fff=func1(em)
+        fff=fff*r*r*r
+        if(fff.gt.80.)fff=80.
         qer=em**(-0.854)*exp(-fff)
         eme0=em/e0
         if(eme0.ge.80.)eme0=80.
-	  sum=(eme0)**g1
+        sum=(eme0)**g1
         sum=fi*qer*sum
       
         sumsum=exp(-eme0)
