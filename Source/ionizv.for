@@ -5,7 +5,7 @@
 !!    ! func2(e,e0,r)=e**(gam-0.854)*exp(-func1(e)*r**3-e/e0)
 ! ionization branch: O2,N2,NO,O
 !      data c/1.09,1.,0.61,1./
-      data c/1.09,1.,0.,1./ ! NO is not ionization by e 
+      data c/1.09,1.,0.,1./ ! NO does not ionizate by particles 25.04.19 
       a=1.277e-13*i0
       g=gam-0.854
       g1=1.+gam

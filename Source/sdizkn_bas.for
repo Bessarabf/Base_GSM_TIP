@@ -25,11 +25,8 @@ c      lov=26
 c     lov=n
 ccc   loov=n
 c    . . .  источник фотодиссоциации (q)
-     
-      
       do i=1,n1
         do j=1,n2
-	    
 !          call fqsmen(an1,an2,an3,an6,n,n1,i,j,solu,q,
 !     *                gkoor,r,delta,n2,nsu,uts)
           do k=1,n

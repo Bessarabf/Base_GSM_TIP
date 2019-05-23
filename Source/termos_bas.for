@@ -666,8 +666,8 @@ c    в yзлax на высотах rads в точке fig,dolg в момент td,uttau
 !            call gtd6(iyd,utsec,rads(ih)/1.e5,fig,dolg,tlttau,fs,fa,apm
 !     *      ,48,d,t)
 !           MSIS 2000
-            call gtd7(iyd,utsec,rads(ih)/1.e5,fig,dolg,tlttau,fs,fa,apm
-     *      ,48,d,t)
+         call gtd7(iyd,utsec,rads(ih)/1.e5,fig,dolg,tlttau,fs,fa,apm
+     *            ,48,d,t)
          
          tn(ih)=t(2)
          cn1(ih)=d(3)
