@@ -49,7 +49,7 @@
             cO2=par(1,k,ig)    ! cO2	     
             cN2=par(2,k,ig)    ! cNO 
             cO=par(3,k,ig)     ! cO 
-	    cNO=par(4,k,ig)    ! cNO
+	      cNO=par(4,k,ig)    ! cNO
             if(mass(21).eq.0) then 
 	      cN=0.
 	    else
@@ -76,8 +76,8 @@
            if (key.eq.0) then
               cn1I=.5*par(6,k,ig)! Q1(k)/pL1(k)
               cn2I=.5*par(6,k,ig)! Q2(k)/pL2(k)
-              par(18,k,ig)=cn2I
-              par(19,k,ig)=cn2I
+              par(18,k,ig)=cn1I  !
+              par(19,k,ig)=cn2I  !
            else
               cn1I=par(18,k,ig) !!cO2pl(k,ig,j)
               cn2I=par(19,k,ig) !!!cNOpl(k,ig,j)

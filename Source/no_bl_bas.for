@@ -34,15 +34,14 @@ c
       cr=180.d0/pi
       bkg=bk/amo2/g(1)
       do i=1,its
-       do j=1,ids 
- 	   do k=1,nh
-         cNd(i,j,k)=pgl(17,k,i,j)   
-
-	   end do
-	 end do
-	end do
-	do i=2,its-1
-       do j=1,ids
+        do j=1,ids 
+          do k=1,nh
+            cNd(i,j,k)=pgl(17,k,i,j)   
+	  end do
+        end do
+      end do
+      do i=2,its-1
+        do j=1,ids
 c      . . . calculation of cos(hi)
         rlat=gkoor(1,i,j)/cr
         rlat=pi/2.-rlat
@@ -74,8 +73,8 @@ c      . . . calculation of cos(hi)
             cO2i(k)=pgl(18,k,i,j)
             cNOi(k)=pgl(19,k,i,j)
             !cN2i(k)=pgl(6,k,i,j)-cNOi(k)-cO2i(k)
-	      call conn2i (cN2i,cNe,pgl,kpars,nh,its,ids,i,j)
-           end do     
+           end do
+           call conn2i (cN2i,cNe,pgl,kpars,nh,its,ids,i,j)     
         end if
 
 46      format(1p4e8.1)
@@ -89,7 +88,7 @@ c      . . . calculation of cos(hi)
      *            ,pgl,ctd,rads,rp,g,kpars,nh,its,ids,i,j,hi,dt)
 !  progonka N(4S)
        
-    	  call nprog(cNd,cNoi,cO2i,cNe
+    	  call nprog(cNd,cNoi,cO2i,cN2i,cNe
      *            ,pgl,ctd,rads,rp,g,kpars,nh,its,ids,i,j,hi,dt)
 ! progonka NO. Altitude part
 	   call noprog(cNd,cNo,cO2i
@@ -252,14 +251,16 @@ c    *    ,alyam11, alyam12,  alyam13, alyam16
 c    *    /3.6e-10,  7.e-11,  1.06e-5, 2.3e-14/
 
       do 1 k=1,nh
-       ot=300./pgl(9,k,i,j)
+       ot=300./pgl(9,k,i,j) ! 300/Te
        ots=sqrt(ot)
        tr=(pgl(8,k,i,j)+pgl(7,k,i,j))*.5
 c p -lost, and q- source
 c
-       a=alfa1*ot**0.85*r1*cNoi(k)*cNe(k)
-       a=a+alyam4*(300./tr)**0.44*cN2i(k)*pgl(3,k,i,j)
-       q=a+r3*alyam6*pgl(14,k,i,j)
+       a=alfa1*ot**0.85*r1*cNoi(k)*cNe(k)             ! NO+ + e
+       a=a+alfa3*ot**0.4*r2*cN2i(k)*cNe(k)            ! N2+ + e
+       a=a+alyam4*(300./tr)**0.44*cN2i(k)*pgl(3,k,i,j)! N2+ + O
+       q=a+r3*alyam6*pgl(14,k,i,j)                    ! N2 + hnu (dissosiation)
+
        b=alyam7*pgl(1,k,i,j)
        b=b+alyam9*pgl(3,k,i,j)
        b=b+alyam11/ots*cNe(k)
@@ -451,20 +452,20 @@ c . . . for GSM NO+
       data amno/49.82e-24/
 	alfa1=4.2e-7
 ***************************************************************
-  !!     do 1 k=1,nh
+!!!     do 1 k=1,nh
   !!!!       coef=0.8*alfa1*(300./pgl(9,k,i,j))**0.85*cNe(k)
-c        cmoli=pgl(13,k,i,j)+pgl(14,k,i,j)+pgl(16,k,i,j)
-c        cmoli=sqrt(cmoli/coef)
- !!!!        cmoli=pgl(6,k,i,j)
-*         cNoi(k)=cmoli-cO2i(k)-cN2i(k)
-*  !!!!       cNOi(k)=pgl(15,k,i,j)/coef
-*  !!! 	  if(cNoi(k).le.0.) then
-*          print 100,cNoi(k),i,j,k
-*100       format('+NO+ < 0 in connoi =',1pe9.2,3i4)
-c         cNoi(k)=abs(cNoi(k))
-*          cNoi(k)=1.
-*        end if
-*    1 continue
+!        cmoli=pgl(13,k,i,j)+pgl(14,k,i,j)+pgl(16,k,i,j)
+!        cmoli=sqrt(cmoli/coef)
+!!!!        cmoli=pgl(6,k,i,j)
+!*         cNoi(k)=cmoli-cO2i(k)-cN2i(k)
+!*  !!!!       cNOi(k)=pgl(15,k,i,j)/coef
+!*  !!! 	  if(cNoi(k).le.0.) then
+!*          print 100,cNoi(k),i,j,k
+!*100       format('+NO+ < 0 in connoi =',1pe9.2,3i4)
+!          cNoi(k)=abs(cNoi(k))
+!*          cNoi(k)=1.
+!*        end if
+!*    1 continue
 	!!! more thin condition	!!!!!!!!!
 	do k =1,nh
 	  sum= cO2i(k)+cN2i(k)

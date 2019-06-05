@@ -1,8 +1,8 @@
-      subroutine nprog(cNd,cNoi,cO2i,cNe
+      subroutine nprog(cNd,cNoi,cO2i,cN2i,cNe
      *                ,pgl,ctd,rads,rp,g,kpars,nh,its,ids,i,j,hi,dt)
 c    N(1s) progonka as O2pro
       dimension pgl(kpars,nh,its,ids),cNd(its,ids,nh),
-     *          cO2i(nh),cNOi(nh),cNe(nh),
+     *          cO2i(nh),cNOi(nh),cNe(nh),cN2i(nh),
      *          rads(nh),rp(nh),g(nh),ctd(nh)
     
       allocatable a(:),b(:),c(:),f(:),cmd(:),cN(:),
@@ -48,15 +48,16 @@ c     . . . scale heights
 
 c p -lost, and q - source
           u=alfa1*ot**0.85*(1.-r1)*cNoi(k)*cNe(k)       ! NO+ + e 
+          u=u+alfa3*ot**0.4*(1.-r2)*cN2i(k)*cNe(k)      ! N2+ + e
           u=u+(alyam9*pgl(3,k,i,j)+alyam11/ots*cNe(k)+  ! N(2D) + O ; N2D + e
      *    alyam16*pgl(2,k,i,j)+alyam13)*cNd(i,j,k)      ! N2D + N2; N2D -> N
-          q=u+r3*alyam6*pgl(14,k,i,j)
+          q=u+r3*alyam6*pgl(14,k,i,j)                   ! q(N2+) - dissosiation
           ho2=const1*pgl(7,k,i,j)/g(k)
           x=(rads(k)+re)/h o2
           ch=chept(x,hi)
           pok=1.e-8*(pgl(1,k,i,j)*h o2*ch*1.E-4)**0.38
           if (pok.gt.30.) pok=30.
-          q=q+alyam14*exp(-pok)*pgl(4,k,i,j)
+          q=q+alyam14*exp(-pok)*pgl(4,k,i,j)            ! SR continuum
 c . . .  lost
           w=alyam2*cO2i(k)
           w=w+alyam8*exp(-3220./pgl(7,k,i,j))*pgl(1,k,i,j)

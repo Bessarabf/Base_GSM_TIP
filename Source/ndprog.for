@@ -59,8 +59,10 @@ c     . . .
          ots=sqrt(ot)
 c . . . p -lost, and q- source
          q=alfa1*ot**0.85*r1*cNoi(k)*cNe(k)               ! NO+ + e
+         q=q+alfa3*ot**0.4*r2*cN2i(k)*cNe(k)              ! N2+ + e
          q=q+alyam4*(300./tr)**0.44*cN2i(k)*pgl(3,k,i,j)  ! N2+ + O
-         q=q+r3*alyam6*pgl(14,k,i,j)                      ! q(N2+)
+         q=q+r3*alyam6*pgl(14,k,i,j)                      ! q(N2+) - dissosiation
+
          p=alyam7*pgl(1,k,i,j)
          p=p+alyam9*pgl(3,k,i,j)
          p=p+alyam11/ots*cNe(k)
