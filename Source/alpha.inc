@@ -1,3 +1,5 @@
+! chem reaction for NO block
+! see Bessarab & Korenkov, 1998 Geomag and Aeronomi
       data  alfa1/4.2e-7/,alfa3/1.8e-7/,r1,r2,r3/0.8,0.9,0.5/
       data alyam1,   alyam3,  alyam4 ,  alyam6,   alyam7
      *    /4.4e-10,  5.e-16,  1.4e-10,     0.5,   5.e-12/
