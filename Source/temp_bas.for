@@ -73,23 +73,23 @@ C     call boskli(an61,nh,its,ids)
 C     call tnalt(an61,nh,its,ids,mass(10))
 C
 c  . . . долготная прогонка с учетом теплопроводности
-       call tnl_jc(an61,an1,an2,an3,vj,ctd,
-     *             rads,nh,its,ids,dts,mass(10))
-       call boskli(an61,nh,its,ids)
+!       call tnl_jc(an61,an1,an2,an3,vj,ctd,
+!     *             rads,nh,its,ids,dts,mass(10))
+!       call boskli(an61,nh,its,ids)
 c  . . . широтная прогонка
-       call tnl_ic(an61,an1,an2,an3,vi,ctd,
-     *             rads,nh,its,ids,dts,mass(10))
-       call boskli(an61,nh,its,ids)
-       call tnalt(an61,nh,its,ids,mass(10))
+!       call tnl_ic(an61,an1,an2,an3,vi,ctd,
+!     *             rads,nh,its,ids,dts,mass(10))
+!       call boskli(an61,nh,its,ids)
+!       call tnalt(an61,nh,its,ids,mass(10))
 C
 c    . . . Старый вариант
-c     call tngojm(an61,vj,
-c    *     rads,nh,its,ids,dts,mass(10))
-c     call boskli(an61,nh,its,ids)
-c     call tngoim_a(an61,vi,             ! Явная схема переноса
-c    *     rads,nh,its,ids,dts,mass(10)) ! через полюс
-c     call boskli(an61,nh,its,ids)
-c     call tnalt(an61,nh,its,ids,mass(10))
+      call tngojm(an61,vj,
+     *     rads,nh,its,ids,dts,mass(10))
+      call boskli(an61,nh,its,ids)
+      call tngoim_a(an61,vi,             ! Явная схема переноса
+     *     rads,nh,its,ids,dts,mass(10)) ! через полюс
+      call boskli(an61,nh,its,ids)
+      call tnalt(an61,nh,its,ids,mass(10))
       return
       end
 c

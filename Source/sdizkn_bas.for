@@ -15,15 +15,15 @@ c
       n11=n1-1
       lk=17
 !!!!!!!!!!!!!!!!!!!!!!! experiment !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-      loov= 7   ! 20 - base
+      loov= 20   ! 20 - base
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 C     . . . Изменена для высокой активности
 cc    loov=28  
-cc      lov=21! зимний вариант
+cc      lov=21 ! зимний вариант
        lov=20  ! основной вариант
 c      lov=26
 c     lov=n
-ccc   loov=n
+
 c    . . .  источник фотодиссоциации (q)
       do i=1,n1
         do j=1,n2
@@ -42,16 +42,24 @@ c         O    con,
 c . . . Циклическая прогонка
       call boskli(an31,n,n1,n2)
       call barsos(an31,an6,rp,g,amo,n,n1,n2,lov)
+!! comment 30.07.18 non explicit scheme
+!      call tn_jc(an31,vj,
+!     *            r,n,n1,n2,dt,n4)
+!      call boskli(an31,n,n1,n2)
+!      call tn_ic(an31,vi,
+!     *           r,n,n1,n2,dt,n4)
+!      call bongl(an31,n,n1,n2)
 !!      call ficon(an31,r,n,n1,n2,dt,ddolg,vj,dtet,vi)
 !!      call boskli(an31,n,n1,n2)
-!! comment 30.07.18
-      call tn_jc(an31,vj,
-     *            r,n,n1,n2,dt,n4)
+!!  end non explicit scheme 
+!!          explicit scheme 
+      call tngojm(an31,vj,
+     *     r,n,n1,n2,dt,n)
       call boskli(an31,n,n1,n2)
-      call tn_ic(an31,vi,
-     *           r,n,n1,n2,dt,n4)
-      call bongl(an31,n,n1,n2)
-c . . . Старый вариант
+      call tngoim_a(an31,vi,     ! advection across poles
+     *     r,n,n1,n2,dt,n)
+      call boskli(an31,n,n1,n2)
+c . . . Old Var
 c      call boskli(an31,n,n1,n2)
 c      call barsos(an31,an6,rp,g,amo2,n,n1,n2,lov)
 c . . . явная схема переноса через полюс
@@ -69,6 +77,13 @@ c     . . . прогонка
        call boskli(an11,n,n1,n2)
 c  . . .   Корректировка О2 с ',loov,' точки'
        call barsos(an11,an6,rp,g,amo2,n,n1,n2,loov)! loov)
+!!   explicit scheme 
+       call tngojm(an11,vj,
+     *     r,n,n1,n2,dt,n)
+       call boskli(an11,n,n1,n2)
+       call tngoim_a(an11,vi,     ! advection across poles
+     *      r,n,n1,n2,dt,n) 
+       call boskli(an11,n,n1,n2)
 
 !       call ficon(an11,r,n,n1,n2,dt,ddolg,vj,dtet,vi)
 !       call boskli(an11,n,n1,n2)
@@ -77,15 +92,15 @@ c      call tetcon_a(an11,vi,r,n,n1,n2,dt,n4)
 c      call boskli(an11,n,n1,n2)
 c      call barsos(an11,an6,rp,g,amo2,n,n1,n2,loov)
 c      call bongl(an11,n,n1,n2)
-
+!! end of explicit scheme
 c . . . Циклическая прогонка
-       call tn_jc(an11,vj,
-     *            r,n,n1,n2,dt,n)  ! loov)
-       call boskli(an11,n,n1,n2)
-       call tn_ic(an11,vi,
-     *            r,n,n1,n2,dt,n)  ! loov)
+!       call tn_jc(an11,vj,
+!     *            r,n,n1,n2,dt,n)  ! loov)
+!       call boskli(an11,n,n1,n2)
+!       call tn_ic(an11,vi,
+!     *            r,n,n1,n2,dt,n)  ! loov)
 !       call bongl(an11,n,n1,n2)
-       call boskli(an11,n,n1,n2)
+!       call boskli(an11,n,n1,n2)
 c          N2 con.
        key=0
 c      lkk=lk

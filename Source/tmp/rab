@@ -1,0 +1,254 @@
+Сравнение файлов no_bl_bas.for и NO_BL_BASE.FOR
+***** no_bl_bas.for
+c
+      subroutine nonew(pgl,pgi,gkoor,ctd,rads,rp,g,
+     *                 kpars,ins,nh,its,ids,del,uts,dt,mass)
+***** NO_BL_BASE.FOR
+c
+      subroutine nonew(pgl,pgi,cHot,tHot,gkoor,ctd,rads,rp,g,
+     *                 kpars,ins,nh,its,ids,del,uts,dt,mass)
+*****
+
+***** no_bl_bas.for
+        dimension pgl(kpars,nh,its,ids),pgi(ins,nh,its,ids),
+     *          mass(30),
+
+***** NO_BL_BASE.FOR
+        dimension pgl(kpars,nh,its,ids),pgi(ins,nh,its,ids),
+     *          cHot(its,ids,nh),tHot(its,ids,nh),mass(*),
+
+*****
+
+***** no_bl_bas.for
+      do i=1,its
+        do j=1,ids 
+          do k=1,nh
+            cNd(i,j,k)=pgl(17,k,i,j)   
+          end do
+        end do
+      end do
+      do i=2,its-1
+        do j=1,ids
+c      . . . calculation of cos(hi)
+***** NO_BL_BASE.FOR
+      do i=1,its
+       do j=1,ids 
+           do k=1,nh
+         cNd(i,j,k)=pgl(17,k,i,j)   
+
+           end do
+         end do
+        end do
+        do i=2,its-1
+       do j=1,ids
+c      . . . calculation of cos(hi)
+*****
+
+***** no_bl_bas.for
+            !cN2i(k)=pgl(6,k,i,j)-cNOi(k)-cO2i(k)
+           end do
+           call conn2i (cN2i,cNe,pgl,kpars,nh,its,ids,i,j)     
+        end if
+***** NO_BL_BASE.FOR
+            !cN2i(k)=pgl(6,k,i,j)-cNOi(k)-cO2i(k)
+              call conn2i (cN2i,cNe,pgl,kpars,nh,its,ids,i,j)
+           end do     
+        end if
+*****
+
+***** no_bl_bas.for
+46      format(1p4e8.1)
+! . . . cNd - calculation
+!  photochen N2d       
+!        call ndnew (cNd,cNo,cNoi,cN2i,cNe
+!     *             ,pgl,kpars,nh,its,ids,i,j,key,dt)
+! 
+!  progonka N(2D)
+          call ndprog(cNd,cNo,cNoi,cN2i,cNe
+     *            ,pgl,ctd,rads,rp,g,kpars,nh,its,ids,i,j,hi,dt)
+!  progonka N(4S)
+       
+          call nprog(cNd,cNoi,cO2i,cN2i,cNe
+     *            ,pgl,ctd,rads,rp,g,kpars,nh,its,ids,i,j,hi,dt)
+! progonka NO. Altitude part
+           call noprog(cNd,cNo,cO2i
+     *            ,pgl,ctd,rads,rp,g,kpars,nh,its,ids,i,j,hi,dt)
+          end do
+***** NO_BL_BASE.FOR
+46      format(1p4e8.1)
+  ! . . . cNd - calculation
+        
+        call ndnew (cNd,cNo,cNoi,cN2i,cNe
+     *             ,pgl,kpars,nh,its,ids,i,j,key,dt)
+ 
+  !  progonka N(4S)
+       
+          call nprog(cNd,cNoi,cO2i,cNe
+     *            ,pgl,ctd,rads,rp,g,kpars,nh,its,ids,i,j,hi,dt)
+                          
+  ! progonka NO. Altitude part
+           call noprog(cNd,cNo,cO2i
+     *             ,pgl,ctd,rads,rp,g,kpars,nh,its,ids,i,j,hi,dt)
+          end do
+*****
+
+***** no_bl_bas.for
+        call bongl(cNd,nh,its,ids)
+      !  horisontal part for NO
+        call bospgl(pgl,kpars,nh,its,ids,4)
+        call pgl_ic(pgl,rads,kpars,nh,its,ids,dt,nh,4)
+        call pgl_jc(pgl,rads,kpars,nh,its,ids,dt,nh,4) 
+        call bospgl(pgl,kpars,nh,its,ids,4)
+***** NO_BL_BASE.FOR
+        call bongl(cNd,nh,its,ids)
+        !  horisontal part for NO
+      call bospgl(pgl,kpars,nh,its,ids,4)
+        call pgl_ic(pgl,rads,kpars,nh,its,ids,dt,nh,4)
+      call pgl_jc(pgl,rads,kpars,nh,its,ids,dt,nh,4) 
+        call bospgl(pgl,kpars,nh,its,ids,4)
+*****
+
+***** no_bl_bas.for
+        call pgl_ic(pgl,rads,kpars,nh,its,ids,dt,nh,5)
+        call pgl_jc(pgl,rads,kpars,nh,its,ids,dt,nh,5)
+        call bospgl(pgl,kpars,nh,its,ids,5)
+      !  horisontal part for N(2D)
+        DO K=1,NH
+***** NO_BL_BASE.FOR
+        call pgl_ic(pgl,rads,kpars,nh,its,ids,dt,nh,5)
+      call pgl_jc(pgl,rads,kpars,nh,its,ids,dt,nh,5)
+        call bospgl(pgl,kpars,nh,its,ids,5)
+c     . . .  horisontal circulation NO,N
+!      call hori(pgl,rads,kpars,nh,its,ids,4,dt)
+!      call horj(pgl,rads,kpars,nh,its,ids,4,dt)
+!      call hori(pgl,rads,kpars,nh,its,ids,5,dt)
+!      call horj(pgl,rads,kpars,nh,its,ids,5,dt)
+!
+! if photochem approx 
+      if ((mass(20).ne.2)) then
+          call bospgl(pgl,kpars,nh,its,ids,18)
+          call bospgl(pgl,kpars,nh,its,ids,19)
+      end if
+        DO K=1,NH
+*****
+
+***** no_bl_bas.for
+           DO I=1,ITS
+              DO J=1,IDS
+               PGL(17,K,I,J)=CND(I,J,K)
+***** NO_BL_BASE.FOR
+           DO I=1,ITS
+            DO J=1,IDS
+               PGL(17,K,I,J)=CND(I,J,K)
+*****
+
+***** no_bl_bas.for
+            
+              END DO
+           END DO
+***** NO_BL_BASE.FOR
+            
+          END DO
+           END DO
+*****
+
+***** no_bl_bas.for
+        END DO
+        call pgl_ic(pgl,rads,kpars,nh,its,ids,dt,nh,17)
+        call pgl_jc(pgl,rads,kpars,nh,its,ids,dt,nh,17)
+        call bospgl(pgl,kpars,nh,its,ids,17)
+
+c     . . .  horisontal circulation NO,N
+!      call hori(pgl,rads,kpars,nh,its,ids,4,dt)
+!      call horj(pgl,rads,kpars,nh,its,ids,4,dt)
+!      call hori(pgl,rads,kpars,nh,its,ids,5,dt)
+!      call horj(pgl,rads,kpars,nh,its,ids,5,dt)
+!
+! if photochem approx 
+      if ((mass(20).ne.2)) then
+          call bospgl(pgl,kpars,nh,its,ids,18)
+          call bospgl(pgl,kpars,nh,its,ids,19)
+      end if
+      deallocate (cNd,cO2i,cNoi,cN2i,cNe,cNo)
+      return
+      end
+***** NO_BL_BASE.FOR
+        END DO
+        
+        deallocate (cNd,cO2i,cNoi,cN2i,cNe,cNo)
+        return
+      end
+*****
+
+***** no_bl_bas.for
+      do 1 k=1,nh
+       ot=300./pgl(9,k,i,j) ! 300/Te
+       ots=sqrt(ot)
+***** NO_BL_BASE.FOR
+      do 1 k=1,nh
+       ot=300./pgl(9,k,i,j)
+       ots=sqrt(ot)
+*****
+
+***** no_bl_bas.for
+c
+       a=alfa1*ot**0.85*r1*cNoi(k)*cNe(k)             ! NO+ + e
+       a=a+alfa3*ot**0.4*r2*cN2i(k)*cNe(k)            ! N2+ + e
+       a=a+alyam4*(300./tr)**0.44*cN2i(k)*pgl(3,k,i,j)! N2+ + O
+       q=a+r3*alyam6*pgl(14,k,i,j)                    ! N2 + hnu (dissosiation)
+
+       b=alyam7*pgl(1,k,i,j)
+***** NO_BL_BASE.FOR
+c
+       a=alfa1*ot**0.85*r1*cNoi(k)*cNe(k)
+       a=a+alyam4*(300./tr)**0.44*cN2i(k)*pgl(3,k,i,j)
+       q=a+r3*alyam6*pgl(14,k,i,j)
+       b=alyam7*pgl(1,k,i,j)
+*****
+
+***** no_bl_bas.for
+***************************************************************
+!!!     do 1 k=1,nh
+  !!!!       coef=0.8*alfa1*(300./pgl(9,k,i,j))**0.85*cNe(k)
+!        cmoli=pgl(13,k,i,j)+pgl(14,k,i,j)+pgl(16,k,i,j)
+!        cmoli=sqrt(cmoli/coef)
+!!!!        cmoli=pgl(6,k,i,j)
+!*         cNoi(k)=cmoli-cO2i(k)-cN2i(k)
+!*  !!!!       cNOi(k)=pgl(15,k,i,j)/coef
+!*  !!!           if(cNoi(k).le.0.) then
+!*          print 100,cNoi(k),i,j,k
+!*100       format('+NO+ < 0 in connoi =',1pe9.2,3i4)
+!          cNoi(k)=abs(cNoi(k))
+!*          cNoi(k)=1.
+!*        end if
+!*    1 continue
+        !!! more thin condition !!!!!!!!!
+***** NO_BL_BASE.FOR
+***************************************************************
+  !!     do 1 k=1,nh
+  !!!!       coef=0.8*alfa1*(300./pgl(9,k,i,j))**0.85*cNe(k)
+c        cmoli=pgl(13,k,i,j)+pgl(14,k,i,j)+pgl(16,k,i,j)
+c        cmoli=sqrt(cmoli/coef)
+ !!!!        cmoli=pgl(6,k,i,j)
+*         cNoi(k)=cmoli-cO2i(k)-cN2i(k)
+*  !!!!       cNOi(k)=pgl(15,k,i,j)/coef
+*  !!!    if(cNoi(k).le.0.) then
+*          print 100,cNoi(k),i,j,k
+*100       format('+NO+ < 0 in connoi =',1pe9.2,3i4)
+c         cNoi(k)=abs(cNoi(k))
+*          cNoi(k)=1.
+*        end if
+*    1 continue
+        !!! more thin condition !!!!!!!!!
+*****
+
+***** no_bl_bas.for
+***** NO_BL_BASE.FOR
+
+        subroutine thot4000(thot,nh,its,ids)
+        dimension thot(its,ids,nh)
+        thot=4000.
+        return
+        end
+*****
+
