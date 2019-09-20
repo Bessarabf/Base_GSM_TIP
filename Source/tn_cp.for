@@ -1,3 +1,4 @@
+! ver 20.09.19  left and right  first derivative in 1 point is equal
        subroutine tn_ic(an6,vi,rads,n,n1,n2,dt,n0)
 c     . . . циклическая прогонка вдоль меридиана
 c     . . .    nm=n1+n1-2
@@ -87,9 +88,11 @@ c     . . . циклическая прогонка
      *                 vp*(1.-par)*ot/del*(tn(j)-tn(jm))
           end do
           call cyclp(a,b,c,f,tn,n2)
-          do j=1,n2
+          do j=2,n2
             an6(i,j,k)=tn(j)
           end do
+!!!     left and right  first derivative in 1 point is equal
+          an6(i,1,k)=(tn(2)+tn(n2))*.5
         end do
        end do
        deallocate (tn,a,b,c,f)
