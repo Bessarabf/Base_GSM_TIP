@@ -79,7 +79,7 @@ c      . . . calculation of cos(hi)
 
 46      format(1p4e8.1)
 ! . . . cNd - calculation
-!  photochen N2d       
+!  photochem N2d       
 !        call ndnew (cNd,cNo,cNoi,cN2i,cNe
 !     *             ,pgl,kpars,nh,its,ids,i,j,key,dt)
 ! 
@@ -307,7 +307,7 @@ c p -lost, and q- souráe
        pok=1.e-8*(pgl(1,k,i,j)*h o2*ch*1.E-4)**0.38
        if (pok.gt.60.) pok=60.
        q=q+alyam14*exp(-pok)*cNo(k)
-       w=alyam2*cO2i(k)
+
        b=alyam2*cO2i(k)
        b=b+alyam8*exp(-3220./pgl(7,k,i,j))*pgl(1,k,i,j)
        p=b+alyam10*cNo(k)
