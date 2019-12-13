@@ -44,10 +44,10 @@ c         O    con,
 c . . . Циклическая прогонка
 !! comment 30.07.18 non explicit scheme
        call tn_jc(an31,vj,
-      *            r,n,n1,n2,dt,n4)
+     *            r,n,n1,n2,dt,n4)
        call boskli(an31,n,n1,n2)
        call tn_ic(an31,vi,
-      *           r,n,n1,n2,dt,n4)
+     *           r,n,n1,n2,dt,n4)
        call bongl(an31,n,n1,n2)
 !!      call ficon(an31,r,n,n1,n2,dt,ddolg,vj,dtet,vi)
 !!      call boskli(an31,n,n1,n2)

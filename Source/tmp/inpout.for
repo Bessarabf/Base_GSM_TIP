@@ -24,8 +24,7 @@
       nf=4
       if(nfile.gt.8) then 
          nf=5 ! файл f5
-      !print*, ' inpout file5', readfl
-	end if
+      print*, ' inpout file5', readfl
 !    integer number of records
       ndor=nob/mdor
 !    difference of addresses
