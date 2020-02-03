@@ -1,18 +1,18 @@
 ! new ver 01_11_18
-      subroutine o2pro (an11,an1,an2,an3,an6,vr,vi,vj,
-     *                  q,ctd,rads,rp,g,n1,n2,n,dt)
-c     O2 в приближении малой компоненты  (прогонка)
+      subroutine traceDif(aTrace,an1,an2,an3,an6,vr,vi,vj,
+     *                  ctd,rads,rp,g,n1,n2,n,dt)
+c     small impurity trace
 
       dimension an1(n1,n2,n),an2(n1,n2,n),
-     *          an3(n1,n2,n),an6(n1,n2,n),an11(n1,n2,n),
+     *          an3(n1,n2,n),an6(n1,n2,n),aTrace(n1,n2,n),
      *          vr(n1,n2,n),vi(n1,n2,n),vj(n1,n2,n),
-     *          q(n1,n2,n),rads(n),rp(n),g(n),ctd(n)
+     *          rads(n),rp(n),g(n),ctd(n)
      *          
       allocatable a(:),b(:),c(:),f(:),cmd(:)
      *         ,h(:),alf(:),bet(:),hsr(:),c o2(:)
       data am1,am2,am3/53.12e-24,46.51e-24,26.56e-24/
-     *     bk/1.38e-16/,gam/1.e-20/,pi/3.141592/,re/6.371e8/
-	allocate (a(n),b(n),c(n),f(n),cmd(n)
+     *     bk/1.38e-16/,pi/3.141592/,re/6.371e8/
+      allocate (a(n),b(n),c(n),f(n),cmd(n)
      *         ,h(n),alf(n),bet(n),hsr(n),c o2(n))
       const=bk/am1
 c*******
@@ -34,25 +34,7 @@ c*******
           ams=(am1*an1(i,j,k)+am2*an2(i,j,k)+am3*an3(i,j,k))/sum
           hsr(k)=bk*an6(i,j,k)/(ams*g(k))
 c    . . . Coef. Mol. Dif.
-c         epok=1
-          epok=exp(2.8/an6(i,j,k))
-          sum1=an1(i,j,k)+an2(i,j,k)
-          sum2=an1(i,j,k)+an3(i,j,k)
-	if(sum1.le.0.) then
 
-	print*,'o2pro',i,j,k, an1(i,j,k-1),an2(i,j,k-1),an3(i,j,k-1)
-!	pause
-         an1(i,j,k)=an1(i,j,k-1)
-	 an2(i,j,k)= an2(i,j,k-1)
-	 an3(i,j,k)=an3(i,j,k-1)
-	 sum1=an1(i,j,k)+an2(i,j,k)
-         sum2=an1(i,j,k)+an3(i,j,k)
-
-	end if
- !         d12=0.829e17/sum1*an6(i,j,k)**0.724*epok
- !         d13=0.969e17/sum2*an6(i,j,k)**0.774*epok
- !         obr=(an2(i,j,k)/d12+an3(i,j,k)/d13)/(an2(i,j,k)+an3(i,j,k))
- !         cmd(k)=1./obr
           cmd(k)=3.e17/sum*sqrt(an6(i,j,k))  ! к-т м.диффузии NO
           alf(k)=cmd(k)/(cmd(k)+ctd(k))
           bet(k)=ctd(k)/(cmd(k)+ctd(k))
@@ -60,19 +42,14 @@ c         epok=1
          c o2(1)=an1(i,j,1)
          do k=2,n-1
           rk=rads(k)+re
-          pro= (rp(k)+rp(k-1))*.5
+!          pro= (rp(k)+rp(k-1))*.5
+          
           c o2(k)=an1(i,j,k)
           sum=an1(i,j,k)+an2(i,j,k)+an3(i,j,k)
 c    . . . источники и потери
-          alpha=9.9e-34*exp(470./an6(i,j,k))
-          betta=1.1e-34*exp(510./an6(i,j,k))
-          if(q(i,j,k).ne.0.)betta=0.
-c    . . .
-          qq=(alpha*sum+gam)*an3(i,j,k)**2
-          p=q(i,j,k)+betta*an3(i,j,k)*sum
 c ============================================
-c          p=0.
-c          qq=0.
+          p=0.
+          qq=0.
           dtnp=alog(an6(i,j,k+1)/an6(i,j,k))
           dtnm=alog(an6(i,j,k)/an6(i,j,k-1))
 c      . . . к-т диффузии в дробной точке
@@ -126,18 +103,9 @@ c        f(n)=h(n)/(rp(n-1)+h(n))
 c     . . .
 ! . . . reASSIGN 
 
-        an11(i,j,1)=c o2(1)
-!!        do k=2,n
-!!          an11(i,j,k)=co2(k)
-!!        end do
-!!	...  and correction
-        do k=n-1,2,-1
-         if(co2(k+1).gt.co2(k)) then 
-	 ! profil correction 31/03/15
-           co2(k)=co2(k+1)*exp(0.5*(rp(k)/h(k+1)+rp(k-1)/h(k)))
-	   print*, 'nO2 correction!!!', co2(k),i,j,k  
-         end if	  
-         an11(i,j,k)=c o2(k)
+        aTrace(i,j,1)=c o2(1)
+        do k=2,n
+          aTrace(i,j,k)=co2(k)
         end do
        end do
       end do
@@ -161,8 +129,8 @@ c         print 100,pa(k+1),k
 c100     format(' pa.gt.1',e8.1,i4)
 c      end if
    1  continue
-      if(kiss.eq.1) dim(n)=pb(n)/(1.-pa(n))           ! for temperature
-      if(kiss.eq.2) dim(n)=f(n)*pb(n)/(1.-pa(n)*f(n)) ! for composition
+      if(kiss.eq.1) dim(n)=pb(n)/(1.-pa(n))
+      if(kiss.eq.2) dim(n)=f(n)*pb(n)/(1.-pa(n)*f(n))
       do 2 l=2,n
         k=n-l+1
         dim(k)=pa(k+1)*dim(k+1)+pb(k+1)
