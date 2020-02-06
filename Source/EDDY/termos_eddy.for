@@ -32,7 +32,6 @@ c - sumro
       USE mo_bas_gsm
 !   !!!!!!!!!!!!!!!!!!!!
       integer day,god,dayt,godt,verno
-      character sr*2, fnewname*80
       dimension
      *   sole(nse),solu(nsu),solet(nse),parj(nh,its,ids)
      *   ,rads(nh),gkoor(2,its,ids),mass(30)
@@ -46,21 +45,16 @@ c - sumro
      *   ,an11(:,:,:),an21(:,:,:),an31(:,:,:)
      *   ,an61(:,:,:),vr(:,:,:),vi(:,:,:)
      *   ,vj(:,:,:),vi1(:,:,:),vj1(:,:,:)
-     *   ,g(:),rp(:),ctd(:),anco2(:,:,:)
+     *   ,g(:),rp(:),eddyco(:,:),anco2(:,:,:)
      *   ,ron(:,:,:),ros(:,:,:),ros0(:,:,:)
-!!!    mass for subprogram trace
-     *   ,aTrace(:,:,:),vrTr(:,:,:),viTr(:,:,:),vjTr(:,:,:)
-     *   ,eddyco(:,:)
+    
        allocate (an1(its,ids,nh),an2(its,ids,nh),an3(its,ids,nh) 
      *   ,an6(its,ids,nh)
      *   ,an11(its,ids,nh),an21(its,ids,nh),an31(its,ids,nh)
      *   ,an61(its,ids,nh),vr(its,ids,nh),vi(its,ids,nh)
      *   ,vj(its,ids,nh),vi1(its,ids,nh),vj1(its,ids,nh)
-     *   ,g(NH),rp(NH),ctd(NH),anco2(its,ids,nh)
-     *   ,ros0(ITS,IDS,NH),ros(ITS,IDS,NH),ron(ITS,IDS,NH)
-!!!    mass for subprogram trace
-     *   ,aTrace(its,ids,nh),vrTr(its,ids,nh),viTr(its,ids,nh)
-     *   ,vjTr(its,ids,nh),eddyco(nh,its))
+     *   ,g(NH),rp(NH),eddyco(nh,its),anco2(its,ids,nh)
+     *   ,ros0(ITS,IDS,NH),ros(ITS,IDS,NH),ron(ITS,IDS,NH))
 
       data key/1/
 
@@ -122,14 +116,15 @@ c
           call plots(ros,an1,an2,an3,an6,rp,g,nh,its,ids)
         end if
       end if
-      call turbk   (ctd,rads,nh)
-      ki=0
+!     2-d massiv eddy duffusion      
+      call turbko(eddyco,pgl,rads,kpars,nh,its,ids)
+      
 c
 c     . . . NO-block
       if(mass(21).eq.0) then  ! apprpoximation
         call connot(pgl,rads,kpars,nh,its,ids)
       else
-        call nonew(pgl,pgi,gkoor,ctd,rads,rp,g,
+        call nonew(pgl,pgi,gkoor,eddyco,rads,rp,g,
      *              kpars,ins,nh,its,ids,delta,uts,dts,mass)
       end if
 c     . . . Расчет термосферы по MSIS
@@ -140,11 +135,11 @@ c     . . . Расчет термосферы по MSIS
       end if
 c     . . . Температура рассчитывается
       if(mass(4).ne.0) then
-         call co2con(anco2,an1,an2,an3,an6,ctd,
+         call co2con(anco2,an1,an2,an3,an6,eddyco,
      *               rads,rp,g,nh,its,ids)
          call heatpo_bas(pgl,pgi,parj,solet,solu,nsu,nse,
      *               kpars,rads,g,nh,gkoor,its,ddolgs,dtets,
-     *               mass,delta,day,uts,tau,dts,ctd,vim,vid,
+     *               mass,delta,day,uts,tau,dts,eddyco,vim,vid,
      *               vir,ids,ins,an1,an2,an3,anco2,an6,an61,ros,
      *               vi,vj,vr)
 
@@ -156,37 +151,10 @@ c     . . . Температура рассчитывается
       if(mass(5).ne.0) then
          call sdizkn_bas(an1,an2,an3,an11,an21,an31,
      *               an61,vr,vi,vj,ros,rp,rads,g,nh,its,ids,
-     *               dts,ctd,roS,solu,gkoor,delta,nsu,
+     *               dts,eddyco,roS,solu,gkoor,delta,nsu,
      *               dtets,uts,ddolgs)
          call nts (An11,nh,its,ids,nh,its-3) ! ,1
-         call nts (An31,nh,its,ids,nh,its-3) ! ,1) 
-!!!!     trace
-         vrTr=0.  ! 0.01
-	 viTr=0.  !0.1 
-	 vjTr=0.  !0.1
-         open(33,file='ftrace',form='unformatted')
-         read(33) aTrace
-!!!      
-         call turbko(eddyco,pgl,rads,kpars,nh,its,ids)
-!         call traceEDDY(aTrace,an1,an2,an3,an6,vrTr,viTr,vjTr,
-!     *              eddyco,rads,rp,g,its,ids,nh,dts)
-          call tracegso(atrace,an1,an3,an2,an3,vrtr,an6,
-     *                  rp,rads,g,30,dts,ctd,ros,its,ids,nh,vitr,vjtr)
-         rewind(33)       
-         write(33) aTrace
-         close(33)
-         iuts=uts+0.0001
-         idts=3600+0.0001
-! copy every hour
-         if(mod(iuts,idts).eq.0) then
-           ihour=uts/3600.+0.001
-	   write(sr,'(i2)') ihour
-           if(ihour<10) sr(1:1)='0'
-	   fnewname='trace'//'.'//sr 
-           open(44,file=fnewname,form='unformatted')  
-           write(44) aTrace
-           close(44)
-         end if
+         call nts (An31,nh,its,ids,nh,its-3) ! ,1)  
       end if
 c
       if(mass(5).eq.1) then
@@ -197,7 +165,7 @@ c
 c     . . . V = 0
     9 if(mass(6).ne.0) then
          call veter_ham(vi1,vj1,vi,vj,vr,vim,vid,an1,an2,an3,an61,ron,
-     *              pgl,pgi,rp,rads,ctd,nh,its,ids,kpars,ins,dts)
+     *              pgl,pgi,rp,rads,eddyco,nh,its,ids,kpars,ins,dts)
          call nts (vj1,nh,its,ids,nh,its-3)
          call nts (vi1,nh,its,ids,nh,its-3)
          call bonvec1(vi1,vj1,nh,its,ids)
@@ -234,7 +202,7 @@ c          File: labt.dan writing heat sourse
         open(8,file='labt.dan',form='Unformatted')
         rewind8
         call heapot(pgl,pgi,an11,an21,an31,an61,anco2,vr,
-     *              vi1,vj1,vim,vid,vir,ctd,solu,
+     *              vi1,vj1,vim,vid,vir,eddyco,solu,
      *              nsu,rads,g,gkoor,kpars,ins,
      *              nh,its,ids,delta,uts,mass(19))
         close(8)
@@ -247,10 +215,8 @@ c          File: labt.dan writing heat sourse
      *   ,an6,an11,an21,an31
      *   ,an61,vr,vi
      *   ,vj,vi1,vj1
-     *   ,g,rp,ctd,anco2
-     *   ,ron,ros,ros0
-!!!    mass for subprogram trace
-     *   ,aTrace,vrTr,viTr,vjTr,eddyco)
+     *   ,g,rp,eddyco,anco2
+     *   ,ron,ros,ros0)
 
       return
       end
