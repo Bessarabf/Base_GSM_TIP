@@ -5,7 +5,7 @@ c vn_t
 c vn_fi
 c vrprim_s
       subroutine veter_ham(vi1,vj1,vi,vj,vr,vim,vjm,an1,an2,an3,an6,ro,
-     *                 pgl,pgi,rp,r,ctd,n,n1,n2,kpars,ins,dt)
+     *                 pgl,pgi,rp,r,eddyco,n,n1,n2,kpars,ins,dt)
 !
 
       dimension vi(n1,n2,n),vi1(n1,n2,n),vj(n1,n2,n),vj1(n1,n2,n),
@@ -13,7 +13,7 @@ c vrprim_s
      *          an1(n1,n2,n),an2(n1,n2,n),an3(n1,n2,n),
      *          an6(n1,n2,n),ro(n1,n2,n),
      *          pgl(kpars,n,n1,n2),pgi(ins,n,n1,n2),
-     *          rp(n),r(n),ctd(n)
+     *          rp(n),r(n),eddyco(n,n1)
 c     . . .   Расчет меридиональной компоненты
 c     . . .  Следующий порядок расщепления не произволен!!!
 c     . . . Расщепление вдоль меридиана
@@ -23,7 +23,7 @@ c     . . . Расщепление вдоль азимута
       call vn_fi(vi1,vj,r,n,n1,n2,dt)
 c     . . . Расщепление по вертикали
       call vi_r_ham(vi1,vi,vj,vr,vim,an1,an2,an3,an6,ro,
-     *          pgl,pgi,rp,r,ctd,n,n1,n2,kpars,ins,dt)
+     *          pgl,pgi,rp,r,eddyco,n,n1,n2,kpars,ins,dt)
 c     . . .   Расчет азимутальной компоненты
 c     . . .  Следующий порядок расщепления не произволен!!!
 c     . . . Расщепление вдоль меридиана
@@ -34,18 +34,18 @@ c     . . . Расщепление вдоль азимута
       call vn_fi(vj1,vj,r,n,n1,n2,dt)
 c     . . . Расщепление по вертикали
       call vj_r_ham(vj1,vj,vi,vr,vjm,an1,an2,an3,an6,ro,
-     *          pgl,pgi,rp,r,ctd,n,n1,n2,kpars,ins,dt)
+     *          pgl,pgi,rp,r,eddyco,n,n1,n2,kpars,ins,dt)
       return
       end
       subroutine vi_r_ham(vi1,vi,vj,vr,vim,an1,an2,an3,an6,ro,
-     *                pgl,pgi,rp,r,ctd,n,n1,n2,kpars,ins,dt)
+     *                pgl,pgi,rp,r,eddyco,n,n1,n2,kpars,ins,dt)
       dimension vi(n1,n2,n),vi1(n1,n2,n),vj(n1,n2,n),
      *          vr(n1,n2,n),vim(n,n1,n2),
      *          an1(n1,n2,n),an2(n1,n2,n),an3(n1,n2,n),
      *          an6(n1,n2,n),ro(n1,n2,n),
      *          pgl(kpars,n,n1,n2),pgi(ins,n,n1,n2),
      *          dragViGSM(n1,n2,n),
-     *          rp(n),r(n),ctd(n),
+     *          rp(n),r(n),eddyco(n,n1),
      *          pa(31),pb(31),amu(31)
       data am1,am2,am3,bk,om,pi/53.12e-24,46.51e-24,26.56e-24,
      *     1.38e-16,7.27e-5,3.14159/,re/6.371e08/
@@ -72,7 +72,7 @@ c
             cp=cp*bk/(am1*an1(i,j,k)+am2*an2(i,j,k)+
      *         am3*an3(i,j,k))
 c       . . . Турбулентная вязкость
-            amut=2.*ctd(k)/cp
+            amut=2.*eddyco(k,i)/cp
             amu(k)=amu(k)+amut
           end do
           do k=2,n-1
@@ -130,14 +130,14 @@ cc
       return
       end
       subroutine vj_r_ham(vj1,vj,vi,vr,vjm,an1,an2,an3,an6,ro,
-     *                pgl,pgi,rp,r,ctd,n,n1,n2,kpars,ins,dt)
+     *                pgl,pgi,rp,r,eddyco,n,n1,n2,kpars,ins,dt)
       dimension vj(n1,n2,n),vj1(n1,n2,n),vi(n1,n2,n),
      *          vr(n1,n2,n),vjm(n,n1,n2),
      *          an1(n1,n2,n),an2(n1,n2,n),an3(n1,n2,n),
      *          an6(n1,n2,n),ro(n1,n2,n),
      *          dragVjGSM(n1,n2,n),
      *          pgl(kpars,n,n1,n2),pgi(ins,n,n1,n2),
-     *          rp(n),r(n),ctd(n),
+     *          rp(n),r(n),eddyco(n,n1),
      *          pa(31),pb(31),amu(31)
       data am1,am2,am3,bk,om,pi/53.12e-24,46.51e-24,26.56e-24,
      *     1.38e-16,7.27e-5,3.14159/,re/6.371e08/
@@ -164,7 +164,7 @@ c
             cp=cp*bk/(am1*an1(i,j,k)+am2*an2(i,j,k)+
      *         am3*an3(i,j,k))
 c       . . . Турбулентная вязкость
-            amut=2.*ctd(k)/cp
+            amut=2.*eddyco(k,i)/cp
             amu(k)=amu(k)+amut
           end do
           do k=2,n-1

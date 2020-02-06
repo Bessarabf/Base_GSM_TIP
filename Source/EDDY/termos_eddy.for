@@ -284,9 +284,9 @@ c                 an31(i,j,k)=cns3(k)/1.4
          return
          end
 
-      subroutine co2con(an co2,an1,an2,an3,an6,ctd,
+      subroutine co2con(an co2,an1,an2,an3,an6,eddyco,
      *                   rads,rp,g,n,n1,n2)
-      dimension an1(n1,n2,n),an2(n1,n2,n),an3(n1,n2,n),ctd(n)
+      dimension an1(n1,n2,n),an2(n1,n2,n),an3(n1,n2,n),eddyco(n,n1)
      *         ,an6(n1,n2,n),anco2(n1,n2,n),rads(n),g(n),rp(n)
       data am1,am2,am3/53.12e-24,46.51e-24,26.56e-24/,
      *     amco2/73.04e-24/,bk/1.38e-16/
