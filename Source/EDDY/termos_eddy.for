@@ -1,8 +1,6 @@
-c   terpot_bas - bas variant GSM TIP 2018-2019
+c   terpot_bas -  variant GSM TIP jan2020 with 2-D eddy diffusion coefficient
 
-c   ver.    
-c   ver.    
-c   ver.    
+c       
 c   version 25.05.12 add to intrface KPA & NT for massive pril
 
 c - terpot
@@ -137,7 +135,7 @@ c     . . . Температура рассчитывается
       if(mass(4).ne.0) then
          call co2con(anco2,an1,an2,an3,an6,eddyco,
      *               rads,rp,g,nh,its,ids)
-         call heatpo_bas(pgl,pgi,parj,solet,solu,nsu,nse,
+         call heatpo_eddy(pgl,pgi,parj,solet,solu,nsu,nse,
      *               kpars,rads,g,nh,gkoor,its,ddolgs,dtets,
      *               mass,delta,day,uts,tau,dts,eddyco,vim,vid,
      *               vir,ids,ins,an1,an2,an3,anco2,an6,an61,ros,
@@ -149,7 +147,7 @@ c     . . . Температура рассчитывается
       end if
 
       if(mass(5).ne.0) then
-         call sdizkn_bas(an1,an2,an3,an11,an21,an31,
+         call sdizkn_eddy(an1,an2,an3,an11,an21,an31,
      *               an61,vr,vi,vj,ros,rp,rads,g,nh,its,ids,
      *               dts,eddyco,roS,solu,gkoor,delta,nsu,
      *               dtets,uts,ddolgs)
@@ -164,7 +162,7 @@ c
       end if
 c     . . . V = 0
     9 if(mass(6).ne.0) then
-         call veter_ham(vi1,vj1,vi,vj,vr,vim,vid,an1,an2,an3,an61,ron,
+         call veter_eddy(vi1,vj1,vi,vj,vr,vim,vid,an1,an2,an3,an61,ron,
      *              pgl,pgi,rp,rads,eddyco,nh,its,ids,kpars,ins,dts)
          call nts (vj1,nh,its,ids,nh,its-3)
          call nts (vi1,nh,its,ids,nh,its-3)

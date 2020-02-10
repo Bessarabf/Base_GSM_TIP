@@ -4,7 +4,10 @@ c vj_r
 c vn_t
 c vn_fi
 c vrprim_s
-      subroutine veter_ham(vi1,vj1,vi,vj,vr,vim,vjm,an1,an2,an3,an6,ro,
+! 
+! version jan.2020 with 2-D eddy diffusion coefficient
+
+      subroutine veter_eddy(vi1,vj1,vi,vj,vr,vim,vjm,an1,an2,an3,an6,ro,
      *                 pgl,pgi,rp,r,eddyco,n,n1,n2,kpars,ins,dt)
 !
 

@@ -1,5 +1,8 @@
 C Temperature calculation
 C 10.05.2018 - Joul source send to HAMMONIA
+! 
+! version jan.2020 with 2-D eddy diffusion coefficient
+
 C list of programm:
 C - HEATPO
 C - TNPOT
@@ -14,11 +17,11 @@ c    . . . cicle_prog alog i и j
       subroutine heatpo_bas(pgl,pgi,parj,solet,solu,nsu,nse,
      *           kpars,rads,g,nh,gkoor,its,ddolg,dtet,
      *           mass,delta,day,uts,
-     *           tau,dts,ctd,vim,vid,vir,ids,ins,
+     *           tau,dts,eddyco,vim,vid,vir,ids,ins,
      *           an1,an2,an3,anco2,an6,an61,ro,vi,vj,vr)
       dimension pgl(kpars,nh,its,ids)
      *,         pgi(ins,nh,its,ids),parj(nh,its,ids)
-     *,         solet(nse),solu(nsu),rads(nh),mass(30),ctd(nh)
+     *,         solet(nse),solu(nsu),rads(nh),mass(30),eddyco(nh,its)
      *,         vim(nh,its,ids),vid(nh,its,ids)
      *,         gkoor(2,its,ids),vir(nh,its,ids)
      *,         an1(its,ids,nh),an2(its,ids,nh)
@@ -58,8 +61,8 @@ c         print*,' Значения Tn на в.границе только при mass(10)=30'
 c         stop
 cc    end if
 !
-      call tnpot_bas(pgl,pgi,an1,an2,an3,an6,an61,vi,vj,vr,
-     *              anco2,ro,vim,vid,vir,rads,g,gkoor,ctd,solu,nsu,
+      call tnpot_eddy(pgl,pgi,an1,an2,an3,an6,an61,vi,vj,vr,
+     *              anco2,ro,vim,vid,vir,rads,g,gkoor,eddyco,solu,nsu,
      *              kpars,ins,nh,its,ids,delta,uts,dts,mass)
       
 c  . . . циклическая прогонка вдоль  fi & tet
@@ -73,11 +76,11 @@ C     call boskli(an61,nh,its,ids)
 C     call tnalt(an61,nh,its,ids,mass(10))
 C
 c  . . . долготная прогонка с учетом теплопроводности
-       call tnl_jc(an61,an1,an2,an3,vj,ctd,
+       call tnl_jc(an61,an1,an2,an3,vj,eddyco,
      *             rads,nh,its,ids,dts,mass(10))
        call boskli(an61,nh,its,ids)
 c  . . . широтная прогонка
-       call tnl_ic(an61,an1,an2,an3,vi,ctd,
+       call tnl_ic(an61,an1,an2,an3,vi,eddyco,
      *             rads,nh,its,ids,dts,mass(10))
        call bongl(an61,nh,its,ids)
 !       call tnalt(an61,nh,its,ids,mass(10))
@@ -93,9 +96,9 @@ c    . . . Старый вариант
       return
       end
 c
-      subroutine tnpot_bas(pgl,pgi,an1,an2,an3,an6,an61,vi,vj,vr,
-     *                 anco2,ro,vim,vid,vir,rads,g,gkoor,ctd,solu,nsu,
-     *                 kpars,ins,nh,its,ids,dl,uts,dts,mass)
+      subroutine tnpot_eddy(pgl,pgi,an1,an2,an3,an6,an61,vi,vj,vr,
+     *                 anco2,ro,vim,vid,vir,rads,g,gkoor,eddyco,solu,
+     *                 nsu,kpars,ins,nh,its,ids,dl,uts,dts,mass)
 ! for EAGLE part
 !      USE mo_ham_gsm, ONLY:qJGSM
       USE mo_bas_gsm
@@ -106,7 +109,7 @@ c
      *          vj(its,ids,nh),vi(its,ids,nh),
      *          vr(its,ids,nh),rads(nh),mass(30)
      *,         pgi(ins,nh,its,ids)
-     *,         solu(nsu),ctd(nh),g(nh)
+     *,         solu(nsu),eddyco(nh,its),g(nh)
      *,         vim(nh,its,ids),vid(nh,its,ids),gkoor(2,its,ids)
      *,         vir(nh,its,ids),alyam(3),ro(its,ids,nh)
      
@@ -132,7 +135,7 @@ c
        sin m=sin(teta-dteta)
        do 2 j=1,ids
         an60=pgl(7,1,i,j)
-        call ijoulp_bas(q,qdj,pgl,pgi,ctd,rads,g,an60,solu,
+        call ijoulp_eddy(q,qdj,pgl,pgi,eddyco,rads,g,an60,solu,
      *            gkoor,kpars,ins,nh,its,ids,nsu,i,j,uts,dl,
      *            an1,an2,an3,an6,anco2,vr,vi,vj,vim,vid,vir)
         do 29 k=1,n0m
@@ -160,7 +163,7 @@ c
 c         . . . Учет турбулентной теплопроводности
           rocp=(3.5*(an1(i,j,kv)+an2(i,j,kv))+2.5*
      *               an3(i,j,kv))*bk
-          alyam(k1)=alyam(k1)+rocp*ctd(kv)
+          alyam(k1)=alyam(k1)+rocp*eddyco(kv,its)
 c
    20   continue
 c
@@ -248,13 +251,13 @@ c  night flux on upper boundary erg/cm2*c-1
       return
       end
 !
-      subroutine ijoulp_bas(q,qdj,pgl,pgi,ctd,rads,g,an60,solu,
+      subroutine ijoulp_eddy(q,qdj,pgl,pgi,eddyco,rads,g,an60,solu,
      *                  gkoor,kpars,ins,nh,its,ids,nsu,i,j,uts,
      *                  del,an1,an2,an3,an6,anco2,vr,vi,vj,vim,vid,vir)
       USE mo_bas_gsm, ONLY: pi,om,qdis
 
       dimension q(nh),g(nh),pgl(kpars,nh,its,ids),gkoor(2,its,ids),
-     *          rads(nh),solu(nsu),ctd(nh),sni(6)
+     *          rads(nh),solu(nsu),eddyco(nh,its),sni(6)
      *         ,an1(its,ids,nh),an2(its,ids,nh),an3(its,ids,nh)
      *         ,an6(its,ids,nh),anco2(its,ids,nh),vr(its,ids,nh)
      *         ,vi(its,ids,nh),vj(its,ids,nh)
@@ -347,7 +350,7 @@ c . . . Увеличение эффективности в зимнем полушарии
 !!        end if
         qi=r*(pgl(13,k,i,j)+pgl(14,k,i,j)+
      *        pgl(15,k,i,j)+pgl(16,k,i,j))*1.e-11
-        co=cold(ano,and,antr,tem,conco2,rads(k),g(k),ctd(k))
+        co=cold(ano,and,antr,tem,conco2,rads(k),g(k),eddyco(k,i))
         cik53=anoik(con no,antr,tem)
         che=chem(ano,and,antr,tem)
 c*

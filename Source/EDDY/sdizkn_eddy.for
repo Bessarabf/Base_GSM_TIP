@@ -1,9 +1,9 @@
-      subroutine sdizkn_bas(an1,an2,an3,an11,an21,an31,an6,vr,
-     *                  vi,vj,ro,rp,r,g,n,n1,n2,dt,ctd,ro1,
+      subroutine sdizkn_eddy(an1,an2,an3,an11,an21,an31,an6,vr,
+     *                  vi,vj,ro,rp,r,g,n,n1,n2,dt,eddyco,ro1,
      *                  solu,gkoor,delta,nsu,dtet,uts,ddolg)
       USE mo_bas_gsm, ONLY:amo2,amn2,amo,qdis
       dimension an1(n1,n2,n),an2(n1,n2,n),an3(n1,n2,n)
-     *         ,ctd(n),an11(n1,n2,n),an21(n1,n2,n),an31(n1,n2,n)
+     *         ,eddyco(n,n1),an11(n1,n2,n),an21(n1,n2,n),an31(n1,n2,n)
      *         ,vr(n1,n2,n),r(n),rp(n),g(n)
      *         ,ro(n1,n2,n),ro1(n1,n2,n)
      *         ,an6(n1,n2,n),vi(n1,n2,n),vj(n1,n2,n)
@@ -37,8 +37,8 @@ c    . . .  источник фотодиссоциации (q)
 
       n4=n
 c         O    con,
-      call gson  (an1,an31,an2,an3,vr,an6,q,rp,r,g,lov,dt,
-     *            ctd,ro1,n1,n2,n ,vi,vj)
+      call gson_eddy(an1,an31,an2,an3,vr,an6,q,rp,r,g,lov,dt,
+     *            eddyco,ro1,n1,n2,n ,vi,vj)
       call boskli(an31,n,n1,n2)
       call barsos(an31,an6,rp,g,amo,n,n1,n2,lov)
 c . . . Циклическая прогонка
@@ -72,8 +72,8 @@ c
 !       call gsoom (an1,an11,an2,an3,vr,an6,q,rp,r,g,loov,dt,
 !     *              ctd,ro1,n1,n2,n ,vi,vj)
 c     . . . прогонка
-       call o2pro  (an11,an1,an2,an3,an6,vr,vi,vj,
-     *               q,ctd,r,rp,g,n1,n2,n,dt)
+       call o2pro_eddy(an11,an1,an2,an3,an6,vr,vi,vj,
+     *               q,eddyco,r,rp,g,n1,n2,n,dt)
        call boskli(an11,n,n1,n2)
 c  . . .   Корректировка О2 с ',loov,' точки'
        call barsos(an11,an6,rp,g,amo2,n,n1,n2,loov)! loov)
