@@ -1,7 +1,7 @@
 !  ver jan2020 2-D eddy diffusion coefficient
 !  quasi-uniform grid
 !  O2 в приближении малой компоненты  (прогонка)
-      subroutine o2uni (an11,an1,an2,an3,an6,vr,vi,vj,
+      subroutine o2_eddy (an11,an1,an2,an3,an6,vr,vi,vj,
      *                  q,eddyco,rads,rp,g,n1,n2,n,dt)
 
       USE mo_bas_gsm, ONLY:amo2,amn2,amo,bk,pi,re 
@@ -89,7 +89,7 @@ c      . . .  к-т диффузии в дробной точке с учетом неравном сетки
           cMolp=(cmd(k+1)+geom*cmd(k))/(geom+1.)
           cMolm=(cmd(k)+geom*cmd(k-1))/(geom+1.)
           cTdp=(eddyco(k+1,i)+geom*eddyco(k,i))/(geom+1.)
-          cTdm=(eddyco(k,i)+geom*eddyco(k-1,i)))/(geom+1.)
+          cTdm=(eddyco(k,i)+geom*eddyco(k-1,i))/(geom+1.)
           cAllp=cMolp+cTdp
           cAllm=cMolm+cTdm
 

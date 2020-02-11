@@ -122,7 +122,7 @@ c     . . . NO-block
       if(mass(21).eq.0) then  ! apprpoximation
         call connot(pgl,rads,kpars,nh,its,ids)
       else
-        call nonew(pgl,pgi,gkoor,eddyco,rads,rp,g,
+        call nonew_eddy(pgl,pgi,gkoor,eddyco,rads,rp,g,
      *              kpars,ins,nh,its,ids,delta,uts,dts,mass)
       end if
 c     . . . Расчет термосферы по MSIS

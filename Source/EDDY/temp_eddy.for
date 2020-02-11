@@ -14,7 +14,7 @@ C - FREAC
 C - E
 
 c    . . . cicle_prog alog i ¨ j
-      subroutine heatpo_bas(pgl,pgi,parj,solet,solu,nsu,nse,
+      subroutine heatpo_eddy(pgl,pgi,parj,solet,solu,nsu,nse,
      *           kpars,rads,g,nh,gkoor,its,ddolg,dtet,
      *           mass,delta,day,uts,
      *           tau,dts,eddyco,vim,vid,vir,ids,ins,
@@ -416,7 +416,7 @@ c*
       end
 c
 c
-      subroutine djoul p(dj,vii,vij,vri,via i,via j,via r,
+      subroutine djoulp(dj,vii,vij,vri,via i,via j,via r,
      *                   vi,vj,vr,an1,an2,an3,sni,kiss)
       dimension sni(6),ami(2),difv(2),am(3),an(3)
       data am/53.12,46.51,26.56/,

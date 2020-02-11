@@ -8,7 +8,7 @@
      *         ,ro(n1,n2,n),ro1(n1,n2,n)
      *         ,an6(n1,n2,n),vi(n1,n2,n),vj(n1,n2,n)
      *         ,solu(nsu),gkoor(2,n1,n2)
-!      data amo2,amn2,amo/53.12e-24,46.51e-24,26.56e-24/
+!     data amo2,amn2,amo/53.12e-24,46.51e-24,26.56e-24/
 c
 	allocatable q(:,:,:) ! dissosiation sourse
 	allocate (q(n1,n2,n))
@@ -72,7 +72,7 @@ c
 !       call gsoom (an1,an11,an2,an3,vr,an6,q,rp,r,g,loov,dt,
 !     *              ctd,ro1,n1,n2,n ,vi,vj)
 c     . . . прогонка
-       call o2pro_eddy(an11,an1,an2,an3,an6,vr,vi,vj,
+       call o2_eddy(an11,an1,an2,an3,an6,vr,vi,vj,
      *               q,eddyco,r,rp,g,n1,n2,n,dt)
        call boskli(an11,n,n1,n2)
 c  . . .   Корректировка О2 с ',loov,' точки'
