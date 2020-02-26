@@ -33,14 +33,6 @@ c     . . . scale height
      *        amn2*pgl(2,k,i,j))/sum
          hsr(k)=bk*pgl(7,k,i,j)/(ams*g(k))
 c    . . . Coef. Mol. Dif.
-c         epok=1
-!          epok=exp(2.8/an6(i,j,k))
-!          sum1=an1(i,j,k)+an2(i,j,k)
-!          sum2=an1(i,j,k)+an3(i,j,k)
-!          d12=0.829e17/sum1*an6(i,j,k)**0.724*epok
-!          d13=0.969e17/sum2*an6(i,j,k)**0.774*epok
-!          obr=(an2(i,j,k)/d12+an3(i,j,k)/d13)/(an2(i,j,k)+an3(i,j,k))
-!          cmd(k)=1./obr
           cmd(k)=3.e17/sum*sqrt(pgl(7,k,i,j))  ! ª-â ¬.¤¨ääã§¨¨ NO
           alf(k)=cmd(k)/(cmd(k)+eddyco(k,i))
           bet(k)=eddyco(k,i)/(cmd(k)+eddyco(k,i))
@@ -61,9 +53,9 @@ c         epok=1
          p=w+alyam1*cO2i(k)+pgl(15,k,i,j)/pgl(4,k,i,j)
  	 
          ho2=const1*pgl(7,k,i,j)/g(k)
-         x=(rads(k)+re)/h o2
+         x=(rads(k)+re)/ho2
          ch=chept(x,hi)
-         pok=1.e-8*(pgl(1,k,i,j)*h o2*ch*1.e-4)**0.38
+         pok=1.e-8*(pgl(1,k,i,j)*ho2*ch*1.e-4)**0.38
          if (pok.gt.30.) pok=30.
          p=p+alyam14*exp(-pok)
 c ============================================
