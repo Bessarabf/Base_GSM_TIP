@@ -14,7 +14,7 @@ c - turbk
 c - conn
 c - cntn90
 c - conno1
-c - co2con
+c - co2den_eddy
 c - rezam
 c - tnalt
 c - nts
@@ -133,8 +133,9 @@ c     . . . Расчет термосферы по MSIS
       end if
 c     . . . Температура рассчитывается
       if(mass(4).ne.0) then
-         call co2con(anco2,an1,an2,an3,an6,eddyco,
-     *               rads,rp,g,nh,its,ids)
+         call co2den_eddy(anco2,an1,an2,an3,an6,eddyco,
+     *                   rads,rp,g,nh,its,ids)
+   
          call heatpo_eddy(pgl,pgi,parj,solet,solu,nsu,nse,
      *               kpars,rads,g,nh,gkoor,its,ddolgs,dtets,
      *               mass,delta,day,uts,tau,dts,eddyco,vim,vid,
@@ -282,46 +283,43 @@ c                 an31(i,j,k)=cns3(k)/1.4
          return
          end
 
-      subroutine co2con(an co2,an1,an2,an3,an6,eddyco,
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! 26/02/2020 approx co2 dencity
+!
+! at 80 km anCO2(1)=360 ppm
+! at higher altitude cO2 density are calculated in diffusion
+! equilibrium approximation.
+! 
+! anCO2 - CO2 density 1/cm-3
+! an1   - O2  density 1/cm-3
+! an2   - N2  density 1/cm-3
+! an3   - O   density 1/cm-3
+! an6   - temperature, K
+! eddyco - 2d eddy diffusion coefficient
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      subroutine co2den_eddy(anco2,an1,an2,an3,an6,eddyco,
      *                   rads,rp,g,n,n1,n2)
       dimension an1(n1,n2,n),an2(n1,n2,n),an3(n1,n2,n),eddyco(n,n1)
      *         ,an6(n1,n2,n),anco2(n1,n2,n),rads(n),g(n),rp(n)
-      data am1,am2,am3/53.12e-24,46.51e-24,26.56e-24/,
-     *     amco2/73.04e-24/,bk/1.38e-16/
+      data amco2/73.04e-24/
 c
-      do 11 k=1,n
-       z=rads(k)*1.e-5
-       if(.not.(z.gt.100.)) go to 12
-        k1=k
-        goto 13
-   12  continue
-   11 continue
-   13 do 1 i=1,n1
-       do 2 j=1,n2
-        do 3 k=1,k1
-         sum con=an1(i,j,k)+an2(i,j,k)+an3(i,j,k)
-c
-         ams=(am1*an1(i,j,k)+am2*an2(i,j,k)+am3*
-     *        an3(i,j,k))/sum con
-          z km=rads(k)*1.e-5
-          h cm=bk*an6(i,j,k)/(ams*g(k))
-          hkm=hcm*1.e-5
-          anco2(i,j,k)=1.e11*an6(i,j,1)/an6(i,j,k)*
-     *              exp((1.+sqrt(1.+0.8e-12*hcm*hcm))*
-     *              (80.-zkm)/(2.*hkm))
-    3    continue
-    2  continue
-    1 continue
-      call barsos(anco2,an6,rp,g,amco2,n,n1,n2,k1)
+      do i=1,n1
+        do j=1,n2
+           anCO2(i,j,1)=360.e-6*an2(i,j,1)
+        end do
+      end do
+      call bardif_eddy(anCO2,an1,an2,an3,an6,eddyco,rp,g,amCO2,
+     *                 n,n1,n2,2)
       return
       end
+
 c
       subroutine conn(pgl,kpars,nh,its,ids)
        dimension pgl(kpars,nh,its,ids)
           do 1 k = 1 , nh
           do 1 i = 1 , its
           do 1 j = 1 , ids
-       pgl(5,k,i,j)=0.
+       pgl(5,k,i,j)=10.
   1     continue
        return
        end
