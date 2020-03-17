@@ -116,7 +116,11 @@
               cn2I=cn2I+dn2I
               cNe=cn1I+cn2I+cn3I+cn4I
               it=it+1
-              if(it.ge.6) EXIT
+              if(it.ge.9) then
+                print*,'WARNING iterations do not converge in ',
+     *                 'molion3nit. dnorm=',dnorm  
+                EXIT
+              end if
            end do
 !!!!   correction negative values
            if(cn1I.lt.0.) cn1I=par(18,k-1,ig)

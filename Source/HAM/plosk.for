@@ -1,5 +1,4 @@
-! subrout for eiscat
-!
+c
       subroutine plosk(pk,pk3,hm,cmi,ssh,se,cm1,ns,ip,imin,ntsl
      *   ,ntpl,nl,npar,its,nh,nl2)
 

@@ -1,4 +1,7 @@
-! correction O2 before turbopause
+!
+! correction O2 before turbopause - 
+!
+!
       subroutine sdizkn_ham(an1,an2,an3,an11,an21,an31,an6,vr,
      *                  vi,vj,ro,rp,r,g,n,n1,n2,dt,ctd,ro1,
      *                  solu,gkoor,delta,nsu,dtet,uts,ddolg)
