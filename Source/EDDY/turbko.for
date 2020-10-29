@@ -16,7 +16,6 @@
            anO2=anO2+pgl(1,k,i,j)
            anN2 =anN2+pgl(2,k,i,j)
            anO=anO+pgl(3,k,i,j)
-           ano2=ano2+pgl(1,k,i,j)
            tn=tn+pgl(7,k,i,j)
          end do 
          sum=(anO2+anN2+anO)/ids

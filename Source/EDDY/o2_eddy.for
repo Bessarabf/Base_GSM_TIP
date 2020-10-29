@@ -18,6 +18,8 @@
       allocate (a(n),b(n),c(n),f(n),cmd(n)
      *         ,h(n),alf(n),bet(n),hsr(n),cO2(n))
       const=bk/amO2
+!  for uniform grid
+      con1=alog(geom)/(geom-1.) 
 c*******
       dtet=pi/(n1-1)
       dfi=2.*pi/n2
@@ -63,8 +65,7 @@ c         epok=1
           bet(k)=eddyco(k,i)/(cmd(k)+eddyco(k,i))
          end do
          c o2(1)=an1(i,j,1)
-!  for uniform grid
-         con1=alog(geom)/(geom-1.) 
+
          do k=2,n-1
           rk=rads(k)+re
           pro= (rp(k)+rp(k-1))*.5
