@@ -5,36 +5,38 @@
       nfile=nfile1
       if(nfile.eq.3)print 101,nfile,readfl
   101 format(' wwt :   nfile=',i3,'  readfl=',l8)
-      if(nfile.ne.14) then 
-        if(mast(13).eq.0) nfile=13  ! если дрейф не учитывать, f5
-      end if 
+      if(nfile.eq.14)go to 8
+      go to 9
+    8 continue
+      if(mast(13).eq.0) nfile=13
+c     if(mast(1).eq.1)nfile=13
+    9 continue
       nob1=0
       nob2=0
-!
       ns=0
-      do i=1,nl
+      do 1 i=1,nl
         ns=ns+ntsl(i)
-      end do
-! 
-     if(nfile.ne.3) then 
-        if(dolm.gt.0.) then 
+    1 continue
+      if(nfile.eq.3)go to 3
+        if(dolm.eq.0.)go to 2
           nn=dolm/ddolgt
           nob2=kpar*ns*nn
-        end if 
-     end if
-      if(md.eq.0) then
-        if(nomsl.ne.1) then 
+    2   continue
+    3 continue
+      if(md.ne.0)go to 6
+        if(nomsl.eq.1)go to 5
           ns1=0
           k=nomsl-1
-          do i=1,k
+          do 4 i=1,k
             ns1=ns1+ntsl(i)
-          end do
+    4     continue
           nob1=kpar*ns1
-        end if 
+    5   continue
         lpar=ntsl(nomsl)*kpar
-      else  
+        go to 7
+    6 continue
         lpar=kpar*ns
-      end if
+    7 continue
       nob=nob1+nob2
       call inpout(readfl,nfile,kdf,ldor,
      *       isp,nob,lpar,par,pole,nr)

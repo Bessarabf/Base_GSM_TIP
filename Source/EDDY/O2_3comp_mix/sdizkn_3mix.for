@@ -1,3 +1,5 @@
+!  O2 - 3-composition mixture                        23.12.2020
+!  ver jan2020 2-D eddy diffusion coefficient   
       subroutine sdizkn_eddy(an1,an2,an3,an11,an21,an31,an6,vr,
      *                  vi,vj,ro,rp,r,g,n,n1,n2,dt,eddyco,ro1,
      *                  solu,gkoor,delta,nsu,dtet,uts,ddolg)
@@ -72,8 +74,8 @@ c
 !       call gsoom (an1,an11,an2,an3,vr,an6,q,rp,r,g,loov,dt,
 !     *              ctd,ro1,n1,n2,n ,vi,vj)
 c     . . . прогонка
-       call o2pro_eddy(an11,an1,an2,an3,an6,vr,vi,vj,
-     *               q,eddyco,r,rp,g,n1,n2,n,dt)
+       call o2pro_3mix(an11,an1,an2,an3,an6,vr,vi,vj,
+     *               q,eddyco,ro,r,rp,g,n1,n2,n,dt)
        call boskli(an11,n,n1,n2)
 c  . . .   Корректировка О2 с ',loov,' точки'
        call barsos(an11,an6,rp,g,amo2,n,n1,n2,loov)! loov)
