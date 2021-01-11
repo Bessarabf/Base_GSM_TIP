@@ -107,17 +107,49 @@ c          c(k)=(cmdm/pro+vrp)/rp(k-1)
 !!!!!!!!!!!!!!!!!!!!! end 30.10.18 !!!!!!!!!!!!!!!!!!!!!
 
           b(k)=b(k)+cl*(cmd(k)+eddyco(k,i))/pro
-
+          f(k)=qq+co2(k)/dt
 !!!!!!!!!!  23.12.2020 O2 - N2 diffusion
           hN2p=constN2*an6(i,j,k+1)/g(k+1)
           hN2=constN2*an6(i,j,k)/g(k)
           hN2m=constN2*an6(i,j,k-1)/g(k-1)
-
-          f(k)=qq+co2(k)/dt
-c . . .  Дивергенция V:
+          aN2p=an2(i,j,k+1)
+          aN2m=an2(i,j,k-1)
+          difP=(an2p-an2(i,j,k))/rp(k)
+          difM=(an2(i,j,k)-aN2m)/rp(k-1)
+       ! k+1/2 point 
+          fluxP=difP+0.5*(aN2p+an2(i,j,k))*(0.5*(hN2p+hN2)/(hN2p*hN2)+
+     *          dtnp/rp(k)
+          fluxP=fluxP*(dp12(k+1)+dp12(k))
+       ! k-1/2 point
+          fluxM=difM+0.5*(aN2m+an2(i,j,k))*(0.5*(hN2m+hN2)/(hN2m*hN2)+
+     *          dtnm/rp(k-1) 
+          fluxM=fluxM*(dp12(k)+dp12(k-1))
+        !  add to f(k)
+          f(k)=f(k)+(fluxP-fluxM)/pro
+ 
+!!!!!!!!!!  23.12.2020 O2 - O diffusion
+          hOp=constO*an6(i,j,k+1)/g(k+1)
+          hO=constO*an6(i,j,k)/g(k)
+          hOm=constO*an6(i,j,k-1)/g(k-1)
+          aOp=an3(i,j,k+1)
+          aOm=an3(i,j,k-1)
+          difPo=(aOp-an3(i,j,k))/rp(k)
+          difMo=(an3(i,j,k)-aOm)/rp(k-1)
+       ! k+1/2 point 
+          fluxPo=difPo+0.5*(aOp+an3(i,j,k))*(0.5*(hOp+hO)/(hOp*hO)+
+     *          dtnp/rp(k)
+          fluxPo=fluxPo*(dp13(k+1)+dp13(k))
+       ! k-1/2 point
+          fluxMo=difMo+0.5*(aOm+an3(i,j,k))*(0.5*(hOm+hO)/(hOm*hO)+
+     *          dtnm/rp(k-1) 
+          fluxMo=fluxMo*(dp13(k)+dp13(k-1))
+        !  add to f(k)
+          f(k)=f(k)+(fluxPo-fluxMo)/pro      
+         
+c . . .  div V :
           del=2.*dfi*rk*sin_t
           div=(vj(i,jp,k)-vj(i,jm,k))/del
-c . . .  учет котангенса:
+c . . .  cotan :
           del=2.*dtet*rk
           div=div+vi(i,j,k)/rk*cot_t+
      *         (vi(i+1,j,k)-vi(i-1,j,k))/del
