@@ -19,10 +19,24 @@ c       cross sections F10.7=115
 c       cross sections F10.7=180
 cc   *     sp/8.14e-19,4.27e-18,4.51e-19,4.69e-19,2.31e-18,9.48e-18,
 cc   *        1.37e-17,1.01e-17,6.01e-18,2.58e-18,1.09e-18,3.92e-19/
+! cross section and spectral interval from Ackerman et al. Planet Space Sci. 1970. v. 1970 (20 intervals)
+! and reduction to 12 intervals. Cross-sections averaging with flux value
+!
+! 1210.0  1220.0  
+! 1220.0  1250.0
+! 1250.0  1270.0
+! 1270.0  1310.0
+! 1310.0  1350.0  
+! 1350.0  1380.0
+! 1380.0  1500.0 
+! 1500.0  1550.0
+! 1550.0  1630.0 
+! 1630.0  1670.0
+! 1670.0  1720.0
+! 1720.0  1760.0
 
       cr=pi/180.
       nsu05=nsu/2
-!!!	qdis=1.e-10 !!!!!!!!!!!!!!!!
       sum=0.
       do i=2,its-1
          do j=1,ids
