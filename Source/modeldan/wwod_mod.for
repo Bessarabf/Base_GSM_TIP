@@ -1,11 +1,11 @@
+c    ver     08.11.2017 - var with modeldan
 c    ver     21.12.2012 - dtets,ddolgs & dtett,ddolgt - read from danmodel
 c            and then compare with inf record  
 c            25/05/2012 - pril with kpa & ntIME
 c    version 25.03.2012 bmod - modulus of solar magnetic field
-c    version 11.03.2010 flosu - flosuN
-c    version 29.10.2017 flosu39
 
-      subroutine wwod_D39(mes,god,day,ut0,utk,dtt,dts,tau,
+
+      subroutine wwod_mod(mes,god,day,ut0,utk,dtt,dts,tau,
      *          bmpz,bmpy,bmod,vsol,csol,ap0,pkp0,dst0,
      *          ae0,al0,au0,verno,gamma,
      *          ddolgt,dtett,nh,dh,rmin,b,c,ddolgs,dtets,

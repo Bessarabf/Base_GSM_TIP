@@ -64,14 +64,15 @@
 
 !
 	
-! чтение danmodel
-      call wwod_D39(mes,god,day,ut0,utk,dtt,dts,tau,
+! чтение modeldan
+      call wwod_mod(mes,god,day,ut0,utk,dtt,dts,tau,
      *          bmpz,bmpy,bmod,vsol,csol,ap0,pkp0,dst0,ae0,
      *          al0,au0,verno,gamma,
      *          ddolgt,dtett,nh,dh,rmin,b,c,ddolgs,dtets,
      *          dlam,rmaxt,nsill,dteta,ns,uprt,uprs,
      *          mas,mast,mass,tet1,tet2,tet3,pdpc,
      *          eps0,om,fac1,fac2,fac3,imja,kpa,ntIME,its,ids)
+!
       nse=mas(4)
       nsu=2*mas(5)
       allocate(sole(nse),solu(nsu),solen(nse),solet(nse))
