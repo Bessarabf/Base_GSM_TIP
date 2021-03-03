@@ -16,17 +16,18 @@ c
 	allocate (q(n1,n2,n))
       n11=n1-1
       lk=17
-!!!!!!!!!!!!!!!!!!!!!!! experiment !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!! O2 altitude point !!!!!!!!!!!!!!!!!!!!!!!!!!!!
       loov= 20   ! 20 - base
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-C     . . . Изменена для высокой активности
-cc    loov=28  
-cc      lov=21 ! зимний вариант
-       lov=20  ! основной вариант
-c      lov=26
-c     lov=n
+!     loov=28    ! for high activity
 
-c    . . .  источник фотодиссоциации (q)
+!!!!!!!!!!!!!!!!!!!!!!! O  altitude point !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!     lov=21 ! winter var
+!       lov=20  ! base var
+       lov=26
+c     lov=n
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+c    . . .  massive of fotodissociation rates (q)
       do i=1,n1
         do j=1,n2
 !          call fqsmen(an1,an2,an3,an6,n,n1,i,j,solu,q,
@@ -43,7 +44,7 @@ c         O    con,
      *            eddyco,ro1,n1,n2,n ,vi,vj)
       call boskli(an31,n,n1,n2)
       call barsos(an31,an6,rp,g,amo,n,n1,n2,lov)
-c . . . Циклическая прогонка
+c . . . tridiagonal matrix algorithmа
 !! comment 30.07.18 non explicit scheme
        call tn_jc(an31,vj,
      *            r,n,n1,n2,dt,n4)
@@ -68,16 +69,17 @@ c . . . явная схема переноса через полюс
 c       call tetcon(an31,r,n,n1,n2,dt,dtet,vi,vj,n4)
 c      call tetcon_a(an31,vi,r,n,n1,n2,dt,n4)
 c      call boskli(an31,n,n1,n2)
-c
-c         O2    con.
+c . . .
+
+c . . .   O2    con.
 c
 !       call gsoom (an1,an11,an2,an3,vr,an6,q,rp,r,g,loov,dt,
 !     *              ctd,ro1,n1,n2,n ,vi,vj)
-c     . . . прогонка
        call o2pro_3mix(an11,an1,an2,an3,an6,vr,vi,vj,
      *               q,eddyco,ro,r,rp,g,n1,n2,n,dt)
        call boskli(an11,n,n1,n2)
-c  . . .   Корректировка О2 с ',loov,' точки'
+
+c  . . .   correction O2 above loov point
        call barsos(an11,an6,rp,g,amo2,n,n1,n2,loov)! loov)
 !!   explicit scheme 
 !       call tngojm(an11,vj,
@@ -95,7 +97,8 @@ c      call boskli(an11,n,n1,n2)
 c      call barsos(an11,an6,rp,g,amo2,n,n1,n2,loov)
 c      call bongl(an11,n,n1,n2)
 !! end of explicit scheme
-c . . . Циклическая прогонка
+
+c . . . tridiagonal matrix algorithmа
        call tn_jc(an11,vj,
      *            r,n,n1,n2,dt,n)  ! loov)
        call boskli(an11,n,n1,n2)
@@ -103,7 +106,8 @@ c . . . Циклическая прогонка
      *            r,n,n1,n2,dt,n)  ! loov)
        call bongl(an11,n,n1,n2)
 !       call boskli(an11,n,n1,n2)
-c          N2 con.
+
+c . . .   N2 con.
        key=0
 c      lkk=lk
        lkk=n-1
@@ -115,7 +119,7 @@ c      lkk=lk
           tot=(ro1(i,j,k))/amn2
           sum=ot*an11(i,j,k)+ot1*an31(i,j,k)
           an21(i,j,k)=tot-sum
-c         . . . Автоматическая проверка
+c         . . . check altitude point
           prov=0.5*an31(i,j,k)
 c          prov=0.3*an31(i,j,k)
           if(an21(i,j,k).lt.prov) then
@@ -136,7 +140,7 @@ c    *     print 100,an21(ii,jj,lkk),ii,jj,lkk
       call barsos   (an21,an6,rp,g,amn2,n,n1,n2,lkk)
 c     call nts(an21,n,n1,n2,n4)
       call boskli(an21,n,n1,n2)
-  100 format(' ОТРИЦАТЕЛЬНАЯ [N2]=',e10.2,3i4)
+  100 format(' negative [N2]=',e10.2,3i4)
       
 	deallocate (q)
 
