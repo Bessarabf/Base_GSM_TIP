@@ -15,13 +15,13 @@
      *          ,dp(3,3)
       allocatable a(:),b(:),c(:),f(:),cmd(:)
      *         ,h(:),alf(:),bet(:),hsr(:),cO2(:)
-               ,dp12(:),dp13(:) 
+     *         ,dp12(:),dp13(:) 
       
       data gam/1.e-20/
 
       allocate (a(n),b(n),c(n),f(n),cmd(n)
      *         ,h(n),alf(n),bet(n),hsr(n),cO2(n),
-                dp12(n),dp13(n))
+     *          dp12(n),dp13(n))
       const=bk/amO2
       constN2=bk/amN2
       constO =bk/amO
@@ -44,7 +44,7 @@ c*******
            ams=(amO2*an1(i,j,k)+amN2*an2(i,j,k)+amO*an3(i,j,k))/sum
            hsr(k)=bk*an6(i,j,k)/(ams*g(k))
 c    . . . Coef. Mol. Dif.
-           áono2=an1(i,j,k)
+           cono2=an1(i,j,k)
            conn2=an2(i,j,k)
            cono=an3(i,j,k)
            tempp=an6(i,j,k)
@@ -118,11 +118,11 @@ c          c(k)=(cmdm/pro+vrp)/rp(k-1)
           difM=(an2(i,j,k)-aN2m)/rp(k-1)
        ! k+1/2 point 
           fluxP=difP+0.5*(aN2p+an2(i,j,k))*(0.5*(hN2p+hN2)/(hN2p*hN2)+
-     *          dtnp/rp(k)
+     *          dtnp/rp(k))
           fluxP=fluxP*(dp12(k+1)+dp12(k))
        ! k-1/2 point
           fluxM=difM+0.5*(aN2m+an2(i,j,k))*(0.5*(hN2m+hN2)/(hN2m*hN2)+
-     *          dtnm/rp(k-1) 
+     *          dtnm/rp(k-1)) 
           fluxM=fluxM*(dp12(k)+dp12(k-1))
         !  add to f(k)
           f(k)=f(k)+(fluxP-fluxM)/pro
@@ -137,11 +137,11 @@ c          c(k)=(cmdm/pro+vrp)/rp(k-1)
           difMo=(an3(i,j,k)-aOm)/rp(k-1)
        ! k+1/2 point 
           fluxPo=difPo+0.5*(aOp+an3(i,j,k))*(0.5*(hOp+hO)/(hOp*hO)+
-     *          dtnp/rp(k)
+     *          dtnp/rp(k))
           fluxPo=fluxPo*(dp13(k+1)+dp13(k))
        ! k-1/2 point
           fluxMo=difMo+0.5*(aOm+an3(i,j,k))*(0.5*(hOm+hO)/(hOm*hO)+
-     *          dtnm/rp(k-1) 
+     *          dtnm/rp(k-1)) 
           fluxMo=fluxMo*(dp13(k)+dp13(k-1))
         !  add to f(k)
           f(k)=f(k)+(fluxPo-fluxMo)/pro      

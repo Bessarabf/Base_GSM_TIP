@@ -1,7 +1,7 @@
 !  Nusinov model UV
       subroutine nus_uv(solu,nsu)
-      PARAMETER(nsu0=12)
-      dimension B0(nsu0-1),B1(nsu0-1),alyam(nsu0-1)
+      PARAMETER(nsu05=12)	! half of nsu
+      dimension B0(nsu05-1),B1(nsu05-1),alyam(nsu05-1)
       dimension solu(2*nsu)
 
 !  Nusinov et al., A Model of Fluxes of Solar Ultraviolet Irradiance
@@ -29,9 +29,9 @@
 
       p_La=solu(1)*1.e-2 ! normalisation La for Nusinov model
       
-      do k=2,nsu
+      do k=2,nsu05
          solu(k) = (B0(k-1) + p_la*B1(k-1))*1.0e2 ! *10**9 phot/cm2/s
-         solu(k+nsu) = solu(k)*1.98648/alyam(k-1) ! erg/cm2/s
+         solu(k+nsu05) = solu(k)*1.98648/alyam(k-1) ! erg/cm2/s
       end do
       return
       end
