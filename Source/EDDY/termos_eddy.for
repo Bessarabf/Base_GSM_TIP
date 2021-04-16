@@ -153,7 +153,7 @@ c     . . . Температура рассчитывается
      *               dts,eddyco,roS,solu,gkoor,delta,nsu,
      *               dtets,uts,ddolgs)
          call nts (An11,nh,its,ids,nh,its-3) ! ,1
-         call nts (An31,nh,its,ids,nh,its-3) ! ,1)  
+         call nts (An31,nh,its,ids,nh,its-3) ! ,1)
       end if
 c
       if(mass(5).eq.1) then
