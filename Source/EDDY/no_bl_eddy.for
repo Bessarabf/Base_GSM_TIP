@@ -1,3 +1,4 @@
+c  23/03/2019 O2+ & NO+ write to f4
 c. . . programm list
 c - nonew    1
 c - nnew     2
