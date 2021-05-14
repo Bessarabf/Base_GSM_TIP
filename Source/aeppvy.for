@@ -1,4 +1,8 @@
       subroutine aeppVY(mass,nl2,idt,ddolgs,dtet,AL,Dst,ut,del0,E0,Q)
+      ! Vorobiev & Yagodkina model precipitations
+      ! adaptation for GSM TIP
+      ! last redaction may 2021
+
       !      nl2=its, idt=ids
       dimension E0(nl2,idt),Q(nl2,idt),MASS(30)
       allocatable qe0(:,:),ebpp1(:),ebpp2(:),ebpp3(:),ebpp4(:),
