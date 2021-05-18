@@ -1,12 +1,8 @@
-c veter
-c vi_r
-c vj_r
-c vn_t
-c vn_fi
-c vrprim_s
+!  subroutine veter_ham, vi_r_ham, vj_r_ham, vn_t, vn_fi, vrprim_s
+!  function amed3
+!------------------------------------------------------------------------------
       subroutine veter_ham(vi1,vj1,vi,vj,vr,vim,vjm,an1,an2,an3,an6,ro,
      *                 pgl,pgi,rp,r,ctd,n,n1,n2,kpars,ins,dt)
-!
 
       dimension vi(n1,n2,n),vi1(n1,n2,n),vj(n1,n2,n),vj1(n1,n2,n),
      *          vr(n1,n2,n),vim(n,n1,n2),vjm(n,n1,n2),
@@ -37,6 +33,7 @@ c     . . . Расщепление по вертикали
      *          pgl,pgi,rp,r,ctd,n,n1,n2,kpars,ins,dt)
       return
       end
+!------------------------------------------------------------------------------
       subroutine vi_r_ham(vi1,vi,vj,vr,vim,an1,an2,an3,an6,ro,
      *                pgl,pgi,rp,r,ctd,n,n1,n2,kpars,ins,dt)
       dimension vi(n1,n2,n),vi1(n1,n2,n),vj(n1,n2,n),
@@ -129,6 +126,7 @@ cc
       end do
       return
       end
+!------------------------------------------------------------------------------
       subroutine vj_r_ham(vj1,vj,vi,vr,vjm,an1,an2,an3,an6,ro,
      *                pgl,pgi,rp,r,ctd,n,n1,n2,kpars,ins,dt)
       dimension vj(n1,n2,n),vj1(n1,n2,n),vi(n1,n2,n),
@@ -231,7 +229,7 @@ c         end if
       end do
       return
       end
-c
+!------------------------------------------------------------------------------
       subroutine vn_t(vi1,vi,rads,n,n1,n2,dt,key)
 c     . . . циклическая прогонка вдоль меридиана
 c     . . . для компоненты скорости
@@ -299,6 +297,7 @@ c . . . переход к меридиональному кругу
        deallocate (v_n,v,a,b,c,f)
        return
        end
+!------------------------------------------------------------------------------
 c     . . . Расщепление вдоль азимута
 c     . . . циклическая прогонка
       subroutine vn_fi(vi1,vj,rads,n,n1,n2,dt)
@@ -342,7 +341,7 @@ c     . . . par - параметр неявности схемы
        deallocate(v_n,a,b,c,f)
        return
        end
-c
+!------------------------------------------------------------------------------
 c    . . . производная по времени на 3-х временных слоях
       subroutine vrprim_s(vr,vi,vj,vi1,vj1,ro0,ro,ro1,
      *                   rp,rads,n,n1,n2,dt,nn)
@@ -485,7 +484,7 @@ c    . . . временная производная по s
       deallocate( f,s,s1,s0,a)
        return
        end
-c
+!------------------------------------------------------------------------------
       function amed3(a)
       dimension a(3)
       amin=a(1)

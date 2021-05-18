@@ -1,17 +1,7 @@
-c. . . programm list
-c - nonew    1
-c - nnew     2
-c - nnewp    3
-c - ndnew    4
-c - conn2i   5
-c - cono2i   6
-c - connoi   7
-c - chep     8
-c - potno    9
-c - hori    10
-c - horj    11
- 
-c
+! subroutine nonew, nnewp, ndnew, nnew, horj, hori, conn2i, connoi, cono2i, 
+!     potno, noprof, baromi, noprog, nprog, ndprog, pgl_ic, pgl_jc
+! function chep, chept
+!------------------------------------------------------------------------------
       subroutine nonew(pgl,pgi,gkoor,ctd,rads,rp,g,
      *                 kpars,ins,nh,its,ids,del,uts,dt,mass)
 !!!!     
@@ -134,9 +124,8 @@ c     . . .  horisontal circulation NO,N
       deallocate (cNd,cO2i,cNoi,cN2i,cNe,cNo)
       return
       end
-
-c
-c . . . for GSM [N4S)] ¤Ёддг§Ё®­­ п Ї®бв ­®ўЄ 
+!------------------------------------------------------------------------------
+c . . . for GSM [N4S)] диффузионная постановка
       subroutine nnewp(cNd,cNo,cNoi,cO2i,cNe
      *                ,pgl,ctd,rads,rp,g,kpars,nh,its,ids,i,j,hi,dt)
       dimension pgl(kpars,nh,its,ids),cNd(its,ids,nh),
@@ -234,8 +223,7 @@ c      end if
 
       return
       end
-c
-
+!------------------------------------------------------------------------------
 c . . . for GSM
       subroutine ndnew(cNd,cNo,cNoi,cN2i,cNe
      *                ,pgl,kpars,nh,its,ids,i,j,key,dt)
@@ -274,7 +262,7 @@ c
    1  continue
       return
       end
-c
+!------------------------------------------------------------------------------
 c . . . for GSM
       subroutine nnew(cNd,cNo,cNoi,cO2i,cNe
      *                ,pgl,rads,g,kpars,nh,its,ids,i,j,hi,dt)
@@ -296,7 +284,7 @@ c . . . for GSM
        ots=sqrt(ot)
        tr=(pgl(8,k,i,j)+pgl(7,k,i,j))*.5
 c
-c p -lost, and q- sourбe
+c p -lost, and q- sourсe
        a=alfa1*ot**0.85*(1.-r1)*cNoi(k)*cNe(k)
        a=a+(alyam9*pgl(3,k,i,j)+alyam11/ots*cNe(k)+
      *   alyam16*pgl(2,k,i,j)+alyam13)*cNd(i,j,k)
@@ -319,7 +307,7 @@ c p -lost, and q- sourбe
    1  continue
       return
       end
-c
+!------------------------------------------------------------------------------
 c     . . . horizontal transport for NO, N
       subroutine horj(pgl,r,kpars,nh,its,ids,np,dt)
       dimension pgl(kpars,nh,its,ids)
@@ -359,6 +347,7 @@ c     . . . horizontal transport for NO, N
       deallocate (as)
       return
       end
+!------------------------------------------------------------------------------
 c     . . . horizontal transport for NO, N
       subroutine hori(pgl,r,kpars,nh,its,ids,np,dt)
 
@@ -398,10 +387,10 @@ c     . . . horizontal transport for NO, N
       deallocate (as)
       return
       end
-c
+!------------------------------------------------------------------------------
       function chep(x,hi)
-c     . . . CHEPMEN's function
-c     definition f-formula
+!     . . . CHEPMEN's function
+!     definition f-formula
       data pi/3.14159/
       ch(a,b,hi)=a*(1./cos(b*hi)-0.834)
       hig=hi/pi*180.
@@ -425,7 +414,7 @@ c     definition f-formula
       endif
       return
       end
-c
+!------------------------------------------------------------------------------
 c . . . for GSM N2+
       subroutine conn2i(cN2i,cNe,pgl,kpars,nh,its,ids,i,j)
       dimension cN2i(nh),cNe(nh),pgl(kpars,nh,its,ids)
@@ -444,6 +433,7 @@ c . . . for GSM N2+
         end do
       return
       end
+!------------------------------------------------------------------------------
 c . . . for GSM NO+
       subroutine connoi(cNoi,cO2i,cN2i,cNe,pgl,rp,g,
      *                  kpars,nh,its,ids,i,j)
@@ -481,8 +471,7 @@ c . . . for GSM NO+
  	cNOi(16)=0.5*(cNOi(15)+cNOi(17))
 	return
       end
-
-
+!------------------------------------------------------------------------------
 c . . . for GSM O2+
       subroutine cono2i(cO2i,cNo,cNe,pgl,kpars,nh,its,ids,i,j)
       dimension cO2i(nh),cNo(nh),cNe(nh),pgl(kpars,nh,its,ids)
@@ -506,7 +495,8 @@ c . . . for GSM O2+
       end do
       return
       end
-c     . . . Ї®в®Є®ў п Їа®Ј®­Є 
+!------------------------------------------------------------------------------
+c     . . . потоковая прогонка
       subroutine potno(dim,sdim,a,b,d,e,n)
 c potokowa progonka
 c     dim -
@@ -566,13 +556,11 @@ c     dim(n)= bet(n)*(+b(n)-gam(n))
          dim(k)=gam(k)-bet(k)*(sdim(k+1)+b(k))
 		end if
 !	  write(*,*) k,dim(k)
-
     2 continue
 	  deallocate(bet,gam)
-
       return
       end 
-
+!------------------------------------------------------------------------------
 	! NO profile
       subroutine noprof(cNd,cNo,cO2i
      *             ,pgl,ctd,rads,rp,g,kpars,nh,its,ids,i,j,hi,dt)
@@ -663,12 +651,9 @@ c          end if
         end do
      	deallocate (a,b,d,e,r,cmd
      *          ,sdim)
-
 	return
 	end
- 
-!!
-
+!------------------------------------------------------------------------------
       subroutine baromi(an,pgl,rp,g,am,kpars,nh,its,ids,i,j,l)
       dimension an(nh)
      *         ,pgl(kpars,nh,its,ids),rp(nh),g(nh)
@@ -685,3 +670,507 @@ c          end if
     3 continue
       return
 	end
+!------------------------------------------------------------------------------
+      subroutine noprog(cNd,cNo,cO2i
+     *                 ,pgl,ctd,rads,rp,g,kpars,nh,its,ids,i,j,hi,dt)
+c    NO в приближении малой компоненты  (прогонка)
+      dimension pgl(kpars,nh,its,ids),
+     *          cO2i(nh),cNo(nh),cNd(its,ids,nh),
+     *          rads(nh),rp(nh),g(nh),ctd(nh)
+      allocatable a(:),b(:),c(:),f(:),cmd(:)
+     *          ,h(:),hsr(:),alf(:),bet(:)
+	allocate (a(nh),b(nh),c(nh),f(nh),cmd(nh)
+     *          ,h(nh),hsr(nh),alf(nh),bet(nh))
+
+      INCLUDE 'alpha.inc'	 
+      data amo2,amn2,amo,amno/ 53.12e-24,46.51e-24,26.56e-24,49.82e-24/
+     *    ,bk/1.38e-16/,re/6.371e8/,pi/3.14159/
+      const=bk/amno
+      const1=bk/amo2
+c*******
+      dtet=pi/(its-1)
+      dfi=2.*pi/ids
+      teta=dtet*(i-1)
+      sin_t=sin(teta)
+      cot_t=cos(teta)/sin_t
+      jp=j+1
+      jm=j-1
+      if(j.eq.ids) jp=1
+      if(j.eq.1)  jm=ids
+      cNO(1)=pgl(4,1,i,j)
+      do k=1,nh     
+c     . . . scale height
+         h(k) =const*pgl(7,k,i,j)/g(k)
+         sum=pgl(1,k,i,j)+pgl(2,k,i,j)+pgl(3,k,i,j)
+         ams=(amo*pgl(3,k,i,j)+amo2*pgl(1,k,i,j)+
+     *        amn2*pgl(2,k,i,j))/sum
+         hsr(k)=bk*pgl(7,k,i,j)/(ams*g(k))
+c    . . . Coef. Mol. Dif.
+c         epok=1
+!          epok=exp(2.8/an6(i,j,k))
+!          sum1=an1(i,j,k)+an2(i,j,k)
+!          sum2=an1(i,j,k)+an3(i,j,k)
+!          d12=0.829e17/sum1*an6(i,j,k)**0.724*epok
+!          d13=0.969e17/sum2*an6(i,j,k)**0.774*epok
+!          obr=(an2(i,j,k)/d12+an3(i,j,k)/d13)/(an2(i,j,k)+an3(i,j,k))
+!          cmd(k)=1./obr
+          cmd(k)=3.e17/sum*sqrt(pgl(7,k,i,j))  ! к-т м.диффузии NO
+          alf(k)=cmd(k)/(cmd(k)+ctd(k))
+          bet(k)=ctd(k)/(cmd(k)+ctd(k))
+         end do
+         do k=2,nh-1
+          rk=rads(k)+re
+          pro= (rp(k)+rp(k-1))*.5
+          cNO(k)=pgl(4,k,i,j)
+          sum=pgl(1,k,i,j)+pgl(2,k,i,j)+pgl(3,k,i,j)
+! . .  q - sourse and...
+         u=(alyam7*cNd(i,j,k)+
+     *      alyam8*exp(-3220./pgl(7,k,i,j))*pgl(5,k,i,j))*pgl(1,k,i,j)
+         q=u+alyam3*cO2i(k)*pgl(2,k,i,j)
+! . . . p - lost
+         w=alyam10*pgl(5,k,i,j)+alyam12*cNd(i,j,k)
+         w=w+alyam15*pgl(3,k,i,j)*pgl(2,k,i,j)*exp(940./pgl(7,k,i,j))
+ !       p=w+alyam1*cO2i(k)
+         p=w+alyam1*cO2i(k)+pgl(15,k,i,j)/pgl(4,k,i,j)
+ 	 
+         ho2=const1*pgl(7,k,i,j)/g(k)
+         x=(rads(k)+re)/h o2
+         ch=chept(x,hi)
+         pok=1.e-8*(pgl(1,k,i,j)*h o2*ch*1.e-4)**0.38
+         if (pok.gt.30.) pok=30.
+         p=p+alyam14*exp(-pok)
+c ============================================
+c          p=0.
+c          qq=0.
+          dtnp=alog(pgl(7,k+1,i,j)/pgl(7,k,i,j))
+          dtnm=alog(pgl(7,k,i,j)/pgl(7,k-1,i,j))
+c      . . . к-т диффузии в дробной точке
+          cmdp=(cmd(k+1)+cmd(k)+ctd(k+1)+ctd(k))*.5
+          cmdm=(cmd(k)+cmd(k-1)+ctd(k)+ctd(k-1))*.5
+
+          a(k)=(cmdp/pro)/rp(k)
+          c(k)=(cmdm/pro)/rp(k-1)
+          b(k)=a(k)+c(k)+1./dt+p
+          clp=0.5*(alf(k+1)/h(k+1)+dtnp/rp(k)+bet(k+1)/hsr(k+1))
+          clm=-0.5*(alf(k-1)/h(k-1)+dtnm/rp(k-1)+bet(k-1)/hsr(k-1))
+          aprim=(cmd(k+1)+ctd(k+1))/pro*clp
+          cprim=(cmd(k-1)+ctd(k-1))/pro*clm
+          cl=0.5*(-dtnp/rp(k)+dtnm/rp(k-1))
+!          a(k)=a(k)+aprim-pgl(10,k+1,i,j)/pro*.5
+!          c(k)=c(k)+cprim+pgl(10,k-1,i,j)/pro*.5
+!!!!!!!!!!!!!!!!!!!!!!!!!!!30.10.18 !!!!!!!!!!!!!!!!!!!!
+          a(k)=a(k)+aprim !30.10.18
+          c(k)=c(k)+cprim !30.10.18
+          if(pgl(10,k,i,j).le.0.) then
+           a(k)=a(k)-pgl(10,k+1,i,j)/rp(k)
+           b(k)=b(k)-pgl(10,k,i,j)/rp(k)
+          else  
+           b(k)=b(k)+pgl(10,k,i,j)/rp(k-1)
+           c(k)=c(k)+pgl(10,k-1,i,j)/rp(k-1)
+          end if 
+!!!!!!!!!!!!!!!!!!!!! end 30.10.18 !!!!!!!!!!!!!!!!!!!!!
+          b(k)=b(k)+cl*(cmd(k)+ctd(k))/pro
+          f(k)=q+cNO(k)/dt
+c . . .  Дивергенция V:
+          del=2.*dfi*rk*sin_t
+          div=(pgl(12,k,i,jp)-pgl(12,k,i,jm))/del
+c . . .  учет котангенса:
+          del=2.*dtet*rk
+          div=div+pgl(11,k,i,j)/rk*cot_t+
+     *         (pgl(11,k,i+1,j)-pgl(11,k,i-1,j))/del
+          if(div.gt.0.) then
+             b(k)=b(k)+div
+          else
+             f(k)=f(k)-div*cNO(k)
+          end if
+        end do
+c . . . элемент массива используется для удобства
+c       
+        f(nh)=exp(-rp(nh-1)/h(nh))
+        kiss=2
+        call progon (cNO,a,b,c,f,nh,kiss)
+c     . . .
+        do k=1,nh
+         pgl(4,k,i,j)=cNO(k)
+        end do
+      deallocate (a,b,c,f,cmd,h,hsr,alf,bet)
+      return
+      end
+!------------------------------------------------------------------------------
+      function chept(x,hi)
+!     . . . CHEPMEN's function by Titheridge
+      data pi/3.141592/
+	
+!     definition f-formula
+      ch(a,b,hi)=a*(1./cos(b*hi)-0.834)
+	if(hi.gt.pi) hi=pi
+      hig=hi/pi*180.
+      a=3.88/x**1.143
+      sq=sqrt(x)
+      b=1.0123-1.454/sq
+      if(hig.lt.89.) then
+       d=ch(a,b,hi)
+       chept=1./cos(hi-d)
+       return
+      else
+       z=sin(hi)*x
+	
+       sqz=sqrt(z)
+       pok=x-z
+       if(pok.gt.30.)pok=30.
+       ex=exp(pok)
+       prom=2.507*sqz+.903/sqz
+       hip=pi-hi
+       d=ch(a,b,hip)
+       chept=ex*prom-1./cos(hip-d)
+      endif
+      return
+      end
+!------------------------------------------------------------------------------
+      subroutine nprog(cNd,cNoi,cO2i,cN2i,cNe
+     *                ,pgl,ctd,rads,rp,g,kpars,nh,its,ids,i,j,hi,dt)
+c    N(1s) progonka as O2pro
+      dimension pgl(kpars,nh,its,ids),cNd(its,ids,nh),
+     *          cO2i(nh),cNOi(nh),cNe(nh),cN2i(nh),
+     *          rads(nh),rp(nh),g(nh),ctd(nh)
+    
+      allocatable a(:),b(:),c(:),f(:),cmd(:),cN(:),
+     *            h(:),hsr(:),alf(:),bet(:)
+      INCLUDE 'alpha.inc'	 
+      data amo2,amn2,amo,amn/ 53.12e-24,46.51e-24,26.56e-24,23.26e-24/
+     *    ,bk/1.38e-16/,re/6.371e8/,pi/3.14159/
+      allocate (a(nh),b(nh),c(nh),f(nh),cmd(nh),cN(nh),
+     *            h(nh),hsr(nh),alf(nh),bet(nh))
+
+	const=bk/amn
+      const1=bk/amo2
+c*******
+      dtet=pi/(its-1)
+      dfi=2.*pi/ids
+      teta=dtet*(i-1)
+      sin_t=sin(teta)
+      cot_t=cos(teta)/sin_t
+      jp=j+1
+      jm=j-1
+      if(j.eq.ids) jp=1
+      if(j.eq.1)  jm=ids
+      cN(1)=pgl(5,1,i,j)
+      do k=1,nh     
+c     . . . scale heights
+         h(k) =const*pgl(7,k,i,j)/g(k)
+         sum=pgl(1,k,i,j)+pgl(2,k,i,j)+pgl(3,k,i,j)
+         ams=(amo*pgl(3,k,i,j)+amo2*pgl(1,k,i,j)+
+     *        amn2*pgl(2,k,i,j))/sum
+         hsr(k)=bk*pgl(7,k,i,j)/(ams*g(k))
+
+          cmd(k)=4.55e17/sum*sqrt(pgl(7,k,i,j))  ! mol dif N 
+          alf(k)=cmd(k)/(cmd(k)+ctd(k))
+          bet(k)=ctd(k)/(cmd(k)+ctd(k))
+         end do
+         do k=2,nh-1
+          rk=rads(k)+re
+          pro= (rp(k)+rp(k-1))*.5
+          cN(k)=pgl(5,k,i,j)
+          sum=pgl(1,k,i,j)+pgl(2,k,i,j)+pgl(3,k,i,j)
+          ot=300./pgl(9,k,i,j)
+          ots=sqrt(ot)
+
+c p -lost, and q - source
+          u=alfa1*ot**0.85*(1.-r1)*cNoi(k)*cNe(k)       ! NO+ + e 
+          u=u+alfa3*ot**0.4*(1.-r2)*cN2i(k)*cNe(k)      ! N2+ + e
+          u=u+(alyam9*pgl(3,k,i,j)+alyam11/ots*cNe(k)+  ! N(2D) + O ; N2D + e
+     *    alyam16*pgl(2,k,i,j)+alyam13)*cNd(i,j,k)      ! N2D + N2; N2D -> N
+          q=u+r3*alyam6*pgl(14,k,i,j)                   ! q(N2+) - dissosiation
+          ho2=const1*pgl(7,k,i,j)/g(k)
+          x=(rads(k)+re)/h o2
+          ch=chept(x,hi)
+          pok=1.e-8*(pgl(1,k,i,j)*h o2*ch*1.E-4)**0.38
+          if (pok.gt.30.) pok=30.
+          q=q+alyam14*exp(-pok)*pgl(4,k,i,j)            ! SR continuum
+c . . .  lost
+          w=alyam2*cO2i(k)
+          w=w+alyam8*exp(-3220./pgl(7,k,i,j))*pgl(1,k,i,j)
+          p=w+alyam10*pgl(4,k,i,j)
+c ============================================
+c          p=0.
+c          qq=0.
+          dtnp=alog(pgl(7,k+1,i,j)/pgl(7,k,i,j))
+          dtnm=alog(pgl(7,k,i,j)/pgl(7,k-1,i,j))
+c      . . . к-т диффузии в дробной точке
+          cmdp=(cmd(k+1)+cmd(k)+ctd(k+1)+ctd(k))*.5
+          cmdm=(cmd(k)+cmd(k-1)+ctd(k)+ctd(k-1))*.5
+
+          a(k)=(cmdp/pro)/rp(k)
+          c(k)=(cmdm/pro)/rp(k-1)
+          b(k)=a(k)+c(k)+1./dt+p
+          clp=0.5*(alf(k+1)/h(k+1)+dtnp/rp(k)+bet(k+1)/hsr(k+1))
+          clm=-0.5*(alf(k-1)/h(k-1)+dtnm/rp(k-1)+bet(k-1)/hsr(k-1))
+          aprim=(cmd(k+1)+ctd(k+1))/pro*clp
+          cprim=(cmd(k-1)+ctd(k-1))/pro*clm
+          cl=0.5*(-dtnp/rp(k)+dtnm/rp(k-1))
+!          a(k)=a(k)+aprim-pgl(10,k+1,i,j)/pro*.5 ! var before 30.10.18
+!          c(k)=c(k)+cprim+pgl(10,k-1,i,j)/pro*.5 !
+!!! like O2pro 30/10/18 !!!!!!!!!!!!!!!!!!!!!!
+          a(k)=a(k)+aprim
+          c(k)=c(k)+cprim
+          if(pgl(10,k+1,i,j).le.0.) then
+           a(k)=a(k)-pgl(10,k+1,i,j)/rp(k)
+           b(k)=b(k)-pgl(10,k,i,j)/rp(k)
+          else  
+           b(k)=b(k)+pgl(10,k,i,j)/rp(k-1)
+           c(k)=c(k)+pgl(10,k-1,i,j)/rp(k-1)
+          end if 
+!!!!!!!!!!!!!!!!!!!!! end 30.10.18 !!!!!!!!!!!!!!!!!!!!!
+          b(k)=b(k)+cl*(cmd(k)+ctd(k))/pro
+          f(k)=q+cN(k)/dt
+c . . .  div V:
+          del=2.*dfi*rk*sin_t
+          div=(pgl(12,k,i,jp)-pgl(12,k,i,jm))/del
+c . . .  non spheric:
+          del=2.*dtet*rk
+          div=div+pgl(11,k,i,j)/rk*cot_t+
+     *         (pgl(11,k,i+1,j)-pgl(11,k,i-1,j))/del
+          if(div.gt.0.) then
+             b(k)=b(k)+div
+          else
+             f(k)=f(k)-div*cN(k)
+          end if
+      end do
+c . . . элемент массива используется для удобства
+c       
+      f(nh)=exp(-rp(nh-1)/h(nh))
+      kiss=2
+      call progon (cN,a,b,c,f,nh,kiss)
+c     . . .
+      do k=1,nh
+        pgl(5,k,i,j)=cN(k)
+      end do
+      deallocate (a,b,c,f,cmd,cN,h,hsr,alf,bet )
+      return
+      end
+!------------------------------------------------------------------------------
+      subroutine ndprog(cNd,cNo,cNoi,cN2i,cNe
+     *                ,pgl,ctd,rads,rp,g,kpars,nh,its,ids,i,j,hi,dt)
+       dimension pgl(kpars,nh,its,ids),cNd(its,ids,nh),
+     *          cNO(nh),cNOi(nh),cNe(nh),cN2i(nh),
+     *          rads(nh),rp(nh),g(nh),ctd(nh)
+
+c    N(2D) progonka as O2pro
+      allocatable a(:),b(:),c(:),f(:),cmd(:),cN(:),
+     *            h(:),hsr(:),alf(:),bet(:)
+
+
+      INCLUDE 'alpha.inc'
+      data amo2,amn2,amo,amn/ 53.12e-24,46.51e-24,26.56e-24,23.26e-24/
+     *    ,bk/1.38e-16/,re/6.371e8/,pi/3.14159/
+      allocate (a(nh),b(nh),c(nh),f(nh),cmd(nh),cN(nh),
+     *            h(nh),hsr(nh),alf(nh),bet(nh))
+
+c
+c     data  alfa1/4.2e-7/,r1,r3/0.7,0.5/
+c    *    , alyam4 /1.4e-10/
+c    *    , alyam6,  alyam7,   alyam9
+c    *    /    0.1,  5.e-12,  4.5e-13/
+c    *    ,alyam11, alyam12,  alyam13, alyam16
+c    *    /3.6e-10,  7.e-11,  1.06e-5, 2.3e-14/
+      const=bk/amn
+      const1=bk/amo2
+c*******
+      dtet=pi/(its-1)
+      dfi=2.*pi/ids
+      teta=dtet*(i-1)
+      sin_t=sin(teta)
+      cot_t=cos(teta)/sin_t
+      jp=j+1
+      jm=j-1
+      if(j.eq.ids) jp=1
+      if(j.eq.1)  jm=ids
+      cN(1)=cNd(i,j,1)
+      do k=1,nh     
+c     . . . scale heights
+         h(k) =const*pgl(7,k,i,j)/g(k)
+         sum=pgl(1,k,i,j)+pgl(2,k,i,j)+pgl(3,k,i,j)
+         ams=(amo*pgl(3,k,i,j)+amo2*pgl(1,k,i,j)+
+     *        amn2*pgl(2,k,i,j))/sum
+         hsr(k)=bk*pgl(7,k,i,j)/(ams*g(k))
+c     . . .
+         cmd(k)=4.55e17/sum*sqrt(pgl(7,k,i,j))  ! mol dif N
+         alf(k)=cmd(k)/(cmd(k)+ctd(k))
+         bet(k)=ctd(k)/(cmd(k)+ctd(k))
+      end do
+      do k=2,nh-1
+         ot=300./pgl(9,k,i,j)
+         ots=sqrt(ot)
+         tr=(pgl(8,k,i,j)+pgl(7,k,i,j))*.5
+         rk=rads(k)+re
+         pro=(rp(k)+rp(k-1))*.5
+         cN(k)=cNd(i,j,k)
+         sum=pgl(1,k,i,j)+pgl(2,k,i,j)+pgl(3,k,i,j)
+         ot=300./pgl(9,k,i,j)
+         ots=sqrt(ot)
+c . . . p -lost, and q- source
+         q=alfa1*ot**0.85*r1*cNoi(k)*cNe(k)               ! NO+ + e
+         q=q+alfa3*ot**0.4*r2*cN2i(k)*cNe(k)              ! N2+ + e
+         q=q+alyam4*(300./tr)**0.44*cN2i(k)*pgl(3,k,i,j)  ! N2+ + O
+         q=q+r3*alyam6*pgl(14,k,i,j)                      ! q(N2+) - dissosiation
+
+         p=alyam7*pgl(1,k,i,j)
+         p=p+alyam9*pgl(3,k,i,j)
+         p=p+alyam11/ots*cNe(k)
+         p=p+alyam12*cNo(k)+alyam16*pgl(2,k,i,j)
+         p=p+alyam13
+c . . .
+         dtnp=alog(pgl(7,k+1,i,j)/pgl(7,k,i,j))
+         dtnm=alog(pgl(7,k,i,j)/pgl(7,k-1,i,j))
+c      . . . dif in semi integer point
+         cmdp=(cmd(k+1)+cmd(k)+ctd(k+1)+ctd(k))*.5
+         cmdm=(cmd(k)+cmd(k-1)+ctd(k)+ctd(k-1))*.5
+
+         a(k)=(cmdp/pro)/rp(k)
+         c(k)=(cmdm/pro)/rp(k-1)
+         b(k)=a(k)+c(k)+1./dt+p
+         clp=0.5*(alf(k+1)/h(k+1)+dtnp/rp(k)+bet(k+1)/hsr(k+1))
+         clm=-0.5*(alf(k-1)/h(k-1)+dtnm/rp(k-1)+bet(k-1)/hsr(k-1))
+         aprim=(cmd(k+1)+ctd(k+1))/pro*clp
+         cprim=(cmd(k-1)+ctd(k-1))/pro*clm
+         cl=0.5*(-dtnp/rp(k)+dtnm/rp(k-1))
+!          a(k)=a(k)+aprim-pgl(10,k+1,i,j)/pro*.5 ! var before 30.10.18
+!          c(k)=c(k)+cprim+pgl(10,k-1,i,j)/pro*.5 !
+!!! like O2pro 30/10/18 !!!!!!!!!!!!!!!!!!!!!!
+          a(k)=a(k)+aprim
+          c(k)=c(k)+cprim
+          if(pgl(10,k+1,i,j).le.0.) then
+           a(k)=a(k)-pgl(10,k+1,i,j)/rp(k)
+           b(k)=b(k)-pgl(10,k,i,j)/rp(k)
+          else  
+           b(k)=b(k)+pgl(10,k,i,j)/rp(k-1)
+           c(k)=c(k)+pgl(10,k-1,i,j)/rp(k-1)
+          end if 
+!!!!!!!!!!!!!!!!!!!!! end 30.10.18 !!!!!!!!!!!!!!!!!!!!!
+          b(k)=b(k)+cl*(cmd(k)+ctd(k))/pro
+          f(k)=q+cN(k)/dt
+c . . .  Дивергенция V:
+          del=2.*dfi*rk*sin_t
+          div=(pgl(12,k,i,jp)-pgl(12,k,i,jm))/del
+c . . .  учет котангенса:
+          del=2.*dtet*rk
+          div=div+pgl(11,k,i,j)/rk*cot_t+
+     *         (pgl(11,k,i+1,j)-pgl(11,k,i-1,j))/del
+          if(div.gt.0.) then
+             b(k)=b(k)+div
+          else
+             f(k)=f(k)-div*cN(k)
+          end if
+        end do
+c . . . элемент массива используется для удобства
+c       
+        f(nh)=exp(-rp(nh-1)/h(nh))
+        kiss=2
+        call progon (cN,a,b,c,f,nh,kiss)
+c     . . .
+      do k=1,nh
+         cNd(i,j,k)=cN(k)
+      end do
+      deallocate (a,b,c,f,cmd,cN,h,hsr,alf,bet )
+      return
+      end
+!------------------------------------------------------------------------------
+       subroutine pgl_ic(pgl,rads,kpars,nh,its,ids,dt,n0,np)
+c     . . . циклическая прогонка вдоль меридиана
+c     . . .    nm=its+its-2
+
+
+       dimension pgl(kpars,nh,its,ids),rads(nh)
+       allocatable tn(:),v(:),a(:)
+     *,            b(:),c(:),f(:)
+       data pi/3.1415926/,re/6.371e8/,par/1./
+      
+       nm=its+its-2
+       allocate( tn(nm),v(nm),a(nm)
+     *,            b(nm),c(nm),f(nm))
+       ns=its-1
+       n_d=ids/2
+       dtet=pi/ns
+       ot=dt/dtet
+       do k=2,n0
+        rk=rads(k)+re
+        do j=1,n_d
+c . . . переход к меридиональному кругу
+            do i=1,its
+              v(i)=pgl(11,k,i,j)
+              tn(i)=pgl(np,k,i,j)
+            end do
+            do i=its+1,nm
+              v(i)=-pgl(11,k,i-its+1,j+n_d)
+              tn(i)=pgl(np,k,i-its+1,j+n_d)
+            end do
+            do i=1,nm
+              im=i-1
+              ip=i+1
+              if(i.eq.nm) ip=1
+              if(i.eq.1) im=nm
+              vm=(v(i)-abs(v(i)))*.5
+              vp=(v(i)+abs(v(i)))*.5
+              a(i)=vp*ot*par/rk
+              c(i)=-vm*ot*par/rk
+              b(i)=1.+a(i)+c(i)
+              f(i)=tn(i)-vm*(1.-par)*ot/rk*(tn(ip)-tn(i))-
+     *                   vp*(1.-par)*ot/rk*(tn(i)-tn(im))
+            end do
+            call cyclp(a,b,c,f,tn,nm)
+            do i=1,its
+              pgl(np,k,i,j)=tn(i)
+            end do
+            do i=its+1,nm
+              pgl(np,k,i-its+1,j+n_d)=tn(i)
+            end do
+        end do
+       end do
+       deallocate( tn,v,a,b,c,f)
+       return
+       end
+!------------------------------------------------------------------------------
+	subroutine pgl_jc(pgl,rads,kpars,nh,its,ids,dt,n0,np)
+c     . . . циклическая прогонка
+
+       dimension pgl(kpars,nh,its,ids),rads(nh)
+       allocatable tn(:),a(:),b(:),c(:),f(:)
+       data pi/3.1415926/,re/6.371e8/,par/1./
+       allocate (tn(ids),a(ids),b(ids),c(ids),f(ids))
+       nm=ids
+       ns=its-1
+       dfi=2.*pi/ids
+       ot=dt/dfi
+       do k=2,n0
+        rk=rads(k)+re
+        do i=2,ns
+          tet=pi*(i-1)/ns
+          del=rk*sin(tet)
+          do j=1,ids
+           tn(j)=pgl(np,k,i,j)
+          end do
+          do j=1,ids
+            jm=j-1
+            jp=j+1
+            if(j.eq.1) jm=ids
+            if(j.eq.ids) jp=1
+            vm=(pgl(12,k,i,j)-abs(pgl(12,k,i,j)))*.5
+            vp=(pgl(12,k,i,j)+abs(pgl(12,k,i,j)))*.5
+            a(j)=vp*ot*par/del
+            c(j)=-vm*ot*par/del
+            b(j)=1.+a(j)+c(j)
+            f(j)=tn(j)-vm*(1.-par)*ot/del*(tn(jp)-tn(j))-
+     *                 vp*(1.-par)*ot/del*(tn(j)-tn(jm))
+          end do
+          call cyclp(a,b,c,f,tn,ids)
+          do j=2,ids
+            pgl(np,k,i,j)=tn(j)
+          end do
+        end do
+!!!     left and right  first derivative in 1 point is equal
+        pgl(np,k,i,1)=(tn(2)+tn(ids))*.5
+
+       end do
+       deallocate(tn,a,b,c,f)
+       return
+       end

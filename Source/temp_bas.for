@@ -1,16 +1,12 @@
+!  subroutine heatpo_bas, tnpot_bas, ijoulp_bas, djoul, freac, tnl_ic, tnl_jc
+!  function anoik, cold, e, chem
 C Temperature calculation
 C 10.05.2018 - Joul source send to HAMMONIA
 C list of programm:
-C - HEATPO
-C - TNPOT
-C - IJOULP
-C - ANOIK
-C - COLD
 C - DJOULP
-C - FREAC
-C - E
 
-c    . . . cicle_prog alog i Ё j
+!------------------------------------------------------------------------------
+c    . . . cicle_prog alog i и j
       subroutine heatpo_bas(pgl,pgi,parj,solet,solu,nsu,nse,
      *           kpars,rads,g,nh,gkoor,its,ddolg,dtet,
      *           mass,delta,day,uts,
@@ -33,7 +29,7 @@ c    . . . cicle_prog alog i Ё j
 !       print *,'HEATPO: ids is too small '
 !       stop
 !      end if
-cc    . . .  TN on 526 Є¬ according MSIS-90
+cc    . . .  TN on 526 км according MSIS-90
 c     if(mass(10).eq.30) then
 c       do   i =  1,its
 c         do   j = 1,ids
@@ -54,7 +50,7 @@ c           pgl(7,nh,i,j)=tm(2)
 c           end do
 c          end do
 c     else
-c         print*,' ‡­ зҐ­Ёп Tn ­  ў.Ја ­ЁжҐ в®«мЄ® ЇаЁ mass(10)=30'
+c         print*,' Значения Tn на в.границе только при mass(10)=30'
 c         stop
 cc    end if
 !
@@ -62,7 +58,7 @@ cc    end if
      *              anco2,ro,vim,vid,vir,rads,g,gkoor,ctd,solu,nsu,
      *              kpars,ins,nh,its,ids,delta,uts,dts,mass)
       
-c  . . . жЁЄ«ЁзҐбЄ п Їа®Ј®­Є  ў¤®«м  fi & tet
+c  . . . циклическая прогонка вдоль  fi & tet
 C     call tn_jc(an61,vj,
 C    *     rads,nh,its,ids,dts,mass(10))
 C     call boskli(an61,nh,its,ids)
@@ -72,27 +68,27 @@ C    *     rads,nh,its,ids,dts,mass(10))
 C     call boskli(an61,nh,its,ids)
 C     call tnalt(an61,nh,its,ids,mass(10))
 C
-c  . . . ¤®«Ј®в­ п Їа®Ј®­Є  б гзҐв®¬ вҐЇ«®Їа®ў®¤­®бвЁ
+c  . . . долготная прогонка с учетом теплопроводности
        call tnl_jc(an61,an1,an2,an3,vj,ctd,
      *             rads,nh,its,ids,dts,mass(10))
        call boskli(an61,nh,its,ids)
-c  . . . иЁа®в­ п Їа®Ј®­Є 
+c  . . . широтная прогонка
        call tnl_ic(an61,an1,an2,an3,vi,ctd,
      *             rads,nh,its,ids,dts,mass(10))
        call bongl(an61,nh,its,ids)
 !       call tnalt(an61,nh,its,ids,mass(10))
 C
-c    . . . ‘в ал© ў аЁ ­в
+c    . . . Старый вариант
 !      call tngojm(an61,vj,
 !     *     rads,nh,its,ids,dts,mass(10))
 !      call boskli(an61,nh,its,ids)
-!      call tngoim_a(an61,vi,             ! џў­ п беҐ¬  ЇҐаҐ­®б 
-!     *     rads,nh,its,ids,dts,mass(10)) ! зҐаҐ§ Ї®«об
+!      call tngoim_a(an61,vi,             ! Явная схема переноса
+!     *     rads,nh,its,ids,dts,mass(10)) ! через полюс
 !      call boskli(an61,nh,its,ids)
       call tnalt(an61,nh,its,ids,mass(10))
       return
       end
-c
+!------------------------------------------------------------------------------
       subroutine tnpot_bas(pgl,pgi,an1,an2,an3,an6,an61,vi,vj,vr,
      *                 anco2,ro,vim,vid,vir,rads,g,gkoor,ctd,solu,nsu,
      *                 kpars,ins,nh,its,ids,dl,uts,dts,mass)
@@ -157,7 +153,7 @@ c
           al=al+67.1*an6(i,j,kv)**0.71*an3(i,j,kv)
           alyam(k1)=al/(an1(i,j,kv)+an2(i,j,kv)+
      *              an3(i,j,kv))
-c         . . . “зҐв вгаЎг«Ґ­в­®© вҐЇ«®Їа®ў®¤­®бвЁ
+c         . . . Учет турбулентной теплопроводности
           rocp=(3.5*(an1(i,j,kv)+an2(i,j,kv))+2.5*
      *               an3(i,j,kv))*bk
           alyam(k1)=alyam(k1)+rocp*ctd(kv)
@@ -194,25 +190,25 @@ c     *         vi(i-1,j,k)*sin m)/dteta*.5
 c        davl=davl0+(davl1+davl2)/(rk*sin t)
         davl=davl0+davl1/rk+davl2/(rk*sin t)
         ha=rc*pgl(7,k,i,j)/dts
-c . . .  ‚п§ЄЁ© ­ ЈаҐў
+c . . .  Вязкий нагрев
         vqi=(vi(i,j,k+1)-vi(i,j,k))/drad
         vqj=(vj(i,j,k+1)-vj(i,j,k))/drad
         vq=(vqi*vqi+vqj*vqj)*anu
 c       fk=q(k)+  ha -davl*sum*an6(i,j,k)+vq
          fk=q(k) + ha+vq
-c . . .  “зҐв §­ Є  ¤ ў«Ґ­Ёп
+c . . .  Учет знака давления
         if(davl.lt.0.) then
           fk=fk-davl*ro(i,j,k)*bk/ams*an6(i,j,k)
         else
           b=b+davl*ro(i,j,k)*bk/ams
         end if
-c . . .  Џап¬ п Їа®Ј®­Є 
+c . . .  Прямая прогонка
         pa(k+1)=a/(b-pa(k)*c)
         pb(k+1)=(c*pb(k)+fk)/(b-pa(k)*c)
     3  continue
 c*
        if(mass(22).ne.0) then
-c    . . . “зҐв ­Ґ«®Є «м­®Ј® ­ ЈаҐў 
+c    . . . Учет нелокального нагрева
          q_ot=pgl(16,n0,i,j)+pgl(16,n0,its-i+1,j)
          if(pgl(16,n0,i,j).ge.pgl(16,n0,its-i+1,j)) then
             q_max=pgl(16,n0,i,j)
@@ -221,7 +217,7 @@ c    . . . “зҐв ­Ґ«®Є «м­®Ј® ­ ЈаҐў 
          end if
          q_ot=q_ot/q_max
        ! pot_m=0.05
-	   pot_m=0.02                    !   Џ®в®Є наЈ/б¬2*c-1
+	   pot_m=0.02                    !   Поток эрг/см2*c-1
 c  night flux on upper boundary erg/cm2*c-1 
          if (klik.eq.0) then
            print*,'temp -nonlocal heating. Flux=',pot_m,' erg/cm2*c-1'
@@ -247,7 +243,7 @@ c  night flux on upper boundary erg/cm2*c-1
       deallocate (pa,pb,q,qdj)
       return
       end
-!
+!------------------------------------------------------------------------------
       subroutine ijoulp_bas(q,qdj,pgl,pgi,ctd,rads,g,an60,solu,
      *                  gkoor,kpars,ins,nh,its,ids,nsu,i,j,uts,
      *                  del,an1,an2,an3,an6,anco2,vr,vi,vj,vim,vid,vir)
@@ -263,23 +259,23 @@ c  night flux on upper boundary erg/cm2*c-1
      *         ,vir(nh,its,ids),qdj(nh)
 !      data pi/3.14159265359d0/,om/7.272205e-5/,
        data
-c   . . . нддҐЄвЁў­®бвм ¤«п §Ё¬л
+c   . . . эффективность для зимы
 c    *     r0,r00/3.48,2.94/
-c   . . . нддҐЄвЁў­®бвм=0.6   а ў­®¤Ґ­бвўЁҐ
+c   . . . эффективность=0.6   равноденствие
 c    *     r1,r2/3.48,2.94/
 c   ..... efficency = 0.3
 c     *     r1,r2/1.74,1.47/
-c   ..... efficency = 0.45        ! “¬Ґ­миҐ­  нддҐЄвЁў­®бвм
-!     *     r1,r2/2.61,2.205/      ! ¤«п «Ґв 
-c   ..... efficency = 0.5         ! “¬Ґ­миҐ­  нддҐЄвЁў­®бвм
-c    *     r1,r2/3.21,2.5 /       ! ¤«п «Ґв 
-c   . . . нддҐЄвЁў­®бвм=0.4
+c   ..... efficency = 0.45        ! Уменьшена эффективность
+!     *     r1,r2/2.61,2.205/      ! для лета
+c   ..... efficency = 0.5         ! Уменьшена эффективность
+c    *     r1,r2/3.21,2.5 /       ! для лета
+c   . . . эффективность=0.4
      *    r1,r2/2.32,1.96/
-c   . . . нддҐЄвЁў­®бвм=0.35
+c   . . . эффективность=0.35
 c    *     r1,r2/2.00,1.71/
-     *    ,r0,r00/3.48,2.94/      ! ¤«п §Ё¬л
-c   . . . UV - efficency          ! ќддҐЄвЁў­®бвм ¤«п UV
-c    *    ,e_dis0,e_dis00/0.3,1.0/! ®б­®ў­®© ў аЁ ­в
+     *    ,r0,r00/3.48,2.94/      ! для зимы
+c   . . . UV - efficency          ! Эффективность для UV
+c    *    ,e_dis0,e_dis00/0.3,1.0/! основной вариант
      *    ,e_dis0,e_dis00/0.3,0.8/
       n0=nh-1
 c*
@@ -318,17 +314,17 @@ c*
 !       di=dis mod(ano,tem,g(k),rads(k),solu,nsu,hi,key)*ano
         di=qdis(2,i,j,k)
 c
-        e_dis=0.3          ! ђ ў­®¬Ґа­л© 
-        if(k.le.23) then   ! ­ ЈаҐў
+        e_dis=0.3          ! Равномерный 
+        if(k.le.23) then   ! нагрев
            r=r1          !
         else             !
            r=r2          !
        end if            !
-c . . .  ¤«п Є®ааҐЄвЁа®ўЄЁ нддҐЄвЁў­®бвЁ:
-c . . .  §Ё¬®© ў®§а бв Ґв ¤® 0.6 (в®«мЄ® ¤«п ‡€ЊЌ…ѓЋ б®«­жҐбв®п­Ёп!!!)
-c . . . “ўҐ«ЁзҐ­ЁҐ нддҐЄвЁў­®бвЁ ў §Ё¬­Ґ¬ Ї®«ги аЁЁ
+c . . .  для корректировки эффективности:
+c . . .  зимой возрастает до 0.6 (только для ЗИМНЕГО солнцестояния!!!)
+c . . . Увеличение эффективности в зимнем полушарии
 !!        g sh=gkoor(1,i,j)
-!!        if(g sh.gt.90.) then  ! ‹Ґв®¬ ЎҐ§ Ё§¬Ґ­Ґ­Ёп
+!!        if(g sh.gt.90.) then  ! Летом без изменения
 !!         e_dis=e_dis0
 !!         if(k.le.23) then
 !!            r=r1
@@ -336,13 +332,13 @@ c . . . “ўҐ«ЁзҐ­ЁҐ нддҐЄвЁў­®бвЁ ў §Ё¬­Ґ¬ Ї®«ги аЁЁ
 !!            r=r2
 !!         end if
 !!        else
-!!          e_dis=e_dis00+(e_dis0-e_dis00)*(g sh)/90.  ! ‡Ё¬ 
+!!          e_dis=e_dis00+(e_dis0-e_dis00)*(g sh)/90.  ! Зима
 !!         if(k.le.23) then
-!!            r=r0+(r1-r0)*(g sh)/90.  ! ‡Ё¬ 
-!c           r=r1+(r0-r1)*(g sh-90.)/90.   ! ‹Ґв®
+!!            r=r0+(r1-r0)*(g sh)/90.  ! Зима
+!c           r=r1+(r0-r1)*(g sh-90.)/90.   ! Лето
 !!         else
-!!            r=r00+(r2-r00)*(g sh)/90.  ! ‡Ё¬ 
-!c           r=r2+(r00-r2)*(g sh-90.)/90.  ! ‹Ґв®
+!!            r=r00+(r2-r00)*(g sh)/90.  ! Зима
+!c           r=r2+(r00-r2)*(g sh-90.)/90.  ! Лето
 !!         end if
 !!        end if
         qi=r*(pgl(13,k,i,j)+pgl(14,k,i,j)+
@@ -350,18 +346,18 @@ c . . . “ўҐ«ЁзҐ­ЁҐ нддҐЄвЁў­®бвЁ ў §Ё¬­Ґ¬ Ї®«ги аЁЁ
         co=cold(ano,and,antr,tem,conco2,rads(k),g(k),ctd(k))
         cik53=anoik(con no,antr,tem)
         che=chem(ano,and,antr,tem)
-c*
+!
         pol=(tem+pgi(6,k,i,j))*.5
         call freac(pol,cona,conm,sni)
-c . . . „®Ї®«­ЁвҐ«м­л© ¤¦®г«м ®в д«гЄвг жЁ© ќ«. Ї®«п kiss=1
+! . . . Дополнительный джоуль от флуктуаций Эл. поля kiss=1
         kiss=0
         call djoulp (dj,vimm,vimd,vimr,viam,viad,viar,
      *               vin,vjn,vrn,ano,and,antr,sni,kiss)
-c . . . ЏҐаҐЄ®б ў „¦®г«Ґ ¤«п §Ё¬л ў бҐўҐа­®¬ Ї®«ги аЁЁ
+! . . . Перекос в Джоуле для зимы в северном полушарии
         i_pol=8
         if (i.le.i_pol) then
           qdj(k)=dj  
-	!	qdj(k)=2.*dj        ! ЌЂѓђ…‚ Ћ„€ЌЂЉЋ‚
+	!	qdj(k)=2.*dj        ! НАГРЕВ ОДИНАКОВ
         else
           qdj(k)=dj  
 	!	qdj(k)=2.*dj
@@ -371,10 +367,8 @@ c . . . ЏҐаҐЄ®б ў „¦®г«Ґ ¤«п §Ё¬л ў бҐўҐа­®¬ Ї®«ги аЁЁ
       q(nh)=0.
       return
       end
-
-
-C
-      function ano ik(con no,ano,temp)
+!------------------------------------------------------------------------------
+      function anoik(con no,ano,temp)
       real k17
 c
       k17=6.5e-11
@@ -385,7 +379,7 @@ c
       anoik=3.73e-13*w*con no *rez*exp(-2700./temp)
       return
       end
-c
+!------------------------------------------------------------------------------
       function cold(ano,and,antr,tem,anco2,radsk,gk,ctdk)
       real ltau,ksy
       data amo2,amN2,amO,amco2/53.12e-24,46.51e-24,26.56e-24,
@@ -411,8 +405,7 @@ c*
       cold=co2ik+co o
       return
       end
-c
-c
+!------------------------------------------------------------------------------
       subroutine djoul p(dj,vii,vij,vri,via i,via j,via r,
      *                   vi,vj,vr,an1,an2,an3,sni,kiss)
       dimension sni(6),ami(2),difv(2),am(3),an(3)
@@ -422,8 +415,8 @@ c
       an(2)=an2
       an(3)=an3
 c
-c . . . “ўҐ«ЁзҐ­ЁҐ ¤Ґ©бвўЁп н«ҐЄваЁзҐбЄ®Ј® Ї®«п ў и ЇЄҐ
-c                           д«гЄвг жЁп¬Ё
+c . . . Увеличение действия электрического поля в шапке
+c                           флуктуациями
       IF(kiss.eq.1) THEN
        const=1.5e4
        const=0.
@@ -473,7 +466,7 @@ c*
   402 format(1x,'incorrect Joul heating',' dj=',e10.3)
   403 stop
       end
-c
+!------------------------------------------------------------------------------
       subroutine freac(ant,cona,conm,sni)
       dimension sni(6)
       sni(1)=1.16e-9*conm
@@ -484,7 +477,7 @@ c
       sni(6)=1.86e-9*(ant/1000.)**0.37*cona
       return
       end
-C
+!------------------------------------------------------------------------------
       function e(tau)
       real tau
       if(.not.((tau.ge.0.).and.(tau.le.10.)))
@@ -502,10 +495,10 @@ C
         return
     3 continue
       print 100,tau
-  100 format (2x,'function E: ЏђЋ‚…ђњ tau','tau',e10.3)
+  100 format (2x,'function E: ПРОВЕРЬ tau','tau',e10.3)
       stop
       end
-c
+!------------------------------------------------------------------------------
 c          heatting term due to chem
 c          reaction
 c                                 o+o+m
@@ -520,4 +513,140 @@ c
 c
       return
       end
-c
+!------------------------------------------------------------------------------
+       subroutine tnl_ic(an6,an1,an2,an3,vi,ctd,rads,n,n1,n2,dt,n0)
+c     . . . теплопроводность вдоль меридиана и долготы
+c     . . . циклическая прогонка вдоль меридиана
+c     . . .    nm=n1+n1-2
+       dimension an6(n1,n2,n),an1(n1,n2,n),an2(n1,n2,n),an3(n1,n2,n)
+     *,          vi(n1,n2,n),ctd(n),rads(n)
+       allocatable tn(:),v(:),a(:),b(:),c(:),f(:),alyam(:)
+       data pi/3.1415926/,re/6.371e8/,bk/1.38e-16/,par/1./
+       nm=n1+n1-2
+       allocate (tn(nm),v(nm),a(nm),b(nm),c(nm),f(nm)
+     *,          alyam(nm))
+       ns=n1-1
+       n_d=n2/2
+       dtet=pi/ns
+       ot=dt/dtet
+       do k=2,n0
+        rk=rads(k)+re
+        do j=1,n_d
+c . . . переход к меридиональному кругу
+            do i=1,n1
+              v(i)=vi(i,j,k)
+              tn(i)=an6(i,j,k)
+c . . . теплопроводность
+              al=18.6*tn(i)**0.84*an1(i,j,k)
+              al=al+27.2*tn(i)**0.8*an2(i,j,k)
+              al=al+67.1*an6(i,j,k)**0.71*an3(i,j,k)
+              alyam(i)=al/(an1(i,j,k)+an2(i,j,k)+
+     *                  an3(i,j,k))
+c         . . . + турбулентная теплопроводность
+              rocp=(3.5*(an1(i,j,k)+an2(i,j,k))+2.5*
+     *              an3(i,j,k))*bk
+              alyam(i)=alyam(i)+rocp*ctd(k)
+            end do
+            do i=n1+1,nm
+              ipol=i-n1+1
+              v(i)=-vi(ipol,j+n_d,k)
+              tn(i)=an6(ipol,j+n_d,k)
+              al=18.6*tn(i)**0.84*an1(ipol,j,k)
+              al=al+27.2*tn(i)**0.8*an2(ipol,j,k)
+              al=al+67.1*an6(ipol,j,k)**0.71*an3(ipol,j,k)
+              alyam(i)=al/(an1(ipol,j,k)+an2(ipol,j,k)+
+     *                  an3(ipol,j,k))
+              rocp=(3.5*(an1(ipol,j,k)+an2(ipol,j,k))+2.5*
+     *              an3(ipol,j,k))*bk
+              alyam(i)=alyam(i)+rocp*ctd(k)
+            end do
+            do i=1,nm
+              im=i-1
+              ip=i+1
+              if(i.eq.nm) ip=1
+              if(i.eq.1) im=nm
+c . . . новая переменная по широте
+              tetn=dtet*(i-1)
+              sin_t=abs(sin(tetn))
+              if(sin_t.lt.0.03) sin_t=0.03
+              del=rk*sin_t*dtet
+              vm=(v(i)-abs(v(i)))*.5
+              vp=(v(i)+abs(v(i)))*.5
+              arg=tetn+dtet*.5
+              ap_2=abs(sin(arg))*(alyam(ip)+alyam(i))*.5
+              arg=tetn-dtet*.5
+              am_2=abs(sin(arg))*(alyam(i)+alyam(im))*.5
+              a(i)=(vp*par+am_2/del)*ot/rk
+              c(i)=(-vm*par+ap_2/del)*ot/rk
+              b(i)=1.+a(i)+c(i)
+              f(i)=tn(i)-vm*(1.-par)*ot/rk*(tn(ip)-tn(i))-
+     *                   vp*(1.-par)*ot/rk*(tn(i)-tn(im))
+            end do
+            call cyclp(a,b,c,f,tn,nm)
+            do i=1,n1
+              an6(i,j,k)=tn(i)
+            end do
+            do i=n1+1,nm
+              an6(i-n1+1,j+n_d,k)=tn(i)
+            end do
+        end do
+       end do
+       deallocate (tn,v,a,b,c,f,alyam)
+       return
+       end
+!------------------------------------------------------------------------------
+       subroutine tnl_jc(an6,an1,an2,an3,vj,ctd,rads,n,n1,n2,dt,n0)
+c     . . . циклическая прогонка
+       dimension an6(n1,n2,n),an1(n1,n2,n),an2(n1,n2,n),an3(n1,n2,n)
+     *,          vj(n1,n2,n),ctd(n),rads(n)
+     
+       allocatable tn(:),a(:),b(:),c(:),f(:),alyam(:)
+       allocate (tn(n2),a(n2),b(n2),c(n2),f(n2),alyam(n2))
+       data pi/3.14159/,re/6.371e8/,bk/1.38e-16/,par/1./
+       ns=n1-1
+       dfi=2.*pi/n2
+       dtet=pi/ns
+       ot=dt/dfi
+       do k=2,n0
+        rk=rads(k)+re
+        do i=2,ns
+          tet=dtet*(i-1)
+          del=rk*sin(tet)
+          do j=1,n2
+           tn(j)=an6(i,j,k)
+c . . . теплопроводность
+           al=18.6*tn(j)**0.84*an1(i,j,k)
+           al=al+27.2*tn(j)**0.8*an2(i,j,k)
+           al=al+67.1*an6(i,j,k)**0.71*an3(i,j,k)
+           alyam(j)=al/(an1(i,j,k)+an2(i,j,k)+
+     *              an3(i,j,k))
+c         . . . + турбулентная теплопроводность
+              rocp=(3.5*(an1(i,j,k)+an2(i,j,k))+2.5*
+     *              an3(i,j,k))*bk
+              alyam(j)=alyam(j)+rocp*ctd(k)
+          end do
+          do j=1,n2
+            jm=j-1
+            jp=j+1
+            if(j.eq.1) jm=n2
+            if(j.eq.n2) jp=1
+            vm=(vj(i,j,k)-abs(vj(i,j,k)))*.5
+            vp=(vj(i,j,k)+abs(vj(i,j,k)))*.5
+            ap_2=(alyam(jp)+alyam(j))*.5
+            am_2=(alyam(j)+alyam(jm))*.5
+            a(j)=(vp*par+am_2/(del*dfi))/del*ot
+            c(j)=(-vm*par+ap_2/(del*dfi))/del*ot
+            b(j)=1.+a(j)+c(j)
+            f(j)=tn(j)-vm*(1.-par)*ot/del*(tn(jp)-tn(j))-
+     *                 vp*(1.-par)*ot/del*(tn(j)-tn(jm))
+          end do
+          call cyclp(a,b,c,f,tn,n2)
+          do j=1,n2
+            an6(i,j,k)=tn(j)
+          end do
+        end do
+       end do
+       deallocate (tn,a,b,c,f,alyam)
+       return
+       end
+!------------------------------------------------------------------------------

@@ -1,3 +1,5 @@
+!     subroutine heapot, dinpac, joupot, rewrit, write8, quad
+!     function dismod
       subroutine heapot(pgl,pgi,an1,an2,an3,an6,anco2,vr,vi,vj,
      *                  vim,vid,vir,ctd,solu,nsu,
      *                  rads,g,gkoor,kpars,ins,nh,its,ids,
@@ -14,13 +16,10 @@ c     6- compress - decompress
 c     7- condactivity cooling
 c     8- viscosity heating
 c     9-
-c     ne & nd - number 'edenic i desyatkow w mass
+!     ne & nd - number 'edenic i desyatkow w mass
 c     nd may be .le. ne, ne .le. 8
 c     nd is first, ne is last writing parameters.
-c     then you can use sub quad
-c
-c
-     
+!     then you can use sub quad
       character*4 lass(1:9),lamp(1:4)
       dimension an1(its,ids,nh),an2(its,ids,nh),an3(its,ids,nh),
      *          an6(its,ids,nh),vr(its,ids,nh),vi(its,ids,nh),
@@ -38,7 +37,6 @@ c
       idsp=ids+1
       nht=26
       allocate(h(its,ids,nh),an(its,ids+1,nht))
-      
 c
       sq=-1.
       sq1=-1.
@@ -114,10 +112,9 @@ c     . . . dynamic sourse and condactiviti heating
       deallocate(h,an)
       return
       end
-
-c
+!------------------------------------------------------------------------------
 c     sub. calculate heat sourse for Gsm tip
-c     It's one of fore sourse
+!     It's one of fore sourse
 c     1 - convection transport
 c     2 - compress
 c     3 - condactivity heating
@@ -220,7 +217,7 @@ c        viscosity heating
   223 format(2x,1p8e9.2)
       return
       end
-c
+!------------------------------------------------------------------------------
       subroutine joupot(q,pgl,pgi,ctd,rads,g,solu,
      *                  gkoor,kpars,ins,nh,its,ids,nsu,uts,
      *                  del,an1,an2,an3,an6,anco2,vr,vi,vj,
@@ -241,11 +238,11 @@ c
 c
       data pi/3.1415926/,om/7.272205e-5/,bk/1.38e-16/
 c
-c   . . . íää¥ªâ¨¢­®áâì ¤«ï §¨¬ë
+c   . . . ıôôåêòèâíîñòü äëÿ çèìû
      *     r0,r00/3.48,2.94/
-c   . . . íää¥ªâ¨¢­®áâì=0.6
+c   . . . ıôôåêòèâíîñòü=0.6
 c    *     r1,r2/3.48,2.94/,
-c   . . . íää¥ªâ¨¢­®áâì=0.4
+c   . . . ıôôåêòèâíîñòü=0.4
 c    *     r1,r2/2.32,1.96/
 c   ..... efficency = 0.45
      *     r1,r2/2.61,2.205/
@@ -290,7 +287,7 @@ c             zenit angle
    14    return
    10  continue
 
-         qi=dis mod(ano,tem,g(k),rads(k),solu,nsu,hi,key)*ano*0.3
+         qi=dismod(ano,tem,g(k),rads(k),solu,nsu,hi,key)*ano*0.3
          go to 2
    11    r=r1
          if(k.gt.24) r=r2
@@ -304,7 +301,7 @@ c             zenit angle
 c*
    13    pol=(tem+pgi(6,k,i,j))*.5
          call freac(pol,cona,conm,sni)
-c . . . „®¯®«­¨â¥«ì­ë© ¤¦®ã«ì ®â ä«ãªâã æ¨© «. ¯®«ï kiss=1
+c . . . Äîïîëíèòåëüíûé äæîóëü îò ôëóêòóàöèé İë. ïîëÿ kiss=1
          kiss=0
          call djoulp(qi,vimm,vimd,vimr,viam,viad,viar,
      *               vin,vjn,vrn,ano,and,antr,sni,kiss)
@@ -325,7 +322,7 @@ c        q(i,j,k)=alog10(qi)
    21 continue
       return
       end
-c
+!------------------------------------------------------------------------------
       subroutine rewrit(anew,an,nh,its,ids,nht)
       dimension an(its,ids,nh),anew(its,ids+1,nht)
       do 1 i=1,its
@@ -338,7 +335,7 @@ c
     1 continue
       return
       end
-c
+!------------------------------------------------------------------------------
       subroutine write8(an,ias,uts,n,n1,n2,sq,sq1)
       character*4 ias
       dimension an(n1,n2,n)
@@ -353,7 +350,7 @@ c 101 format(1p100(e8.1))
   102 format(' write8 ',a4,' sq=',1pe9.2,'sq1=',1pe9.2)
       return
       end
-c
+!------------------------------------------------------------------------------
       subroutine quad(sq,sq1,q,r,n,n1,n2,ki,ke)
 c     thri-dimensional quadrature method
 c     ki - initial point
@@ -413,3 +410,78 @@ c    . . .   souse semisphere
        call trap(sj,fi,n2,sq1)
        return
        end
+!------------------------------------------------------------------------------
+      subroutine trap1(f,x,n,q,ki,ke)
+c     . . . quadrating programm from x(ki) to x(ke)
+      dimension f(n),x(n)
+      q=0.
+      do 1 i=ki,ke-1
+       q=q+(f(i)+f(i+1))*(x(i+1)-x(i ))*.5
+   1  continue
+      return
+      end
+!------------------------------------------------------------------------------
+      subroutine trap(f,x,n,stra)
+      dimension f(n),x(n)
+      n 1=n-1
+      stra=0.
+      do 1 k=1,n 1
+       chisl=f(k)+f(k+1)
+       znam=x(k+1)-x(k)
+       stra=stra+0.5*chisl*znam
+   1  continue
+      return
+      end
+!------------------------------------------------------------------------------
+      function dismod(ano,tem,g,rh,solu,nsu,hi,key)
+      dimension solu(nsu),sp(12)
+      data re/6.371e8/,am1/53.12e-24/,bk/1.38e-16/,
+     *     pi/3.14159265359d0/,
+cc      ÑÅ×ÅÍÈß ÄËß F10.7= 70
+cc   *     sp/0.12e-18,1.39e-18,13.2e-18,10.5e-18,2.39e-18,
+cc   *        0.87e-18,0.28e-18,0.01e-18,0.,0.,0.,0./
+c       ÑÅ×ÅÍÈß ÄËß F10.7=115
+     *     sp/7.29E-19,4.30E-18,4.03E-19,4.69E-19,2.29E-18,9.40E-18,
+     *        1.37E-17,1.01E-17,5.98E-18,2.55E-18,1.08E-18,3.93E-19/
+c       ÑÅ×ÅÍÈß ÄËß F10.7=180
+cc   *     sp/8.14e-19,4.27e-18,4.51e-19,4.69e-19,2.31e-18,9.48e-18,
+cc   *        1.37e-17,1.01e-17,6.01e-18,2.58e-18,1.09e-18,3.92e-19/
+      dis mod=0.
+      sum=0.
+      h=bk*tem/(am1*g)
+      ra=sqrt(rh*(rh+2.*re))
+      alfa=atan(re/ra)
+      him=pi-alfa
+      if(.not.(hi.gt.him)) go to 1
+        dis mod=0.
+        return
+    1 continue
+      f=cos(hi)
+c      arad=80.0/180.*pi
+      arad=85.0/180.*pi
+      if(.not.(hi.gt.arad)) go to 2
+        z=(rh+re)*(1.-sin(hi))/h
+        if(z.gt. 90.) z= 90.
+        er=erf(sqrt(z))
+        if(er.eq.1..and.f.gt.0.) go to 2
+        sec=sqrt(pi/2.*re/h)*exp(z)
+        sec=sec*(1.-sign(1.,f)*er)
+        go to 5
+    2 continue
+      sec=1./f
+    5 continue
+      tt=ano*h*sec
+      lin=nsu/key
+      l0=1
+      if(key.eq.1) l0=l0+nsu/2
+      l1=1
+      do 6 l=l0,lin
+        tau=sp(l1)*tt
+        sum=0.
+        if(tau.le.60. )
+     *    sum=sp(l1)*solu(l)*exp(-tau)
+        dismod=dismod+sum
+        l1=l1+1
+    6 continue
+      return
+      end

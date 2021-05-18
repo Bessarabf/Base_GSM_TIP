@@ -1,3 +1,0 @@
-      subroutine timen
-      return
-      end

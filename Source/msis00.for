@@ -18,13 +18,13 @@ C           their individual variations are not presently separable with
 C           the drag data used to define this model component.
 C
 C        SUBROUTINES FOR SPECIAL OUTPUTS:
-C
-C        HIGH ALTITUDE DRAG: EFFECTIVE TOTAL MASS DENSITY
-C        (SUBROUTINE GTD7D, OUTPUT D(6))
-C           For atmospheric drag calculations at altitudes above 500 km,
-C           call SUBROUTINE GTD7D to compute the "effective total mass
-C           density" by including contributions from "anomalous oxygen."
-C           See "NOTES ON OUTPUT VARIABLES" below on D(6).
+!
+!        HIGH ALTITUDE DRAG: EFFECTIVE TOTAL MASS DENSITY
+!        (SUBROUTINE GTD7D, OUTPUT D(6))
+!           For atmospheric drag calculations at altitudes above 500 km,
+!           call SUBROUTINE GTD7D to compute the "effective total mass
+!           density" by including contributions from "anomalous oxygen."
+!           See "NOTES ON OUTPUT VARIABLES" below on D(6).
 C
 C        PRESSURE GRID (SUBROUTINE GHP7)
 C          See subroutine GHP7 to specify outputs at a pressure level
@@ -107,9 +107,9 @@ C          species labeled by indices 1-5 and 7-8 in output variable D.
 C          This includes He, O, N2, O2, Ar, H, and N but does NOT include
 C          anomalous oxygen (species index 9).
 C
-C          SUBROUTINE GTD7D -- D(6) is the "effective total mass density 
-C          for drag" and is the sum of the mass densities of all species 
-C          in this model, INCLUDING anomalous oxygen.
+!          SUBROUTINE GTD7D -- D(6) is the "effective total mass density 
+!          for drag" and is the sum of the mass densities of all species 
+!          in this model, INCLUDING anomalous oxygen.
 C
 C     SWITCHES: The following is for test and special purposes:
 C
