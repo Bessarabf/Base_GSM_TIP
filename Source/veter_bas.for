@@ -4,7 +4,7 @@ c vj_r
 c vn_t
 c vn_fi
 c vrprim_s
-      subroutine veter_ham(vi1,vj1,vi,vj,vr,vim,vjm,an1,an2,an3,an6,ro,
+      subroutine veter_bas(vi1,vj1,vi,vj,vr,vim,vjm,an1,an2,an3,an6,ro,
      *                 pgl,pgi,rp,r,ctd,n,n1,n2,kpars,ins,dt)
 !
 
@@ -22,7 +22,7 @@ c     . . . Расщепление вдоль меридиана
 c     . . . Расщепление вдоль азимута
       call vn_fi(vi1,vj,r,n,n1,n2,dt)
 c     . . . Расщепление по вертикали
-      call vi_r_ham(vi1,vi,vj,vr,vim,an1,an2,an3,an6,ro,
+      call vi_r(vi1,vi,vj,vr,vim,an1,an2,an3,an6,ro,
      *          pgl,pgi,rp,r,ctd,n,n1,n2,kpars,ins,dt)
 c     . . .   Расчет азимутальной компоненты
 c     . . .  Следующий порядок расщепления не произволен!!!
@@ -33,11 +33,11 @@ c     . . . Расщепление вдоль меридиана
 c     . . . Расщепление вдоль азимута
       call vn_fi(vj1,vj,r,n,n1,n2,dt)
 c     . . . Расщепление по вертикали
-      call vj_r_ham(vj1,vj,vi,vr,vjm,an1,an2,an3,an6,ro,
+      call vj_r(vj1,vj,vi,vr,vjm,an1,an2,an3,an6,ro,
      *          pgl,pgi,rp,r,ctd,n,n1,n2,kpars,ins,dt)
       return
       end
-      subroutine vi_r_ham(vi1,vi,vj,vr,vim,an1,an2,an3,an6,ro,
+      subroutine vi_r(vi1,vi,vj,vr,vim,an1,an2,an3,an6,ro,
      *                pgl,pgi,rp,r,ctd,n,n1,n2,kpars,ins,dt)
       dimension vi(n1,n2,n),vi1(n1,n2,n),vj(n1,n2,n),
      *          vr(n1,n2,n),vim(n,n1,n2),
@@ -129,7 +129,7 @@ cc
       end do
       return
       end
-      subroutine vj_r_ham(vj1,vj,vi,vr,vjm,an1,an2,an3,an6,ro,
+      subroutine vj_r(vj1,vj,vi,vr,vjm,an1,an2,an3,an6,ro,
      *                pgl,pgi,rp,r,ctd,n,n1,n2,kpars,ins,dt)
       dimension vj(n1,n2,n),vj1(n1,n2,n),vi(n1,n2,n),
      *          vr(n1,n2,n),vjm(n,n1,n2),

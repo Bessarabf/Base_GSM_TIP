@@ -38,7 +38,7 @@ c
 
       subroutine bardif_eddy(an,an1,an2,an3,an6,eddyco,rp,g,am,
      *                       n,n1,n2,l)
-      USE mo_gsm_const, ONLY:amO2,amN2,amO,bk
+      USE mo_bas_gsm, ONLY:amO2,amN2,amO,bk
       dimension an(n1,n2,n),an1(n1,n2,n),an2(n1,n2,n),an3(n1,n2,n)
      *         ,an6(n1,n2,n),eddyco(n,n1),rp(n),g(n)
       data ves/0.5/

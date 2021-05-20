@@ -1,6 +1,6 @@
       subroutine spline_bas(n,x,y,b,c,d)
       real x(n),y(n),b(n),c(n),d(n)
-      data k/1/
+      
       nm1=n-1
       if(n.lt.2) go to 999
       if(n.lt.3) go to 50

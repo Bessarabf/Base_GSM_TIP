@@ -1,7 +1,7 @@
-      subroutine lambet(ne,i1,i2,det,ht,tt,co2,cn2,co,ch,che,
-     *           tn,vnq,cim,cio,cih,cihe,vio,vih,vihe,ti,te,col,
-     *           vdu,vdv,beta,lam,vio1,vih1,vihe1,al,ga,
-     *           cio1,cih1,cihe1,dolm)
+      subroutine lambet_nv(ne,i1,i2,det,ht,tt,co2,cn2,co,ch,che,
+     *                     tn,vnq,cim,cio,cih,cihe,vio,vih,vihe,
+     *                     ti,te,vdu,vdv,beta,lam,dolm,nv)
+
 C     LAM - diffusion coefficients for atomic ions
 C           (NE=1 - O+, NE=2 - H+, NE=3 - HE+)
 C     or conductivities ions (NE=4) and electrons (NE=5)
@@ -10,14 +10,14 @@ C     convection heatings:
 C       GA-AL*FU-KAP*D/DS(-LAM*D/DS(FU)-BETA*FU)=0
 C                        or
 C       GA-AL*FU-KAP*D/DS(-LAM*D/DS(FU))-BETA*D/DS(FU)=0
-      USE mo_bas_gsm, ONLY: nv0,re
+
+      USE mo_bas_gsm, ONLY: re
       real lam,n2,nu4,nu5,nu,la
 
-      dimension ht(nv0),tt(nv0),co2(nv0),cn2(nv0),co(nv0),ch(nv0),che(nv0),
-     *          tn(nv0),vnq(nv0),cim(nv0),cio(nv0),cih(nv0),col(nv0),
-     *          cihe(nv0),vio(nv0),vih(nv0),vihe(nv0),ti(nv0),te(nv0),
-     *          vdu(nv0),vdv(nv0),beta(nv0),lam(nv0),vio1(nv0),vih1(nv0),
-     *          vihe1(nv0),al(nv0),ga(nv0),cio1(nv0),cih1(nv0),cihe1(nv0)
+      dimension ht(nv),tt(nv),co2(nv),cn2(nv),co(nv),ch(nv),che(nv),
+     *          tn(nv),vnq(nv),cim(nv),cio(nv),cih(nv),
+     *          cihe(nv),vio(nv),vih(nv),vihe(nv),ti(nv),te(nv),
+     *          vdu(nv),vdv(nv),beta(nv),lam(nv)
 
 C    DET - time step 
       eht=1./det
@@ -80,27 +80,18 @@ cccc      rin=eht
 cccc
 c         rin=dnv
 c         rin=dnv+eht
-cccc
-cccc      if(dnv.ge.0.)rin=rin+dnv*.5
-cccc
+
           goto(2,3,4),ne
     2     continue
 C                    branch O+ (NE=1)
             r=rik(1,tei,ten,o2,n2,o,h,he,alt)
-!	print*,'lambet ',ne,i1,i2,tei,ten
+
             nu5=nu(3,tei,ten)
             s1=sik(1,oi,hi,hei,nu5,nu4)
             s2=sik(2,oi,hi,hei,nu5,nu4)
             dnk=(cih(mp)-cih(mm))*dst
             dnl=(cihe(mp)-cihe(mm))*dst
             fob=1./oi
-c           if(vio(m).ge.0.)dv=(vio(m)-vio(mm))*dst*2.
-c           if(vio(m).lt.0.)dv=(vio(mp)-vio(m))*dst*2.
-c           rin=rin+dv
-c           rin=rin+(ga(m)*fob-al(m))+(1.-cio1(m)*fob)*eht
-cccc
-cccc        gs=gs+vio1(m)*eht
-cccc        if(dnv.lt.0.)gs=gs-.5*dnv*vio(m)
 cccc
             goto5
     3     continue
@@ -112,13 +103,6 @@ c
             dnk=(cio(mp)-cio(mm))*dst
             dnl=(cihe(mp)-cihe(mm))*dst
             fob=1./hi
-c           if(vih(m).ge.0.)dv=(vih(m)-vih(mm))*dst*2.
-c           if(vih(m).lt.0.)dv=(vih(mp)-vih(m))*dst*2.
-c           rin=rin+dv
-c           rin=rin+(ga(m)*fob-al(m))+(1.-cih1(m)*fob)*eht
-cccc
-cccc        gs=gs+vih1(m)*eht
-cccc        if(dnv.lt.0.)gs=gs-.5*dnv*vih(m)
 cccc
             goto5
     4     continue
@@ -131,13 +115,7 @@ c                      for HE+ (NE=3)
             dnk=(cio(mp)-cio(mm))*dst
             dnl=(cih(mp)-cih(mm))*dst
             fob=1./hei
-c           if(vihe(m).ge.0.)dv=(vihe(m)-vihe(mm))*dst*2.
-c           if(vihe(m).lt.0.)dv=(vihe(mp)-vihe(m))*dst*2.
-c           rin=rin+dv
-c           rin=rin+(ga(m)*fob-al(m))+(1.-cihe1(m)*fob)*eht
-cccc
-cccc        gs=gs+vihe1(m)*eht
-cccc        if(dnv.lt.0.)gs=gs-.5*dnv*vihe(m)
+
 cccc
     5     continue
           
@@ -152,16 +130,16 @@ c         col(m) =r+s1+s2+rin
           dt=dt*rps
           beta(m)=be(ne,dt,r,rps,vio(m),vih(m),vihe(m),s1,s2)
     6   continue
-C  Calculation of the flux of thermal electrons for the convective transfer term 
-C  in the heat balance equation
+!  Calculation of the flux of thermal electrons for the convective transfer term 
+!  in the heat balance equation
         if(ne.gt.3)w=oi*vio(m)+hi*vih(m)+hei*vihe(m)
-c       if(ne.gt.3)w=0.
-C     Convecting heating coefficient BETA for 
-c     heat balance equation of ions
+!       if(ne.gt.3)w=0.
+!     Convecting heating coefficient BETA for 
+!     heat balance equation of ions
         if(ne.eq.4)beta(m)=w/ces
-C                           ... & electrons
+!                           ... & electrons
         if(ne.eq.5)beta(m)=w/ce
-c  Classic electron condactivity and diffusion
+!  Classic electron condactivity and diffusion
         lam(m)=la(ne,o2,n2,o,h,he,oi,hi,hei,ce,bm,rps,tei,tee,alt)
 c  Classic electron condactivity end
 
