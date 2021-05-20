@@ -8,6 +8,7 @@
       cih=0.
       cihe=0.
       ntr2=ntr+2
+      print *,'nh=',nh,'ntr2=',ntr2
       do 1 ig=2,its-1
         do 2 i=1,ntr2
           alt=rads(i)
