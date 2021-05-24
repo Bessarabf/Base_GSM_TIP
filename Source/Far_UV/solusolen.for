@@ -20,10 +20,10 @@
 	     print*,' flosu'
 	    else if (mas(8).eq.2) then
               if(mas(4).le.15) then
-     	         call flosuN(fs,fa0,sole,nn)
+     	         call flosuN(fs,fa0,sole,nn)         ! Default option 
 	         print*,' flosuN'
               else
-                 call flosuN38(fs,fa0,sole,mas(4))
+                 call flosuN38(fs,fa0,sole,mas(4))   ! Option for 38 bands (and flares)
                  print*,' flosuN38'
 	        end if
           else if (mas(8).eq.3) then
@@ -39,14 +39,14 @@
             stop
  	    end if
           
-!!! Nusinov solu model
+!!! Nusinov solu model (default option)
           !!!! La in solu 
           solu(1)=sole(nse) ! La in photon
           solu(nsu/2+1)=solu(1)*1.98648/121.5 !La in erg
           call nus_uv(solu,nsu)
       end if
       read(22,*)
-!!!! reading solen & sole (if nessesary)      
+!!!! reading solen & sole (if mas(8) = 0)      
       do i=1,nse
          if (mas(8).eq.0) then
              read(22,*,err=100) dws,dwe, sole(i),solet(i),solen(i)
