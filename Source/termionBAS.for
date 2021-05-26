@@ -161,4 +161,7 @@ c     . . . Creating global initial distribution of the parameters:
      *            sole,solu,solen,solet,rads,u,ntsl,
      *            dut,hut,iput,keut,kut,sut,tut,izap,
      *            nzapjet,lzapjet,pole)  
+<<<<<<< HEAD
       end  program termionBAS
+=======
+>>>>>>> 01aad467aea148940a8031fcde5ca22bd005032a
