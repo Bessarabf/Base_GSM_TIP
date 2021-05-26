@@ -63,7 +63,7 @@ C
       allocate(sole(nse),solu(nsu),solen(nse),solet(nse))
 	
 ! чтение danmodel
-      call wwod_D(mes,god,day,ut0,utk,dtt,dts,tau,sole,solu,solet,
+      call wwod_Duv(mes,god,day,ut0,utk,dtt,dts,tau,sole,solu,solet,
      *          bmpz,bmpy,bmod,vsol,csol,fa0,fs,ap0,pkp0,dst0,ae0,
      *          al0,au0,solen,nsu,nse,verno,gamma,
      *          ddolgt,dtett,nh,dh,rmin,b,c,ddolgs,dtets,
