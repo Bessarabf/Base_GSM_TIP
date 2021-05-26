@@ -39,8 +39,8 @@ c
       integer god,day,verno,godt,dayt
       logical readfl
       !data pi/3.14159265359/
-	print *,'GSMTIP: cyclt1 - begin'
-
+      print *,'GSMTIP: cyclt1 - begin'
+      CALL CPU_TIME(TT1)
       allocate (E0(its,ids),FAE(its,ids),vert(kpart,nv),qom(nl))
       i=0
 !!!!  do j=1,nl
@@ -258,6 +258,9 @@ c-------------------------------------------------------------------
       print*,'GSMTIP: cyclt1 - end'
       print 670
 670   format(' *****  END OF TIME STEP  *****')
+      CALL CPU_TIME(TT2)
+      print*,' CALCULATING step TIME = ', tt2-tt1
       deallocate (E0,FAE,vert,qom)
+      stop
       return
       end

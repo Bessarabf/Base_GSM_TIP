@@ -73,7 +73,7 @@ c ********* Chepmen function**********
     7     continue
           do 4 j=1,k
             fs=0.
-            do 5 l=1,kl
+            do 5 l=1,15 !kl
               ab=0.
               do 6 m=1,k
                 ab=ab+sa(m,l)*ai(m)
