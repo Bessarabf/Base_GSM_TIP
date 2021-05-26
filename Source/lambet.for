@@ -10,15 +10,20 @@ C     convection heatings:
 C       GA-AL*FU-KAP*D/DS(-LAM*D/DS(FU)-BETA*FU)=0
 C                        or
 C       GA-AL*FU-KAP*D/DS(-LAM*D/DS(FU))-BETA*D/DS(FU)=0
-      USE mo_bas_gsm, ONLY: nv0,re
+!      USE mo_bas_gsm, ONLY: nv0,re
       real lam,n2,nu4,nu5,nu,la
 
-      dimension ht(nv0),tt(nv0),co2(nv0),cn2(nv0),co(nv0),ch(nv0),che(nv0),
-     *          tn(nv0),vnq(nv0),cim(nv0),cio(nv0),cih(nv0),col(nv0),
-     *          cihe(nv0),vio(nv0),vih(nv0),vihe(nv0),ti(nv0),te(nv0),
-     *          vdu(nv0),vdv(nv0),beta(nv0),lam(nv0),vio1(nv0),vih1(nv0),
-     *          vihe1(nv0),al(nv0),ga(nv0),cio1(nv0),cih1(nv0),cihe1(nv0)
-
+!      dimension ht(nv0),tt(nv0),co2(nv0),cn2(nv0),co(nv0),ch(nv0),che(nv0),
+!     *          tn(nv0),vnq(nv0),cim(nv0),cio(nv0),cih(nv0),col(nv0),
+!     *          cihe(nv0),vio(nv0),vih(nv0),vihe(nv0),ti(nv0),te(nv0),
+!     *          vdu(nv0),vdv(nv0),beta(nv0),lam(nv0),vio1(nv0),vih1(nv0),
+!     *          vihe1(nv0),al(nv0),ga(nv0),cio1(nv0),cih1(nv0),cihe1(nv0)
+      dimension ht(*),tt(*),co2(*),cn2(*),co(*),ch(*),che(*),
+     *          tn(*),vnq(*),cim(*),cio(*),cih(*),col(*),
+     *          cihe(*),vio(*),vih(*),vihe(*),ti(*),te(*),
+     *          vdu(*),vdv(*),beta(*),lam(*),vio1(*),vih1(*),
+     *          vihe1(*),al(*),ga(*),cio1(*),cih1(*),cihe1(*)
+      data re/6371.02e5/
 C    DET - time step 
       eht=1./det
       do 7 m=i1,i2
