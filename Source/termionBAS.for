@@ -161,6 +161,6 @@ c     . . . Creating global initial distribution of the parameters:
      *            sole,solu,solen,solet,rads,u,ntsl,
      *            dut,hut,iput,keut,kut,sut,tut,izap,
      *            nzapjet,lzapjet,pole)  
-
+      end program termionBAS
       stop
       end  
