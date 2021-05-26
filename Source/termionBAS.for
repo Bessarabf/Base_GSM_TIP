@@ -5,6 +5,7 @@ C
 
 ! объ€вление статических массивов
 ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      program termionBAS
       Parameter(isat=8700,ldor0=4096)
 !	
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -129,7 +130,7 @@ c     . . . Creating global initial distribution of the parameters:
      *            kdu,isp,par,pole,nr,verno,pkp0,mass,imja,mast)
 
 
-	  if(verno.ne.0) then
+      if(verno.ne.0) then
          print *,'  nachus: incorrect input data. STOP! '
          stop
       end if
@@ -160,6 +161,4 @@ c     . . . Creating global initial distribution of the parameters:
      *            sole,solu,solen,solet,rads,u,ntsl,
      *            dut,hut,iput,keut,kut,sut,tut,izap,
      *            nzapjet,lzapjet,pole)  
-
-      stop
-      end  
+      end  program termionBAS
