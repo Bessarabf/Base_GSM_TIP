@@ -52,7 +52,7 @@
      &                         Ntr,key)
         ENDIF ! Mass(20).EQ.0
 !------------------------------------------------------------------------------
-        PRINT *,'j=',j,'ntr=',ntr
+!        PRINT *,'j=',j,'ntr=',ntr
         CALL TEMOL(Par,Pari,Rads,Mass,Kpars,Nh,Its,Dts,Ntr,Ins)
 c . . . обход интерпол€ции шар-трубка при фиксировании ионосферы
         IF ( Mass(13).NE.0 ) CALL INST(dolg,Ntsl,Nl,Ntr,Ddolgt,Kdf,

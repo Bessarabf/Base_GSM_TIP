@@ -231,7 +231,7 @@ C  88 continue
      *        '  dlam   = ',f4.0,'   nsill = ',i4,'  dteta = ',f4.0)
  
       read (7,931)tet1,tet2,tet3,eps0,om,fac1,fac2,fac3,pdpc
-  931 format(/2x,f3.0,3x,f3.0,3x,f3.0,2x,e6.2,2x,f4.2,4(2x,e6.2))
+  931 format(/2x,f3.0,3x,f3.0,3x,f3.0,2x,f6.2,2x,f4.2,4(2x,f6.2))
       write(10,939)tet1,tet2,tet3,eps0,om,fac1,fac2,fac3
   939 format(/'   tet1 = ',f4.0,3x,'tet2 = ',f4.0,5x,'tet3 = ',f4.0/
      *        '   eps0 = ',1pe9.2,7x,'om = ',0pf5.2/

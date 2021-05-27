@@ -1,11 +1,11 @@
 C
 c    12.12.18 Base vaiant GSM TIP based on EAGLE 
 C
+      program termionBAS
 !      USE mo_ham_gsm
 
 ! объ€вление статических массивов
 ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-      program termionBAS
       Parameter(isat=8700,ldor0=4096)
 !	
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -161,7 +161,4 @@ c     . . . Creating global initial distribution of the parameters:
      *            sole,solu,solen,solet,rads,u,ntsl,
      *            dut,hut,iput,keut,kut,sut,tut,izap,
      *            nzapjet,lzapjet,pole)  
-<<<<<<< HEAD
-      end  program termionBAS
-=======
->>>>>>> 01aad467aea148940a8031fcde5ca22bd005032a
+      end program termionBAS

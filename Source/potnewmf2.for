@@ -195,7 +195,7 @@ c   49 continue
       
 	! iteration cycle
 	it=0
-
+!------------------------------------------------------------------------------
    37 continue
 		it=it+1
 		call libmanmf(nc,nl,na,alt,nh,dtet,ddolgs,alfa,beta,gamma,
@@ -222,7 +222,9 @@ c   49 continue
 
 		if(eps.le.eps0) goto 43
 		  goto37
+!------------------------------------------------------------------------------
    43 continue
+      PRINT *,'e=',e,'pef=', maxval(pef),minval(pef)
 	ami=pef(1,1)
       ama=pef(1,1)
       do801i=1,nl
