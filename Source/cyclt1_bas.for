@@ -88,7 +88,12 @@ c
       else  
         print*, 'incorrect mass(12) - var of precipitations'
       end if
-      
+!------------------------------------------------------------------------------
+      do ix = 1 , kpars
+        print *,'pglo (',ix,') max=',maxval(pglo(ix,:,:,:)),'min=',
+     *    minval(pglo(ix,:,:,:))
+      end do
+!------------------------------------------------------------------------------
       call shar_bas(day,god,dayt,godt,uts,tau,dts,sole,solu,solen,nsu,
      *           nse,kpars,ins,int,rads,nh,gkoor,its,ids,ddolgs,
      *           dtets,dtett,fa,fs,ap,pkp,dst,ae,al,au,bmpz,bmpy,
@@ -96,6 +101,12 @@ c
      *           nr,pari,par1,ni,ddolgt,ntsl,nl,verno,park,ks,potef,
      *           nl2,ntr,gins,solet,ut0,qom,qmax,iqo,mast,pglo,
      *           pril,kpa,nt,E0,FAE)
+!------------------------------------------------------------------------------
+      do ix = 1 , kpars
+        print *,'pglo (',ix,') max=',maxval(pglo(ix,:,:,:)),'min=',
+     *    minval(pglo(ix,:,:,:))
+      end do
+!------------------------------------------------------------------------------
 !     Potencial calculation 
        if(mast(13).eq.0) go to 8
           if(mast(18).eq.1) go to 119
