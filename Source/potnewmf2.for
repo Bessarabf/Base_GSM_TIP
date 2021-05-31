@@ -224,7 +224,7 @@ c   49 continue
 		  goto37
 !------------------------------------------------------------------------------
    43 continue
-      PRINT *,'e=',e,'pef=', maxval(pef),minval(pef)
+      PRINT *,'e=',e,'pef max=', maxval(pef),'max=',minval(pef)
 	ami=pef(1,1)
       ama=pef(1,1)
       do801i=1,nl

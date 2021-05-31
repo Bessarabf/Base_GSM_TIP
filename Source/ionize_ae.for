@@ -69,5 +69,4 @@ c         ground precipitation
  !         call ionizv(qfsm,gamc,e0f,emin,emax,h,par,parj,kpars,
  !    *               nh,its,ig)
     1 continue
-      return
       end

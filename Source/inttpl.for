@@ -32,6 +32,7 @@
             if(dolg1.eq.dolgb) go to 7
               k2=0
               if(dolg1.eq.dolga) k2=1
+!              print *,'dolgb=',dolgb,'dolg1=',dolg1
               dolgb=dolg1
     7       continue
             go to 9

@@ -101,6 +101,7 @@ c********
       nfw=13
       call copmd(nfr,nfw,kdf,isp,ldor,kdu,par,nr,mass,mast)
       print *,'cyclt2 - end'
+      print *,'pari max=',maxval(pari),'min=',minval(pari)
       deallocate( cio1,cih1,cihe1,vio1,vih1,
      *          vihe1,ti1,te1,cio,
      *          cih,cihe,vio,vih,vihe,

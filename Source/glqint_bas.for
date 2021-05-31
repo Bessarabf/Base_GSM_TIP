@@ -40,8 +40,10 @@
 !!!form 2d massiv (for compatibility with old version GSM TIP)
         Par(1:Kpars,1:Nh,1:Its) = Pgl1(1:Kpars,1:Nh,1:Its,j)
         Pari(1:Ins,1:Nh,1:Its) = Gins(1:Ins,1:Nh,1:Its,j)
+!        print *,'j=',j,'Par i max=',maxval(Par(14,:,:)),'min=',minval(Par(14,:,:))
         CALL IONIZ_AE(Sole,Solen,Rads,Par,Parj1,Gkoor,Uts,Dtets,dolg,
      &                Ddolgs,Delta,Nh,Its,Ids,Nse,Kpars,Mass,Ps,E0,Fae)
+!        print *,'j=',j,'Par m max=',maxval(Par(14,:,:)),'min=',minval(Par(14,:,:))
 !------------------------------------------------------------------------------
         IF ( Mass(20).EQ.0 ) THEN
           CALL MOLION(Par,Kpars,Nh,Its,Pari,Ins,Mass,Dts,Ntr)
@@ -51,9 +53,11 @@
         CALL MOLIO3NIT_BAS(Par,Ids,Its,Nh,Kpars,Pari,Ins,Mass,Dts,j,
      &                         Ntr,key)
         ENDIF ! Mass(20).EQ.0
+!        print *,'j=',j,'Par m2 max=',maxval(Par(14,:,:)),'min=',minval(Par(14,:,:))
 !------------------------------------------------------------------------------
 !        PRINT *,'j=',j,'ntr=',ntr
         CALL TEMOL(Par,Pari,Rads,Mass,Kpars,Nh,Its,Dts,Ntr,Ins)
+!        print *,'j=',j,'Par max=',maxval(Par(14,:,:)),'min=',minval(Par(14,:,:))
 c . . . обход интерпол€ции шар-трубка при фиксировании ионосферы
         IF ( Mass(13).NE.0 ) CALL INST(dolg,Ntsl,Nl,Ntr,Ddolgt,Kdf,
      &                                 Ldor,Isp,Par,Pari,Pole,Nr,Ni,
