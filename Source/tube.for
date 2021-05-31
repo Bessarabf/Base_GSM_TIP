@@ -70,10 +70,9 @@ c
      *                ti,te,vdu,vdv,cio1,cih1,cihe1,ti1,te1,qo,
      *                qsm,al,ga,qomt,qmax,iqo,mass,nv)
 
-     	   call lambet(ne,i1,i2,dt,ht,tt,co2,cn2,co,ch,che,tn,vnq,cim,
-     *               cio,cih,cihe,vio,vih,vihe,ti,te,col,vdu,vdv,beta,
-     *               lam,vio1,vih1,vihe1,al,ga,cio1,cih1,cihe1,dolm)
-	    
+     	call lambet_nv(ne,i1,i2,dt,ht,tt,co2,cn2,co,ch,che,
+     *               tn,vnq,cim,cio,cih,cihe,vio,vih,vihe,
+     *               ti,te,vdu,vdv,beta,lam,dolm,nv)
 
       end if
       if(i1.ne.1) goto 2
@@ -320,10 +319,9 @@ c         te(i2)=tn(i2)*5.
      *             cihe1,ti1,te1,qo,qsm,al,ga,qomt,qmax,
      *             iqo,mass,nv)
 	  
-          call lambet(ne,i1,i2,dt,ht,tt,co2,cn2,co,ch,che,tn,vnq,cim,
-     *            cio,cih,cihe,vio,vih,vihe,ti,te,col,vdu,vdv,beta,lam,
-     *            vio1,vih1,vihe1,al,ga,cio1,cih1,cihe1,dolm)
-       
+          call lambet_nv(ne,i1,i2,dt,ht,tt,co2,cn2,co,ch,che,
+     *                   tn,vnq,cim,cio,cih,cihe,vio,vih,vihe,
+     *                   ti,te,vdu,vdv,beta,lam,dolm,nv)
 
           do j=i1,i2
             if(ne.eq.4)then
@@ -335,18 +333,15 @@ c         te(i2)=tn(i2)*5.
             end if
           end do
       call alga(ne,nx,i1,i2,dt,ht,tt,co2,cn2,co,ch,che,tn,
-     *             vnq,vnu,vnv,cim,cio,cih,cihe,vio,vih,vihe,
-     *             tempi,tempe,vdu,vdv,cio1,cih1,
-     *             cihe1,ti1,te1,qo,qsm,alp,gap,qomt,qmax,iqo,
-     *             mass,nv)
-
-	     
-
-      call lambet(ne,i1,i2,dt,ht,tt,co2,cn2,co,ch,che,tn,vnq,cim,
-     *            cio,cih,cihe,vio,vih,vihe,tempi,tempe,col,vdu,vdv,
-     *            betap,lamp,vio1,vih1,vihe1,alp,gap,
-     *            cio1,cih1,cihe1,dolm)
-	      
+     *          vnq,vnu,vnv,cim,cio,cih,cihe,vio,vih,vihe,
+     *          tempi,tempe,vdu,vdv,cio1,cih1,
+     *          cihe1,ti1,te1,qo,qsm,alp,gap,qomt,qmax,iqo,
+     *          mass,nv)
+	
+      call lambet_nv(ne,i1,i2,dt,ht,tt,co2,cn2,co,ch,che,
+     *               tn,vnq,cim,cio,cih,cihe,vio,vih,vihe,
+     *               tempi,tempe,vdu,vdv,betap,lamp,dolm,nv)
+	      		   
           do 43 j=i1,i2
             if(ne.eq.4)then
               tempi(j)=ti(j)*(1.-dte)
@@ -362,11 +357,10 @@ c         te(i2)=tn(i2)*5.
      *             ti1,te1,qo,qsm,alm,gam,qomt,qmax,iqo,
      *             mass,nv)
 
-	call lambet(ne,i1,i2,dt,ht,tt,co2,cn2,co,ch,che,tn,vnq,cim,
-     *     cio,cih,cihe,vio,vih,vihe,tempi,tempe,col,vdu,vdv,betam,
-     *     lamm,vio1,vih1,
-     *     vihe1,alm,gam,cio1,cih1,cihe1,dolm)
-	      
+      call lambet_nv(ne,i1,i2,dt,ht,tt,co2,cn2,co,ch,che,
+     *               tn,vnq,cim,cio,cih,cihe,vio,vih,vihe,
+     *               tempi,tempe,vdu,vdv,betam,lamm,dolm,nv)
+	      			 
 
       if(ne.eq.4)then
         call forvt(ne,i1,i2,ht,tt,cim,cio,cih,cihe,beta,
