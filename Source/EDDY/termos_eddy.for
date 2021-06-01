@@ -558,7 +558,7 @@ c . . . средняя шкала высот (обратная)
           oh1=g(k-1)*amcn/bk/tn
           oh2=g(k)*amcv/bk/tv
           alf=(oh1+oh2)*rp(k-1)*0.5
-          s=alog(ro(i,j,k-1)*tn*amcv/(tv*amcn))-alf
+          s=alog(ro(i,j,k-1)*(tn/tv)*(amcv/amcn))-alf
           ro(i,j,k)=exp(s)
     3    continue
     2  continue

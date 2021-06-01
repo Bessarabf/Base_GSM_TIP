@@ -1,10 +1,9 @@
-c   terpot_bas - bas variant GSM TIP 2018-2019
-
-c   ver.    
-c   ver.    
-c   ver.    
+c   terpot_HAM - integrate with HAMMONIA 
+c   ver.    18.05.18 Ion Drag sent to HAMMONIA 
+c   ver.    10.05.18 Joul heating sent to HAMMONIA
+c   ver.    08.04.14 allocatable massives
 c   version 25.05.12 add to intrface KPA & NT for massive pril
-
+c           20.11.17 integate with HAMMONIA
 c - terpot
 c - lowgln
 c - gstrf0
@@ -24,13 +23,16 @@ c - bongl
 c - boskli
 c - progjn
 c - sumro
-      subroutine terpot_bas(day,god,dayt,godt,uts,tau,dts,solet,sole,
+      subroutine terpot_ham(day,god,dayt,godt,uts,tau,dts,solet,sole,
      *       solu,nsu,nse,kpars,rads,nh,gkoor,its,ddolgs,dtets,fa,fs,
      *       ap,pkp,dst,ae,al,au,bmpz,bmpy,mass,delta,pgl,pgi,ids,ins
      *      ,isp,vir,vid,vim,verno,parj,potef,ntr,nl2,pril,KPA,NT)
-!   constants of GSM TIP   
-      USE mo_bas_gsm
-!   !!!!!!!!!!!!!!!!!!!!
+!    
+!     module with mass GSM to HAM & HAM to GSM 
+      USE mo_ham_gsm
+	USE mo_gsm_const
+!	  use ieee_arithmetic
+
       integer day,god,dayt,godt,verno
       dimension
      *   sole(nse),solu(nsu),solet(nse),parj(nh,its,ids)
@@ -45,7 +47,7 @@ c - sumro
      *   ,an11(:,:,:),an21(:,:,:),an31(:,:,:)
      *   ,an61(:,:,:),vr(:,:,:),vi(:,:,:)
      *   ,vj(:,:,:),vi1(:,:,:),vj1(:,:,:)
-     *   ,g(:),rp(:),ctd(:),anco2(:,:,:)
+     *   ,g(:),rp(:),eddyco(:,:),anco2(:,:,:)
      *   ,ron(:,:,:),ros(:,:,:),ros0(:,:,:)
     
        allocate (an1(its,ids,nh),an2(its,ids,nh),an3(its,ids,nh) 
@@ -53,12 +55,10 @@ c - sumro
      *   ,an11(its,ids,nh),an21(its,ids,nh),an31(its,ids,nh)
      *   ,an61(its,ids,nh),vr(its,ids,nh),vi(its,ids,nh)
      *   ,vj(its,ids,nh),vi1(its,ids,nh),vj1(its,ids,nh)
-     *   ,g(NH),rp(NH),ctd(NH),anco2(its,ids,nh)
-     *   ,ros0(ITS,IDS,NH),ros(ITS,IDS,NH),ron(ITS,IDS,NH))
+     *   ,g(nh),rp(nh),eddyco(nh,its),anco2(its,ids,nh)
+     *   ,ros0(its,ids,nh),ros(its,ids,nh),ron(its,ids,nh))
 
       data key/1/
-
-      n4=nh
 
       do 21 k=1,nh
        g(k)=g0/(1.+rads(k)/re)**2
@@ -69,13 +69,15 @@ c - sumro
        end if
  21   continue
 c
-      call lowgln_bas(pgl,rads,kpars,nh,its,ids,day
+       call lowgln_ham(pgl,rads,kpars,nh,its,ids,day
      *         ,ap,fa,fs,gkoor,dtets,ddolgs,uts,mass(18),pril,KPA,NT)
 
        call pgl3d(pgl,kpars,nh,its,ids,an1,an2,an3,an6,vr,vi,vj)
-!      rate dissociation massiv
+
+   !      rate dissociation massiv
        call r_dis(qdis,an1,an6,gkoor,g,rads,solu,nsu,delta,
      *            nh,its,ids,uts)
+
 !      recommend time step
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       dLong=(re+rads(nh-1))*sin(pi*dtets/180.)
@@ -116,15 +118,17 @@ c
           call plots(ros,an1,an2,an3,an6,rp,g,nh,its,ids)
         end if
       end if
-      call turbk   (ctd,rads,nh)
-      ki=0
+!     2-d massiv eddy duffusion      
+      call turbko(eddyco,pgl,rads,kpars,nh,its,ids)
+
 c
 c     . . . NO-block
       if(mass(21).eq.0) then  ! apprpoximation
         call connot(pgl,rads,kpars,nh,its,ids)
       else
-        call nonew(pgl,pgi,gkoor,ctd,rads,rp,g,
+        call nonew_eddy(pgl,pgi,gkoor,eddyco,rads,rp,g,
      *              kpars,ins,nh,its,ids,delta,uts,dts,mass)
+
       end if
 c     . . . Расчет термосферы по MSIS
       if(mass(4).eq.0.or.mass(5).eq.0) then
@@ -134,26 +138,37 @@ c     . . . Расчет термосферы по MSIS
       end if
 c     . . . Температура рассчитывается
       if(mass(4).ne.0) then
-         call co2con(anco2,an1,an2,an3,an6,ctd,
-     *               rads,rp,g,nh,its,ids)
-         call heatpo_bas(pgl,pgi,parj,solet,solu,nsu,nse,
+        call co2den_eddy(anco2,an1,an2,an3,an6,eddyco,
+     *                   rads,rp,g,nh,its,ids)
+        call heatpo_ham(pgl,pgi,parj,solet,solu,nsu,nse,
      *               kpars,rads,g,nh,gkoor,its,ddolgs,dtets,
-     *               mass,delta,day,uts,tau,dts,ctd,vim,vid,
+     *               mass,delta,day,uts,tau,dts,eddyco,vim,vid,
      *               vir,ids,ins,an1,an2,an3,anco2,an6,an61,ros,
      *               vi,vj,vr)
 
-
+!  correction Tn by HAMMONIA
+!      ncor=mlev  !   10 ! point number of correction 
+!      do i=1,its
+!    	  do j=1,ids
+!	    do k=1,ncor-1
+!!		  an61(i,j,k)=gsmHAM(k,i,j)
+!	    end do
+!            an61(i,j,ncor)=(gsmHAM(ncor,i,j)+
+!     *                         an61(i,j,ncor))*0.5
+!	   end do
+!	end do
+!  correction end
          call nts (an61,nh,its,ids,nh,its-3)
 
       end if
 
       if(mass(5).ne.0) then
-         call sdizkn_bas(an1,an2,an3,an11,an21,an31,
+         call sdizkn_eddy(an1,an2,an3,an11,an21,an31,
      *               an61,vr,vi,vj,ros,rp,rads,g,nh,its,ids,
-     *               dts,ctd,roS,solu,gkoor,delta,nsu,
+     *               dts,eddyco,roS,solu,gkoor,delta,nsu,
      *               dtets,uts,ddolgs)
          call nts (An11,nh,its,ids,nh,its-3) ! ,1
-         call nts (An31,nh,its,ids,nh,its-3) ! ,1)  
+         call nts (An31,nh,its,ids,nh,its-3) ! ,1)   
       end if
 c
       if(mass(5).eq.1) then
@@ -163,10 +178,24 @@ c
       end if
 c     . . . V = 0
     9 if(mass(6).ne.0) then
-         call veter_bas(vi1,vj1,vi,vj,vr,vim,vid,an1,an2,an3,an61,ron,
-     *              pgl,pgi,rp,rads,ctd,nh,its,ids,kpars,ins,dts)
+         call veter_ham(vi1,vj1,vi,vj,vr,vim,vid,an1,an2,an3,an61,ron,
+     *              pgl,pgi,rp,rads,eddyco,nh,its,ids,kpars,ins,dts)
          call nts (vj1,nh,its,ids,nh,its-3)
          call nts (vi1,nh,its,ids,nh,its-3)
+! correction Vn 
+!         do i=1,its
+!           do j=1,ids
+!             do k=1,ncor-1
+!               vi1(i,j,k)=UgsmHAM(k,i,j)
+!               vj1(i,j,k)=VgsmHAM(k,i,j)
+!             end do
+!             vi1(i,j,ncor)=(UgsmHAM(ncor,i,j)+
+!     *                         vi1(i,j,ncor))*0.5
+!             vj1(i,j,ncor)=(VgsmHAM(ncor,i,j)+
+!     *                         vj1(i,j,ncor))*0.5
+!           end do
+!         end do
+!  correction end
          call bonvec1(vi1,vj1,nh,its,ids)
       else
          vi1=0.
@@ -201,7 +230,7 @@ c          File: labt.dan writing heat sourse
         open(8,file='labt.dan',form='Unformatted')
         rewind8
         call heapot(pgl,pgi,an11,an21,an31,an61,anco2,vr,
-     *              vi1,vj1,vim,vid,vir,ctd,solu,
+     *              vi1,vj1,vim,vid,vir,eddyco,solu,
      *              nsu,rads,g,gkoor,kpars,ins,
      *              nh,its,ids,delta,uts,mass(19))
         close(8)
@@ -214,7 +243,7 @@ c          File: labt.dan writing heat sourse
      *   ,an6,an11,an21,an31
      *   ,an61,vr,vi
      *   ,vj,vi1,vj1
-     *   ,g,rp,ctd,anco2
+     *   ,g,rp,eddyco,anco2
      *   ,ron,ros,ros0)
 
       return
@@ -283,46 +312,14 @@ c                 an31(i,j,k)=cns3(k)/1.4
          return
          end
 
-      subroutine co2con(an co2,an1,an2,an3,an6,ctd,
-     *                   rads,rp,g,n,n1,n2)
-      dimension an1(n1,n2,n),an2(n1,n2,n),an3(n1,n2,n),ctd(n)
-     *         ,an6(n1,n2,n),anco2(n1,n2,n),rads(n),g(n),rp(n)
-      data am1,am2,am3/53.12e-24,46.51e-24,26.56e-24/,
-     *     amco2/73.04e-24/,bk/1.38e-16/
-c
-      do 11 k=1,n
-       z=rads(k)*1.e-5
-       if(.not.(z.gt.100.)) go to 12
-        k1=k
-        goto 13
-   12  continue
-   11 continue
-   13 do 1 i=1,n1
-       do 2 j=1,n2
-        do 3 k=1,k1
-         sum con=an1(i,j,k)+an2(i,j,k)+an3(i,j,k)
-c
-         ams=(am1*an1(i,j,k)+am2*an2(i,j,k)+am3*
-     *        an3(i,j,k))/sum con
-          z km=rads(k)*1.e-5
-          h cm=bk*an6(i,j,k)/(ams*g(k))
-          hkm=hcm*1.e-5
-          anco2(i,j,k)=1.e11*an6(i,j,1)/an6(i,j,k)*
-     *              exp((1.+sqrt(1.+0.8e-12*hcm*hcm))*
-     *              (80.-zkm)/(2.*hkm))
-    3    continue
-    2  continue
-    1 continue
-      call barsos(anco2,an6,rp,g,amco2,n,n1,n2,k1)
-      return
-      end
+      
 c
       subroutine conn(pgl,kpars,nh,its,ids)
        dimension pgl(kpars,nh,its,ids)
           do 1 k = 1 , nh
           do 1 i = 1 , its
           do 1 j = 1 , ids
-       pgl(5,k,i,j)=0.
+       pgl(5,k,i,j)=10.
   1     continue
        return
        end
@@ -514,7 +511,7 @@ c . . . средняя шкала высот (обратная)
           oh1=g(k-1)*amcn/bk/tn
           oh2=g(k)*amcv/bk/tv
           alf=(oh1+oh2)*rp(k-1)*0.5
-          s=alog(ro(i,j,k-1)*(tn/tv)*(amcv*amcn))-alf
+          s=alog(ro(i,j,k-1)*tn*amcv/(tv*amcn))-alf
           ro(i,j,k)=exp(s)
     3    continue
     2  continue
@@ -610,7 +607,7 @@ c  !     data hm/ 94./,c1,c0/5.e 6,5.e 6/,
 c      data hm/ 94./,c1,c0/1.e 6,5.e 5/,
 !      data hm/ 90./,c1,c0/5.e 6,1.e 6/,!9.03.11
 !     *     s1,s2,s3/0.01,0.05,0.01/
-	data hm/98./,c1,c0/5.0e 6,3.0e 6/
+ 	  data hm/98./,c1,c0/5.0e 6,3.0e 6/
      *     s1,s2,s3/0.01,0.005,0.01/
 !	data hm/103./,c1,c0/5.0e 6,3.0e 6/	 !!! 5/02/13
 !        data hm/108./,c1,c0/8.0e 6,4.0e 6/	 !!! 25/07/18
@@ -656,11 +653,9 @@ c    в yзлax на высотах rads в точке fig,dolg в момент td,uttau
       do 3 i=1,7
        apm(i)=ap   ! ap-index
  3    continue
-
       alat=fig*1.7453292e-2
       alon=dolg*1.7453292e-2
       iyd=80*1000+td
-     
       do 2 ih=1,nh
 !           MSIS-86
 !            call gtd6(iyd,utsec,rads(ih)/1.e5,fig,dolg,tlttau,fs,fa,apm
@@ -668,13 +663,12 @@ c    в yзлax на высотах rads в точке fig,dolg в момент td,uttau
 !           MSIS 2000
          call gtd7(iyd,utsec,rads(ih)/1.e5,fig,dolg,tlttau,fs,fa,apm
      *            ,48,d,t)
-         
+     
          tn(ih)=t(2)
          cn1(ih)=d(3)
          cn2(ih)=d(4)
          cn4(ih)=d(2)
  2    continue
-
       return
       end
 
