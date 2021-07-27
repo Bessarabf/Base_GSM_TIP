@@ -5,6 +5,7 @@ C
 
 ! объ€вление статических массивов
 ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      program termionBAS
       Parameter(isat=8700,ldor0=4096)
 !	
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -160,6 +161,6 @@ c     . . . Creating global initial distribution of the parameters:
      *            sole,solu,solen,solet,rads,u,ntsl,
      *            dut,hut,iput,keut,kut,sut,tut,izap,
      *            nzapjet,lzapjet,pole)  
-
+      end program termionBAS
       stop
       end  

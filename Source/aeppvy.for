@@ -1,18 +1,24 @@
-      subroutine aeppVY(mass,nl,idt,ddolgs,dtet,AL,Dst,ut,del0,E0,Q)
-      !      nl=its, idt=ids
-      dimension E0(nl,idt),Q(nl,idt),MASS(30)
+      subroutine aeppVY(mass,nl2,idt,ddolgs,dtet,AL,Dst,ut,del0,E0,Q)
+      ! Vorobiev & Yagodkina model precipitations
+      ! adaptation for GSM TIP
+      ! last redaction may 2021
+
+      !      nl2=its, idt=ids
+      dimension E0(nl2,idt),Q(nl2,idt),MASS(30)
       allocatable qe0(:,:),ebpp1(:),ebpp2(:),ebpp3(:),ebpp4(:),
      *            ebpp5(:),gmltm(:)
-      allocate(qe0(nl,idt+1),ebpp1(idt+1),ebpp2(idt+1),ebpp3(idt+1),
+      allocate(qe0(nl2,idt+1),ebpp1(idt+1),ebpp2(idt+1),ebpp3(idt+1),
      *         ebpp4(idt+1),ebpp5(idt+1),gmltm(idt+1))      
       data pi/3.14159265359/
       dpi=pi+pi
       if(AL.ge.-5.)AL=-5.
+	! initial value
+	E0 = 0.
+	Q  = 0.
+	!!!!!!!!!!!!!!!
       do l=1,idt+1
-	 
         l00=l
 	  if(l.eq.idt+1)l00=1 
-
         dolg=(l-1)*ddolgs
         fi=dolg/180.*pi
         call magsm(ut,del0,fi,phism,1)
@@ -142,30 +148,33 @@ c            b4s=67.48+0.007*al+1.36e-6*al*al+0.048*dst
         call aurprecip(gmlt,al,f1,f2,
      *         f4,f5,e1,e2,e4,e5,eaop,
      *         edaz,esdp,faop,fdaz,fsdp)
-        do j=1,nl/2+1
+        do j=1,nl2/2+1
           tet=(j-1)*dtet
-
           gmlat=90.-tet
           if(gmlt.ge.0..and.gmlt.le.6..or.gmlt.gt.18..
      *       and.gmlt.le.24.)then
             if(gmlat.gt.b1e.and.gmlat.le.b2e)then
               qe0(j,l)=f1
               E0(j,l00)=e1
+              if(E0(j,l00).lt.1.e-3) E0(j,l00)= 1.e-3
               Q(j,l00)=qe0(j,l)/E0(j,l00)*6.24e8
             end if
             if(gmlat.gt.b2e.and.gmlat.le.b4s)then
               qe0(j,l)=f2
               E0(j,l00)=e2
+              if(E0(j,l00).lt.1.e-3) E0(j,l00)= 1.e-3
               Q(j,l00)=qe0(j,l)/E0(j,l00)*6.24e8
             end if
             if(gmlat.gt.b4s.and.gmlat.le.b5e)then
               qe0(j,l)=f4
               E0(j,l00)=e4
+              if(E0(j,l00).lt.1.e-3) E0(j,l00)= 1.e-3
               Q(j,l00)=qe0(j,l)/E0(j,l00)*6.24e8
             end if
             if(gmlat.gt.b5e.and.gmlat.le.b6e)then
               qe0(j,l)=f5
               E0(j,l00)=e5
+              if(E0(j,l00).lt.1.e-3) E0(j,l00)= 1.e-3
               Q(j,l00)=qe0(j,l)/E0(j,l00)*6.24e8
             end if
           end if
@@ -173,26 +182,30 @@ c            b4s=67.48+0.007*al+1.36e-6*al*al+0.048*dst
             if(gmlat.gt.ecps.and.gmlat.le.pcps)then
               qe0(j,l)=fdaz
               E0(j,l00)=edaz
+              if(E0(j,l00).lt.1.e-3) E0(j,l00)= 1.e-3
               Q(j,l00)=qe0(j,l)/E0(j,l00)*6.24e8
             end if
             if(gmlat.ge.ebps.and.gmlat.le.pbps)then
               qe0(j,l)=faop
               E0(j,l00)=eaop
+              if(E0(j,l00).lt.1.e-3) E0(j,l00)= 1.e-3
               Q(j,l00)=qe0(j,l)/E0(j,l00)*6.24e8
             end if
             if(gmlat.gt.pbps.and.gmlat.le.pllb)then
               qe0(j,l)=fsdp
               E0(j,l00)=esdp
+              if(E0(j,l00).lt.1.e-3) E0(j,l00)= 1.e-3
               Q(j,l00)=qe0(j,l)/E0(j,l00)*6.24e8
             end if
           end if
-
+!	    if(E0(j,l00).lt.1.e-3) E0(j,l00)= 1.e-3
+!            if(Q(j,l00).lt.1.e-3) Q(j,l00)= 1.e-3
         end do
       end do
 ! south hemisphere 
       
-      do j=1,nl/2+1
-        jc=nl-j+1
+      do j=1,nl2/2+1
+        jc=nl2-j+1
 	  do l=1,idt+1
            l00=l
            if(l.eq.idt+1)l00=1 
@@ -201,45 +214,44 @@ c            b4s=67.48+0.007*al+1.36e-6*al*al+0.048*dst
         end do
       end do
 		  
-        if(mass(30).eq.1)then	
-          open(1,file='epres',access='direct',recl=1371)
-          nrec=nrec+1
+       if(mass(30).eq.1)then	
+          open(1,file='epres',access='direct',recl=4107)
+	    nrec=nrec+1
           write(1,rec=nrec)ut
-	      nrec=nrec+1
+	    nrec=nrec+1
           write(1,rec=nrec)AL
-	      nrec=nrec+1
+	    nrec=nrec+1
           write(1,rec=nrec)Dst
-	      do j=1,nl/2+1
-	        nrec=nrec+1
-	        write(1,rec=nrec)(E0(j,l),l=1,idt)
-	      end do
-	      do j=1,nl/2+1
-	        nrec=nrec+1
-	        write(1,rec=nrec)(qe0(j,l),l=1,idt)
-	      end do
-	      do j=1,nl/2+1
-	        nrec=nrec+1
-	        write(1,rec=nrec)(Q(j,l),l=1,idt)
-	      end do
+	    do j=1,nl2/2+1
+	      nrec=nrec+1
+	      write(1,rec=nrec)(E0(j,l),l=1,IDT)
+	    end do
+	    do j=1,nl2/2+1
+	      nrec=nrec+1
+	      write(1,rec=nrec)(qe0(j,l),l=1,IDT)
+	    end do
+	    do j=1,nl2/2+1
+	      nrec=nrec+1
+	      write(1,rec=nrec)(Q(j,l),l=1,IDT)
+	    end do
           close(1)
           open(1,file='bound',access='direct',recl=147)
-	      nrec=nrec+1
+	    nrec=nrec+1
           write(1,rec=nrec)ut
-	      nrec=nrec+1
+	    nrec=nrec+1
           write(1,rec=nrec)AL
-	      nrec=nrec+1
+	    nrec=nrec+1
           write(1,rec=nrec)Dst
-	      do l=1,idt
-	        nrec=nrec+1
-            write(1,rec=nrec)gmltm(l),ebpp1(l),ebpp2(l),ebpp3(l),
+	    do l=1,IDT
+	      nrec=nrec+1
+                write(1,rec=nrec)gmltm(l),ebpp1(l),ebpp2(l),ebpp3(l),
      *          ebpp4(l),ebpp5(l)
-	      end do
+	    end do
           close(1)
         end if
-
-      print*,' '
-      print 100,(ebpp1(i),i=1,idt)
-      print*,' '
+!      print*,' '
+!      print 100,(ebpp1(i),i=1,idt)
+!      print*,' '
   100 format(' ',5f9.3)
       deallocate(qe0,ebpp1,ebpp2,ebpp3,ebpp4,ebpp5,gmltm)      
       return

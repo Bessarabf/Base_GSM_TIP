@@ -1,6 +1,3 @@
-c   shar_HAM - integrate with HAMMONIA 
-c   ver.    18.05.18 Ion Drag sent to HAMMONIA 
-c   ver.    10.05.18 Joul heating sent to HAMMONIA
       subroutine shar_bas(day,god,dayt,godt,uts,tau,dts,sole,solu,
      *           solen,nsu,nse,kpars,ins,int,rads,nh,gkoor,
      *           its,ids,ddolgs,dtets,dtett,fa,fs,ap,pkp,dst,
@@ -41,13 +38,11 @@ c
       end if
       if(mass(9).gt.3) mass(9)=mass(9)-3
       call zamion (gins,ins,its,ids,nh,uts,mass)
-      do 10 k = 1 , nh
-       do 10 i = 1 , its
-        do 10 j = 1 , ids
-         vir(k,i,j)=0.
-         vim(k,i,j)=0.
-         vid(k,i,j)=0.
-  10  continue
+!     initiation vimol = 0.
+      vir = 0.
+      vim = 0.
+      vid = 0.
+
 
       if(mass(3).eq.0) go to 11
 c        if(mast(26).eq.2.or.mast(26).eq.3)then

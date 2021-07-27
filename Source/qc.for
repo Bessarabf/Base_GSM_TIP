@@ -1,9 +1,9 @@
       function qc(vic,lam,teta)
       real lam,lamg,lmn,lms
       data rad/57.2957/,vc/3.0e8/
-      data fmdn/15./,fmnn/25./,dfn/10./,lmn/45./,dln/25.0/
-c     data fmdn/15./,fmnn/25./,dfn/10./,lmn/45./,dln/35.0/
-      data fmds/15./,fmns/25./,dfs/10./,lms/00./,dls/1.e6/
+      data fmdn/15./,fmnn/25./,dfn/10./,lmn/45./,dln/25.0/ ! north hemisphere
+c     data fmdn/15./,fmnn/25./,dfn/10./,lmn/45./,dln/35.0/ 
+      data fmds/15./,fmns/25./,dfs/10./,lms/00./,dls/1.e6/ ! south hemisphere 
 c
       lamg=lam*rad
 c     !for lmn=0 only!

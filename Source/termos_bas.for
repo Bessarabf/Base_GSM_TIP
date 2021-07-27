@@ -163,7 +163,7 @@ c
       end if
 c     . . . V = 0
     9 if(mass(6).ne.0) then
-         call veter_ham(vi1,vj1,vi,vj,vr,vim,vid,an1,an2,an3,an61,ron,
+         call veter_bas(vi1,vj1,vi,vj,vr,vim,vid,an1,an2,an3,an61,ron,
      *              pgl,pgi,rp,rads,ctd,nh,its,ids,kpars,ins,dts)
          call nts (vj1,nh,its,ids,nh,its-3)
          call nts (vi1,nh,its,ids,nh,its-3)
