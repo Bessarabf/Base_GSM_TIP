@@ -96,30 +96,10 @@ c     write(10,944)ns,uprt,uprs
       read(7,919)fa0,fs
 	   
       nn=mas(4)
-	
+!  reading sole from danmodel	
       read(7,903)(dw1(i),dw2(i),sole(i),i=1,nse)
   919 format(/1x,2(f4.0,1x)) 
   903 format(/3(f7.1,1x,f7.1,1x,f10.5,1x))
-      
-      if(mas(8).ne.0) then
-          if (mas(8).eq.1 ) then
-     	     call flosu(god,fa0,sole,nn)
-	     print*,' flosu'
-	    else if (mas(8).eq.2) then
-     	      call flosuN(fs,fa0,sole,nn)
-	      print*,' flosuN'
-          else if (mas(8).eq.3) then
-     	      call flosuEUVAC(fs,fa0,sole,nn)
-          else
-            print*,' wwod: incorrect mas(8)'
-            stop
- 	    end if
-          !!! Nusinov solu model
-          !!!! La in solu 
-          solu(1)=sole(nse) ! La in photon
-          solu(nsu/2+1)=solu(1)*1.98648/121.5 !La in erg
-          call nus_uv(solu,nsu)
-      end if
 	
       m=mas(4)/2
       mr=mas(4)-m*2
@@ -247,9 +227,32 @@ C  88 continue
 
 !  чтение параметров для задания массива PRIL
 	read(7,*) 
-	
 
       read(7,*) kpa,ntime
+
+!! UV & FUV models      
+      if(mas(8).ne.0) then
+          if (mas(8).eq.1 ) then
+     	     call flosu(god,fa0,sole,nn)
+	     print*,' flosu'
+	    else if (mas(8).eq.2) then
+     	      call flosuN(fs,fa0,sole,nn)
+	      print*,' flosuN'
+          else if (mas(8).eq.3) then
+     	      call flosuEUVAC(fs,fa0,sole,nn)
+          else
+            print*,' wwod: incorrect mas(8)'
+            stop
+          end if
+!!!! La in solu 
+          solu(1)=sole(nse) ! La in photon
+          solu(nsu/2+1)=solu(1)*1.98648/121.5 !La in erg
+!!! Nusinov solu model
+          call nus_uv(solu,nsu)
+         
+      end if
+!   rewrite solu after model Nusiov
+          write(10,940)(dlw1(k),dlw2(k),solu(k),solu(k+nn),k=1,m)        
 
       close(10)
       close(7)
