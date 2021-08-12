@@ -1,4 +1,3 @@
-!  may 2021     - reduction lambet_nv
 !  ver 18.04.14 - add nv to interface
 
       subroutine tube(ne,nx,dt,ht,tt,co2,cn2,co,ch,che,tn,
@@ -74,18 +73,21 @@ c
      	call lambet_nv(ne,i1,i2,dt,ht,tt,co2,cn2,co,ch,che,
      *               tn,vnq,cim,cio,cih,cihe,vio,vih,vihe,
      *               ti,te,vdu,vdv,beta,lam,dolm,nv)
-
+     
       end if
       if(i1.ne.1) goto 2
-        if(ne.lt.4) goto 33
-          if(ne.eq.4)then
-            itr=mast(10)
-          else
-            itr=mast(12)
-          end if
-          tiit=ti(i1)
-          teit=te(i1)
-          do 32 i=1,itr
+      if(ne.lt.4) goto 33
+
+      if(ne.eq.4)then
+        itr=mast(10)
+      else
+         itr=mast(12)
+      end if
+      
+      tiit=ti(i1)
+      teit=te(i1)
+!------------------------------------------------------------------------------
+          do i=1,itr
             call algat(ne,nx,i1,i1,i2,dt,ht,tt,co2,cn2,co,ch,
      *                 che,tn,vnq,vnu,vnv,cim,cio,cih,cihe,
      *                 vio,vih,vihe,tiit,teit,vdu,vdv,cio1,cih1,
@@ -98,7 +100,7 @@ c
               tiit1=tiit
               teit1=teit*(1.+dte)
             end if
-		   
+
             call algat(ne,nx,i1,i1,i2,dt,ht,tt,co2,cn2,co,ch,
      *                 che,tn,vnq,vnu,vnv,cim,cio,cih,cihe,
      *                 vio,vih,vihe,tiit1,teit1,vdu,vdv,cio1,cih1,
@@ -122,13 +124,15 @@ c
               dfte=(gatep/altep-gatem/altem)/(tiit*2.*dte)
               tiit=(gate/alte-tiit*dfte)/(1.-dfte)
               if(tiit.lt.tn(i1))tiit=tn(i1)
+              if(tiit > 1.e4) tiit = 1.e4
             else
               dfte=(gatep/altep-gatem/altem)/(teit*2.*dte)
               teit=(gate/alte-teit*dfte)/(1.-dfte)
               if(teit.lt.tn(i1))teit=tn(i1)
+              if(teit > 1.e4) teit = 1.e4
             end if
-   32     continue
-         	
+          enddo ! i=1,itr
+!------------------------------------------------------------------------------
           call algat(ne,nx,i1,i1,i2,dt,ht,tt,co2,cn2,co,ch,
      *               che,tn,vnq,vnu,vnv,cim,cio,cih,cihe,
      *               vio,vih,vihe,tiit,teit,vdu,vdv,cio1,cih1,
@@ -141,6 +145,7 @@ c
           else
             te(i1)=teit
           end if
+
    33   continue
         bet(i1)=0.
         gamm(i1)=ga(i1)/al(i1)
@@ -175,17 +180,20 @@ c       if(ne.eq.4)ti(i1)=tn(i1)*10.
 c       if(ne.eq.4)ti(i1)=tn(i1)*5.
 c       if(ne.eq.5)te(i1)=tn(i1)*5.
     4 continue
+!------------------------------------------------------------------------------
       if(ne.lt.4)goto35
-        if(i2.ne.nx)goto35
-          if(ne.eq.4)then
-            itr=mast(10)
-          else
-            itr=mast(12)
-          end if
-          tiit=ti(i2)
-          teit=te(i2)
-          do 34 i=1,itr
-	     
+      if(i2.ne.nx)goto35
+      
+      if(ne.eq.4)then
+        itr=mast(10)
+      else
+        itr=mast(12)
+      end if
+      
+      tiit=ti(i2)
+      teit=te(i2)
+!------------------------------------------------------------------------------
+          do i=1,itr
             call algat(ne,nx,i2,i1,i2,dt,ht,tt,co2,cn2,co,ch,
      *                 che,tn,vnq,vnu,vnv,
      *                 cim,cio,cih,cihe,vio,vih,vihe,
@@ -199,7 +207,7 @@ c       if(ne.eq.5)te(i1)=tn(i1)*5.
               tiit1=tiit
               teit1=teit*(1.+dte)
             end if
-             
+
 		  call algat(ne,nx,i2,i1,i2,dt,ht,tt,co2,cn2,co,ch,
      *                    che,tn,vnq,vnu,vnv,
      *                    cim,cio,cih,cihe,vio,vih,vihe,tiit1,
@@ -223,12 +231,16 @@ c       if(ne.eq.5)te(i1)=tn(i1)*5.
               dfte=(gatep/altep-gatem/altem)/(tiit*2.*dte)
               tiit=(gate/alte-tiit*dfte)/(1.-dfte)
               if(tiit.lt.tn(i2))tiit=tn(i2)
+              if(tiit > 1.e4) tiit = 1.e4
             else
               dfte=(gatep/altep-gatem/altem)/(teit*2.*dte)
               teit=(gate/alte-teit*dfte)/(1.-dfte)
               if(teit.lt.tn(i2))teit=tn(i2)
+              if(teit > 1.e4) teit = 1.e4
             end if
-   34     continue
+          enddo ! i=1,itr
+!------------------------------------------------------------------------------
+
           call algat(ne,nx,i2,i1,i2,dt,ht,tt,co2,cn2,co,ch,
      *                  che,tn,vnq,vnu,vnv,
      *                  cim,cio,cih,cihe,vio,vih,vihe,tiit,teit,
@@ -372,6 +384,7 @@ c         te(i2)=tn(i2)*5.
      *  bet,gamm,ga,al,lam,betap,gap,alp,lamp,betam,gam,alm,lamm,
      *  te)
       end if
+
       call backt(i1,i2,delu,bet,gamm)
           do 44 j=i1,i2
             if(ne.eq.4)then
@@ -384,6 +397,7 @@ c         te(i2)=tn(i2)*5.
             if(te(j).gt.1.e4)te(j)=1.e4
             end if
    44     continue
+
    40 continue
       end if
       if(ne.gt.3)goto31
@@ -464,5 +478,3 @@ cc          if(cihe(m).lt.1.e-3)cihe(m)=1.e-3
      *          delu,tempi,tempe,col) 
       return
       end
-
-
