@@ -39,5 +39,8 @@
          eddyco(k,i)=eddyco(k,i)*(1.+sign(1.,eddyco(k,i)-cMol))*0.5 
        end do
       end do
+! Kt in poles
+      eddyco(:,1) = eddyco(:,2)
+      eddyco(:,its) = eddyco(:,its-1)
       return
       end
