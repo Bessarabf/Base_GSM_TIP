@@ -1,0 +1,131 @@
+      subroutine libman(nc,nl,na,alt,nh,dtets,dfis,alfa,
+     *beta,gamma,delta,psi,pot0,pot,om,tet1,tet2,tet3,nvg)
+      dimension alt(nh),alfa(nl,nc),beta(nl,nc),gamma(nl,nc),
+     *delta(nl,nc),psi(nl,nc),pot0(na,nl,nc),pot(na,nl,nc)
+      data pi/3.14159265359/,re/6371.02e5/,pmi0/14.9/
+      df=dfis/180.*pi
+      dt=dtets/180.*pi
+      df=1./df
+      dt=1./dt
+      k=nc-1
+      dfs=df*df
+      dts=dt*dt
+      df=df*.5
+      dt=dt*.5
+      m=(nc+1)/2
+      do4i=1,nl
+        ip=i+1
+        im=i-1
+        if(i.eq.1)im=nl
+        if(i.eq.nl)ip=1
+        do3j=2,k
+          jp=j+1
+          jm=j-1
+          tet=(j-1)*dtets/180.*pi
+          st=sin(tet)
+          st=st*st
+          pmi=(re+alt(na))/(re*st)
+          p=0.
+          f=0.
+          if(pmi.ge.pmi0.or.pmi.lt.pmi0.and.j.eq.m)goto2
+            l=nc-j+1
+            if(j.gt.m)goto1
+              lp=l+1
+              lm=l-1
+              e=alfa(i,l)
+              g=(e+alfa(i,lp))*.5*dts
+              h=gamma(i,l)*dt
+              a=abs(h)
+              b=g+h+a
+              p=p+b
+              f=f+b*pot0(na,i,lp)
+              g=(e+alfa(i,lm))*.5*dts
+              b=g-h+a
+              p=p+b
+              f=f+b*pot0(na,i,lm)
+              e=beta(i,l)
+              h=delta(i,l)*df
+              g=(e+beta(ip,l))*.5*dfs
+              a=abs(h)
+              b=g-h+a
+              p=p+b
+              f=f+b*pot0(na,ip,l)
+              g=(e+beta(im,l))*.5*dfs
+              b=g+h+a
+              p=p+b
+              f=f+b*pot0(na,im,l)-psi(i,l)
+              goto2
+    1       continue
+            pot(na,i,j)=pot(na,i,l)
+            goto3
+    2     continue
+          if(j.ne.m)goto8
+            ee=alfa(i,j)
+            h=gamma(i,j)+(alfa(i,jp)-alfa(i,jm))*dt
+            h=h/ee*dt
+            a=abs(h)
+            b=dts+h+a
+            p=p+b
+            f=f+b*pot0(na,i,jp)
+            b=dts-h+a
+            p=p+b
+            f=f+b*pot0(na,i,jm)
+            e=beta(i,j)
+            h=delta(i,j)*df
+            g=(e+beta(ip,j))*.5*dfs
+            a=abs(h)
+            b=(g-h+a)/ee
+            p=p+b
+            f=f+b*pot0(na,ip,j)
+            g=(e+beta(im,j))*.5*dfs
+            b=(g+h+a)/ee
+            p=p+b
+            f=f+b*pot0(na,im,j)
+            f=f-psi(i,j)/ee
+            goto9
+    8     continue
+          if(nvg.eq.0)goto7
+            if(j.eq.4.or.j.eq.34)goto3
+    7     continue
+          e=alfa(i,j)
+          h=gamma(i,j)*dt
+          g=(e+alfa(i,jp))*.5*dts
+          a=abs(h)
+          b=g+h+a
+          p=p+b
+          f=f+b*pot0(na,i,jp)
+          g=(e+alfa(i,jm))*.5*dts
+          b=g-h+a
+          p=p+b
+          f=f+b*pot0(na,i,jm)
+          e=beta(i,j)
+          h=delta(i,j)*df
+          g=(e+beta(ip,j))*.5*dfs
+          a=abs(h)
+          b=g-h+a
+          p=p+b
+          f=f+b*pot0(na,ip,j)
+          g=(e+beta(im,j))*.5*dfs
+          b=g+h+a
+          p=p+b
+          f=f+b*pot0(na,im,j)
+          f=f-psi(i,j)
+    9     continue
+          pot(na,i,j)=om/p*f+(1.-om)*pot0(na,i,j)
+    3   continue
+    4 continue
+      k=nc-1
+      s1=0.
+      s2=0.
+      do5i=1,nl
+        s1=s1+pot(na,i,2)
+        s2=s2+pot(na,i,k)
+    5 continue
+      s1=s1/nl
+      s2=s2/nl
+      do6i=1,nl
+        pot(na,i,1)=s1
+        pot(na,i,nc)=s2
+    6 continue
+      return
+      end

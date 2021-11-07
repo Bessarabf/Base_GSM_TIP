@@ -261,6 +261,5 @@ c-------------------------------------------------------------------
       CALL CPU_TIME(TT2)
       print*,' CALCULATING step TIME = ', tt2-tt1
       deallocate (E0,FAE,vert,qom)
-      stop
       return
       end

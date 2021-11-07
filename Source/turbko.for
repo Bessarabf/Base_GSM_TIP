@@ -25,7 +25,7 @@
          ah=(rads(k))*1.e-5
          y=hm-ah
          y2=y*y
-         if (y2.gt.5000.) then
+         if (y2.gt.3000.) then
            eddyco(k,i)=0.
          else
            if(ah.lt.hm) then
@@ -39,5 +39,8 @@
          eddyco(k,i)=eddyco(k,i)*(1.+sign(1.,eddyco(k,i)-cMol))*0.5 
        end do
       end do
+! Kt in poles
+      eddyco(:,1) = eddyco(:,2)
+      eddyco(:,its) = eddyco(:,its-1)
       return
       end

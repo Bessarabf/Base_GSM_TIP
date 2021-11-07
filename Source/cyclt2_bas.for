@@ -1,4 +1,5 @@
-c    VER _04_2014 DINAMIC MASSIVES
+c    VER 22_05_2014 par2 ADD TO INTERFACE TO DREIFGSM
+c    VER _04_2014 allocatable MASSIVES
 
       subroutine cyclt2_bas(mast,ntsl,nl,par,nr,pari,ni,par1,PAR2,b,c,
      *                  its,park,ks,gins,rads,nh,ddolgt,dtett,ddolgs,
@@ -44,7 +45,7 @@ c    VER _04_2014 DINAMIC MASSIVES
           call select(ne,j,m,ntsl,nl,cio1,cih1,cihe1,vio1,vih1,vihe1,
      *                ti1,te1,co2,cn2,co,ch,che,cim,tn,vnq,vnu,vnv,
      *                qo,qsm,ht,tt,vdv,vdu,park,ks,nv)
-     		call vdrift(i,j,idt,ntsl,nl,ddolgt,dtett,fi,ht,tt,potef,
+     	  call vdrift(i,j,idt,ntsl,nl,ddolgt,dtett,fi,ht,tt,potef,
      *                vdu,vdv,ntr,nl2)
           ne=2
           m=2
@@ -61,7 +62,6 @@ c
 c
           mi=2
         end do
-
 
         go to 5
 c

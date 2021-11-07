@@ -1,6 +1,8 @@
       subroutine noprog_eddy(cNd,cNo,cO2i
      *                 ,pgl,eddyco,rads,rp,g,kpars,nh,its,ids,i,j,hi,dt)
 c    NO в приближении малой компоненты  (прогонка)
+      USE mo_bas_gsm, ONLY: amo2,amn2,amo,amno,bk,re,pi
+
       dimension pgl(kpars,nh,its,ids),
      *          cO2i(nh),cNo(nh),cNd(its,ids,nh),
      *          rads(nh),rp(nh),g(nh),eddyco(nh,its)
@@ -8,10 +10,9 @@ c    NO в приближении малой компоненты  (прогонка)
      *          ,h(:),hsr(:),alf(:),bet(:)
 	allocate (a(nh),b(nh),c(nh),f(nh),cmd(nh)
      *          ,h(nh),hsr(nh),alf(nh),bet(nh))
-
+      
       INCLUDE 'alpha.inc'	 
-      data amo2,amn2,amo,amno/ 53.12e-24,46.51e-24,26.56e-24,49.82e-24/
-     *    ,bk/1.38e-16/,re/6.371e8/,pi/3.14159/
+     
       const=bk/amno
       const1=bk/amo2
 c*******

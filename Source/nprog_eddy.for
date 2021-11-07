@@ -1,19 +1,19 @@
       subroutine nprog_eddy(cNd,cNoi,cO2i,cN2i,cNe
      *                ,pgl,eddyco,rads,rp,g,kpars,nh,its,ids,i,j,hi,dt)
 c    N(1s) progonka as O2pro
+      USE mo_bas_gsm, ONLY: amo2,amn2,amo,amn,bk,re,pi 
+      
       dimension pgl(kpars,nh,its,ids),cNd(its,ids,nh),
      *          cO2i(nh),cNOi(nh),cNe(nh),cN2i(nh),
      *          rads(nh),rp(nh),g(nh),eddyco(nh,its)
-    
       allocatable a(:),b(:),c(:),f(:),cmd(:),cN(:),
      *            h(:),hsr(:),alf(:),bet(:)
-      INCLUDE 'alpha.inc'	 
-      data amo2,amn2,amo,amn/ 53.12e-24,46.51e-24,26.56e-24,23.26e-24/
-     *    ,bk/1.38e-16/,re/6.371e8/,pi/3.14159/
       allocate (a(nh),b(nh),c(nh),f(nh),cmd(nh),cN(nh),
      *            h(nh),hsr(nh),alf(nh),bet(nh))
 
-	const=bk/amn
+      INCLUDE 'alpha.inc'	 
+
+      const=bk/amn
       const1=bk/amo2
 c*******
       dtet=pi/(its-1)

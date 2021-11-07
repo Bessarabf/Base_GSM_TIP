@@ -53,7 +53,7 @@ c . . . without dreif
 c . . . potential calculate
         readfl=.true.
         n3=ntr*idt*nl2
-	  call wpotef(readfl,potef,n3,kdf,kdu,ldor,isp)
+        call wpotef(readfl,potef,n3,kdf,kdu,ldor,isp)
       end if
       iqo=mast(25)
       ut=ut0
@@ -186,8 +186,8 @@ c . . . copy f4 or not?
             do i=1,8
                isf4=isf4+kdu(i)
             end do
-!            call copyf4(uts)
-!            call copyf4day(uts,day)
+             
+             
              call cpf4day(uts,day,isf4,ldor)
           end if
         end if

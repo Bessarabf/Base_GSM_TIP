@@ -2,7 +2,7 @@ c . . . ver. 2012 - P_riliv
       subroutine lowgln_bas(pgl,rads,kpars,nh,its,ids,day
      *           ,ap,fa,fs,gkoor,dtets,ddolgs,uts,musl,pril,KPA,NT)
 c
-c     . . . параметры на 80 км
+c     . . . parameters at 80 km altitude
 c
 !      USE mo_ham_gsm 
       
@@ -50,7 +50,7 @@ C . . .  F10.7=180
 c        pgl(1,3,i,j)=2.1e+13
 c       pgl(2,1,i,j)=3.2e+14
 c
-        pgl(3,1,i,j)=2.4e+11
+        pgl(3,1,i,j)=5.4e+9
         pgl(7,1,i,j)=180.
 cc        pgl(3,1,i,j)=2.4e+11
 cc        pgl(7,1,i,j)=180.

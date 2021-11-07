@@ -1,12 +1,10 @@
+! version jan.2020 with 2-D eddy diffusion coefficient
 c veter
 c vi_r
 c vj_r
 c vn_t
 c vn_fi
 c vrprim_s
-! 
-! version jan.2020 with 2-D eddy diffusion coefficient
-
       subroutine veter_eddy(vi1,vj1,vi,vj,vr,vim,vjm,an1,an2,an3,an6,ro,
      *                 pgl,pgi,rp,r,eddyco,n,n1,n2,kpars,ins,dt)
 !
@@ -481,7 +479,7 @@ c    . . . временная производная по s
     2  continue
     1 continue
       
-  100 format(' VR на данной высоте слишком велико!   vr=',
+  100 format(' VR нis too large !   vr=',
      *        1pe10.2,' ',3e10.3,3i4)
       deallocate( f,s,s1,s0,a)
        return
