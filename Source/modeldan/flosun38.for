@@ -83,7 +83,6 @@
 !  Layman Alpha model based on Nusinov A.A., Katyushina V.V. 
 !  Lyman alpha line intensity as a solar activity index. Solar Phys.
 !  1994. V. 152. V 1. P. 201-206. 
-
       solLA=bla(1)+bla(2)*fff+bla(3)*ffa 
 !
 !  XUV-model based on Nusinov

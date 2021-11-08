@@ -45,6 +45,10 @@ C  ѕересчет составл€ющих скорости:
       k=its/2+1
       do i=1,ins
         pari(i,ntr,k)=plm(i)
+	if(ins.eq.6 .and. k.eq.17) then 
+	   print*, plm(i),ins,k, dolm
+	pause
+	end if
       end do
 C  ќстальные точки экватора:
       ro=re/(re+rads(ntr))
