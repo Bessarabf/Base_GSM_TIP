@@ -16,6 +16,7 @@ c     tv=tn*1.75
       b=exp(c17*a)-1.
       c=c13*tanh(c14*(te-c15))
       d=exp((c12+c)*(te-c16)/(c16*te))
+c   Vibrational excitation of O2 
       ptd1=c11*co2*d*b
       b=te-c29
       c=te-c31
