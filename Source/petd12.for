@@ -1,5 +1,4 @@
-!     Pасчет потерь тепла электронов на колебательное возбуждение
-!                     нейтралов
+!    electrons heat losses for vibrational excitation of neutrals
 !
       function petd12(co2,cn2,tn,te,tv)
       data c11/5.76e-9/,c12/3.902e3/,c13/4.38e2/,c14/4.56e-4/,
@@ -12,7 +11,7 @@
       c=c13*tanh(c14*(te-c15))
       d=exp((c12+c)*(te-c16)/(c16*te))
 
-!    Kолебательное возбуждение O2
+c   Vibrational excitation of O2 
       ptd1=c11*co2*d*b
       b=te-c29
       c=te-c31
@@ -20,10 +19,17 @@
       f=c23+c24*tanh(c25*d)
       g=c27+c28*b-c30*b*c
       a=(te-tv)/(te*tv)
-      b=exp(-g*a)-1.
+! potential overflow/underflow 17.11.2021
+      if(abs(a*g) > 20.) then
+        ag = 20.
+        print*, te,tv,tn
+      end if
+!      b=exp(-g*a)-1.
+      b=exp(-ag)-1.
+
       c=exp(f*(te-c22)/(c22*te))
 
-!    Kолебательное возбуждение N2
+c . . . and N2
       ptd2=c21*cn2*c*b
       petd12=ptd1+ptd2
       return

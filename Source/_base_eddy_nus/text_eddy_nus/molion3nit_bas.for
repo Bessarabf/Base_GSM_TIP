@@ -49,7 +49,7 @@
             cO2=par(1,k,ig)    ! cO2	     
             cN2=par(2,k,ig)    ! cNO 
             cO=par(3,k,ig)     ! cO 
-	      cNO=par(4,k,ig)    ! cNO
+            cNO=par(4,k,ig)    ! cNO
             if(mass(21).eq.0) then 
 	      cN=0.
 	    else
@@ -60,7 +60,7 @@
 	    qO2=par(13,k,ig) 
 	    qN2=par(14,k,ig)
 	    qNO=par(15,k,ig)
-	    qO=par(16,k,ig)  
+	    qO= par(16,k,ig)  
             Q3= qO  
     ! lost 
             pL3=al(6)*cO2+al(7)*cN2
@@ -70,7 +70,7 @@
            else 
                   cn3I=pari(1,k,ig)
            end if
-           cNe=par(6,k,ig)  ! Ne значения на i-ом временном шаге 
+           cNe=par(6,k,ig)  ! Ne и® оЃљнѕЁ оћ i-пЄ г±ҐоЇ¬ б¤Ґ 
           ! first step before iteration O2+ & NO+
  !             key=0
            if (key.eq.0) then
@@ -116,9 +116,9 @@
               cn2I=cn2I+dn2I
               cNe=cn1I+cn2I+cn3I+cn4I
               it=it+1
-              if(it.ge.9) then
-                print*,'WARNING iterations do not converge in ',
-     *                 'molion3nit. dnorm=',dnorm  
+              if(it.ge.11) then
+                print*,'WARNING molion3nit:iterations dn''t converge',
+     *                 ' dnorm=',dnorm,' k=',k,ig,' j=',j   
                 EXIT
               end if
            end do
